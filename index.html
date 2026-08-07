@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Filiz</title>
+<title>Habitopia</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 <style>
@@ -475,16 +475,127 @@
   body.dark-mode .toast{ background:#000; }
   body.dark-mode .pet-xp-bar{ background:var(--line); }
   body.dark-mode .stat-box .sbi{ background:#151E15; border-color:var(--line); }
+
+  /* ---------- Profile name field ---------- */
+  .name-input{
+    font-family:'Fredoka',sans-serif; font-size:19px; font-weight:600; letter-spacing:.2px;
+    background:transparent; border:none; color:#fff; padding:0; width:100%;
+    outline:none; border-bottom:1.5px dashed rgba(255,255,255,0.001);
+  }
+  .name-input::placeholder{ color:rgba(255,255,255,0.65); }
+  .name-input:focus{ border-bottom:1.5px dashed rgba(255,255,255,0.55); }
+
+  /* ---------- Wheel of fortune (upgraded look) ---------- */
+  .wheel-wrap{width:172px; height:172px; margin:0 auto 12px;}
+  .wheel-pointer{
+    top:-6px; font-size:0; width:0; height:0;
+    border-left:9px solid transparent; border-right:9px solid transparent;
+    border-top:16px solid var(--danger);
+    filter:drop-shadow(0 2px 2px rgba(0,0,0,0.35));
+  }
+  .wheel-disc{
+    width:172px; height:172px;
+    box-shadow:0 8px 22px rgba(0,0,0,0.28), 0 0 0 5px #fff, 0 0 0 8px var(--accent), inset 0 0 0 1px rgba(0,0,0,0.05);
+  }
+  .wheel-spin-btn{ position:relative; }
+  .wheel-spin-btn.ready{ animation: wheelPulse 1.8s ease-in-out infinite; }
+  @keyframes wheelPulse{
+    0%,100%{ box-shadow:0 0 0 0 rgba(232,163,61,0.55); }
+    50%{ box-shadow:0 0 0 8px rgba(232,163,61,0); }
+  }
+  body.dark-mode .wheel-disc{ box-shadow:0 8px 22px rgba(0,0,0,0.5), 0 0 0 5px #1C261C, 0 0 0 8px var(--accent); }
+
+  /* ---------- Onboarding (splash / gender / character) ---------- */
+  .onboarding-overlay{
+    position:fixed; inset:0; z-index:500;
+    background:radial-gradient(circle at 50% 18%, #1c1c1c 0%, #000 72%);
+    display:flex; align-items:center; justify-content:center; padding:28px 22px;
+    transition:opacity .35s ease, visibility .35s ease;
+  }
+  .onboarding-overlay.hide{ opacity:0; visibility:hidden; pointer-events:none; }
+  .ob-step{ display:none; flex-direction:column; align-items:center; text-align:center; width:100%; max-width:340px; }
+  .ob-step.active{ display:flex; animation: fade .35s ease; }
+  .ob-logo{ width:132px; height:132px; border-radius:30px; margin-bottom:20px; box-shadow:0 14px 34px rgba(0,0,0,0.55); object-fit:cover; }
+  .ob-appname{ font-family:'Fredoka',sans-serif; color:#fff; font-size:30px; font-weight:700; letter-spacing:.5px; }
+  .ob-tagline{ color:#AEBBA9; font-size:12.5px; margin:9px 0 30px; line-height:1.5; }
+  .ob-btn{
+    background:var(--accent); color:#3A2A0D; border:none; border-radius:14px; padding:14px 36px;
+    font-family:'Fredoka',sans-serif; font-weight:600; font-size:14.5px; cursor:pointer; width:100%;
+  }
+  .ob-btn:disabled{ opacity:.35; cursor:default; }
+  .ob-eyebrow{ color:#8FA88C; font-size:11px; text-transform:uppercase; letter-spacing:1.2px; margin-bottom:8px; font-weight:700; }
+  .ob-question{ color:#fff; font-family:'Fredoka',sans-serif; font-size:20px; font-weight:600; margin-bottom:26px; }
+  .ob-gender-row{ display:flex; gap:14px; width:100%; margin-bottom:6px; }
+  .ob-gender-card{
+    flex:1; background:#181818; border:2px solid #2C2C2C; border-radius:20px; padding:26px 8px;
+    color:#fff; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:10px;
+    font-family:'Inter',sans-serif; font-weight:600; font-size:13.5px;
+  }
+  .ob-gender-card.selected{ border-color:var(--accent); background:#241C0D; }
+  .ob-gender-emoji{ font-size:42px; }
+  .ob-char-row{ display:flex; gap:10px; margin:6px 0 26px; flex-wrap:wrap; justify-content:center; }
+  .ob-char-card{
+    background:#181818; border:2px solid #2C2C2C; border-radius:16px; padding:10px 8px 8px;
+    cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:6px;
+  }
+  .ob-char-card.selected{ border-color:var(--accent); background:#241C0D; }
+  .ob-char-card .ob-char-svg{ background:#fff; border-radius:12px; padding:4px; line-height:0; }
+  .ob-char-name{ color:#fff; font-size:10.5px; font-weight:600; }
+
+  /* ---------- Mobile: real device, no phone frame, fixed bottom nav ---------- */
+  @media (max-width: 480px){
+    html, body{ height:100%; }
+    body{
+      padding:0; align-items:stretch; justify-content:stretch;
+      background: var(--bg);
+    }
+    .phone{
+      width:100%; max-width:none; height:100dvh; min-height:100dvh;
+      border-radius:0; box-shadow:none;
+    }
+    header.top{ padding-top:calc(20px + env(safe-area-inset-top)); }
+    nav.tabbar{ padding-bottom:env(safe-area-inset-bottom); }
+    .onboarding-overlay{ padding:24px 20px calc(24px + env(safe-area-inset-bottom)); }
+  }
 </style>
 </head>
 <body>
+
+<div class="onboarding-overlay" id="onboardingOverlay">
+  <div class="ob-step ob-splash active" id="obSplash">
+    <img class="ob-logo" alt="Habitopia" src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBAUEBAYFBQUGBgYHCQ4JCQgICRINDQoOFRIWFhUSFBQXGiEcFxgfGRQUHScdHyIjJSUlFhwpLCgkKyEkJST/2wBDAQYGBgkICREJCREkGBQYJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCT/wAARCAFoAWgDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD5UooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooA3vB/gfX/Huoy6b4csDf3kUDXDQrIqEopAJG4gE5YcVS1zw7q/hm/fT9a066067T70NzEUbHrz1HuOK9n/Y0/5Ktd/9gif/ANGRV9ZfEH4c+H/iVoUmk67ZrKuCYLhQBLbP2dG7H26HoaAPzVoro/iD4I1H4d+Lb/w5qQDS2r/JKows0Z5SQexH5HI7VzlABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFAHvP7Gf8AyVa8/wCwRN/6Mir7Z+tfE37Gn/JVbv8A7BE//oyKvtmgD5W/bc8PwKfDXiCNAs7+dZStjllGHT8sv+dfK1fX/wC24f8AilvDf/X9L/6Lr5AoAKUDNA5Ne+fBX4CWWv6VD4l8VLJJa3HzWlirFBImf9Y5HOD2UYyOSea5sXi6eFp+0qvQ1o0ZVZcsTwPaaSvuKb4UeBZ7T7I3hPSBERjKwBXH/Ax82ffNfPvxv+CsXgMR63obzS6NM4jkjkO57Vz0Ge6nsTyDwexrz8FnmHxVT2aTi3tfqdFbA1KUebdHj9FFFeycQUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQB7z+xp/yVW7/AOwRP/6Mir7aNfEv7Gn/ACVW7/7BE/8A6Mir7Z6UAfNn7bn/ACK3hr/r+l/9FivkCvr/APbc/wCRW8Nf9f0v/osV8gUAKvf6V9++HEto/D+lpZY+yrZwCLHTb5a4r4CBxX0Z8EPjpplpo9t4X8U3K2f2UeXZ30n+raPskh/hI6BumMA4xz4HEGDqV6MZU1fl6HoZfWjTm1LqfQRriPjULY/CzxGLoLt+zApns+9dv45xXQT+MfDVvaG7l8QaQlvjPmm8j24/OvnH46/Gi28YxL4c8Puz6VFIJJ7kqV+1OPuhQedg689Tj0r5rKsBWq4iMkmkndv0PSxVeEabV9zxY9aSiiv0Q+dCiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKAPef2NP+SrXf8A2CJ//RkVfbWK+Jf2M/8Akq15/wBgif8A9GRV9tUAfNX7bn/Ir+Gv+v6X/wBFivkGvsz9sHRdS8R6X4S0rSLKa9vrnUJUighXczHyx+nqeg71g/Dn9jSAQxX3jvUpGlYbjp1g4AX2eXufUKB9aAPlLBox7j86/R3Qvgv8PPDkapp/hDRwyjAkngE7/i0mTWvceA/CdzGYp/DGiSof4WsYiP8A0GgD8y8n/IpK+/PFH7Mfwz8SxP5eh/2RcNnE+myGLaf9w5Q/lXzZ8Vf2X/FHw/hm1TSmOvaPHlnlhTE8C+rx85A/vLkeuKAPFqKUjFJQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQB7z+xn/yVa8/7BE3/oyKvtqviX9jP/kq15/2CJ//AEZFX2z1oAa0MbSLIUUugIViBkZ64PboKd2oNfPHx7/acXwZdz+GPB/kXGsR/JdXrgPHaN/cUdGkHfPC9OTkAA+gbq9tbGLzru4ht4h/HK4RfzNVLTxLomoS+TZ6xp1zJ/chuUdvyBr80/EHinXPFV697rmq3uo3DHJe5lL4+gPAHsABWYkjIwZCVYHII4IoA/VAHNBGeK+D/hT+0v4s8AXMNpqlzPruh5CvbXD7pYl9YpDyCP7pyD7da+2/C3ijSvGOhWmuaLdLdWN2m+NxwR6qw7MDwR2NAHzH+098ALbTbe48deFLUQwKd+p2MS4VMn/XoB0GfvAcDOfWvl/GK/U25tory3lt540lhlQpJG4yrqRggj0INfnP8Y/AbfDn4g6roK5Nqjia0Y/xQP8AMn5cqfdTQBxNFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRSgZr0uw+CWp6v4Gs9f0+cPfzhpfsL4XfFn5Srf3jgnB65HNKUktwPM6KmurWeyuJLa5hkhmjba8cilWU+hB6VDTA95/Yz/AOSrXn/YIn/9GRV9tdK+Jf2M/wDkq15/2CJ//RkVfbPSgDz348ePpPh18NtR1a0kEeozbbSyb+7K+Ru/4CoZv+AivzylleeRpZXZ3clmZjksT1JPc19ffttyuPCfhyIMQjX8jEepEXH8zXx9QAVNb2lxdl1t4ZJSiNIwRSdqgZLH0A9al0q0XUNTtLN2KLcTJEWHUBmAz+tfRmpeE9J8HeAdds9Ltwu6xmEkz8ySnaeWb+g4FZzqKNkJux80V9FfsdfEG40rxbc+DbiUtZarG09uhPEdwi5OP95Ac+6rXzrXe/AeZ4PjB4SaNiCdRjX8GyD+hNaDP0WwK+UP23NBRLvwzryKBJKk1lK2OoUh0/8AQnr6uGMCvnD9tof8Ud4eOOf7Rf8A9FGgD48ooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAUV9jaDNBa+ENLnIAgisIG+XoFEa5P4DJr44r6T+B/jS217wxHoV1Ihv9NQxiJ/8AltB2I9cZ2kfT1rCvG6uKRL8XvANt4s0ObU7SFBqtlGZEkUczxqMlD68cqfw7180GvrfStSXTDqWh3zYbS4jNCzn/AFtmQdje5XBQ/wC6PWvnXwb8O9T8am6urcC30+3DNJcOOMgFgiju3T2GeaVGVk0xI9L/AGM/+SrXn/YIn/8ARkVfbVfEv7Gg/wCLrXn/AGCJv/RkVfbVdBR81ftuf8iv4a/6/pf/AEWK+Qq+vf23P+RY8Nf9f03/AKLFfP8A8HNG0/X/ABBfWGp2kd1bvYudrcFTvTDKRyCPUUpS5VcGcl4c/wCRh0z/AK+4f/QxX0945/5E3Xh/05Tf+gmvEvEvgVPA3jXRYobo3FtdXEckW8YdAJQCG7H6ivbfHXy+Dtdzzmym/wDQTXLWacotESPlGu5+Bv8AyV7wj/2E4f5103wk+GWl6vpsHiHVf9LV5GWK1IwgKtjL/wB76dPXNZfwzUL+0Doyqqqq6/gBRgACVuAK6VNNtLoVc/QYdOK+cf22v+RN8Pf9hJ//AEUa+jh0r5w/bZ/5E3w9/wBhF/8A0UaoZ8eUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAbHhvwlrXi27Nro9jJcuoy7cKkY9WY8Cu7tvgd470h49R02ezF5Ad6C2uisqn2JAH613vws8eeCI9BtdItJo9IuI1/eRXjBTLJ3fzOjE++COmK6XxHrvg5bUz6zq9kYlH+rW8YlvokbZP5VzSqz5rJE3Z4Zr3jTxVrd7BomuqthqsKyWbXJjMMjpIMGOQDgqxA5x7109n8QdO8GfDOPRFhmi1zypYfIZCNjszhpGPt+ZI9BXAeN/EGhazrTyaPpL2tkg2KzzO0knP3vmJCj0FaHjGIeJfDum+LLeWWdokTTtQDrho5VHyOcdnXv6j3rVxTtdDPQP2NCf+Fq3g7f2RN/6Mir7Z5r4l/Y0x/wALVvP+wRN/6Mir7ZJxWgz5r/bc/wCRX8Nf9f0v/osV4b8AsDxhdZ/58H/9DSvcv22x/wAUv4a/6/pf/RYrwj4FTQW3i26kuJ4YEFi/zSuEH307k1nV+Biex0vxgGPGnhMnoXX/ANHLXonjgbvB+u/9eU//AKCa86+Jsqa74v8ADUul7r+K1YGdrVTKI/3oPJUHsM16N4mgl1nw3qtlZRyNNcWsscQdDHuYg4HzYrlltEjsc/8ABbP/AAgNhj/nvN/6HXnfw2/5OE0j/sYD/wCjWr1X4ZaHfeG/CFpp2oxCK6jlkZ0DBgAXyORx0rjfBXw/8QaN8XtN8SXtpHHpkOr/AGuSUTKxEe8nO0HPQ9OtaU5JTk2yk9T7iHAxXzh+20P+KN8Pf9hF/wD0Ua9vh8e+G5R8upov++jL/MV4T+2HfW+veDdC/sudL4xag7OLf5yg8o8kDoPrXQpRezKPkOilZSpwRgjsaSqAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAWjNJU1t9n8wfaTL5f/TPGf1oAi616P8ABmS31O91XwnqBzZ6zaMMddsqcqw9wMn8BXK2msaHYYMfh5bxwchr66dl/wC+Y9g/MmtWP4r6/YoY9Ii0rR0IxixsY0P5kEn86iabVkJnoXwj8OeP/hf4svdW07RdNuna1ks0lu7nbDhmU7wE+Y/d6cda9J1HxX8RL5d2ufEKz0WFuWh0q1jgx/20lJavl3UPHPibVM/a9e1GUHqvnsq/kMCsaSaSZi8js7HqWOTS5ZvqGp9D61dfD66mE3iPxXNr80RJB1DUpbvB74VflH4CqKfEr4a6Cu3TLBGx/wA+2nqP1bBrwTNFL2V92wse53H7QWjxnFrouoOP9uRIx+QzWbN+0PNkiDw7CB2MlyT/ACUV47RQqMF0DlR6tJ+0HrR/1Wj6Yg/2jI39RUB+P/iPORp+lf8AfD//ABVeYUU/ZQ7BZHqA/aA8RcZ07SuP9iQf+zVYi/aF1dSTLo2ntnj5HkX+pryeij2UOwWR6zcfGnRtXTZrPgmyul9d6sfzKZ/WsS8u/hnrKtss9b0Kc8hods8X4qWz+VcDRTVNLYLG1qGgW8Y8zTNYstSj9FzDKPqjgfoTWMQQcGjNJVjCiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACilFdt8T/AIdRfD1/D6xai98NX0mDUyWiCeUZM/J1OcY68fSgDiKKWkoAKKWjFACUUV2mmfD+K/8AhZq3jg37pJp+oxWItfKBEgcA7t2eMZ6YoA4uilxSUAFFdR8PvDegeJ9Zms/EXiaHw5aJbSSpdSxFw8gxtTGR1yT+GBya5lwFYhTkDv60ANortdN+HsV/8KtX8cnUHSTTtRisRaeUCHDhTu3Z4xu6YriqACiilxQAlFFFABRS4pKACitrwdpOl654m0/Tda1dNG064l2T3zruEC4PJH1wOeBnJqrr9jZ6Zrd9ZaffpqNnbzvHDdopUToGIDgHpkc0AZ9FFLigBKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigBRX1J8WfFnhbwTpfgfU7zwzZeI/EM/h20jhi1LLWtpAq53lB952YkDPQL+fy2K9m/aUBE3gHI/wCZUsv/AGagC7qEHhL4yfDrxB4g0zw3ZeGfFHhuNbu4i08Fba9tySCdv8LDB9+ByQePDMc4r2H4HZ/4QX4q8H/kXj/Nq8e6GgD2yx03wn8G/BGia9r/AIftvE3irxBD9stLK9JNrY22fld1H3mb/OMc3PDl54P+P0lz4auPCeleFvFTwSS6XfaQpiguJEUt5UsfTkA8+x6Y5k1nwzcfHvwD4a1PwpLBc+I/DunrpWo6Q0qpK8afclj3EAgjP546itv9n34Max4L+IWk6740jj0eYtLFpthJKrXF3MY2yQik4RU3kk98UAfNc8EltM8MqlJI2Ksp6gg4I/OvoD4QL4aX4AeKrvxalxNpNnrUNw9rA217t1jTZFu7BmIBI6DNeH+KP+Rl1X/r8m/9GNXp3wdutM8W+B/EvwwvtRt9LvdVlivtKuLhtsT3MeP3THtuAGPx74BAJbD4xeB9bvI9J8SfC3w1aaFKfKM2mI0d3aqeN4k6sR1PTP6VxPxY8An4b+Nr3QUuftdqoSe0uO8sDjchPvjg+4rrNI/Zk8evq/la/YQ6HpMDbrvU7q5iEMUQPzMCG+bjp+uKxfjt4z03xt8Qrq80XLaXaQRWFrIesscS43/QnOPbFAGn+zdouma749urXVrC1v7ddJu5RFcRh1Dqow2D3HrXlRr2L9llS3xGvMf9Aa9/9BWvHTQB7/8ACjxLB4S/Z88T6rcaJpmtxprkCGz1BN8TZRACR6jqK8Z8YeIYfFPiC61aDSLDR459mLKwTZDFhQvyj3xk+5Neq/CPTD4++EPi7wBpVxAPED3sGqWltNIE+1IgUMqk8ZG39RXkvibwvrHg7WZ9F12yex1CAKZIGZWKhlDDlSRyCD1oA9B+E3gzw0vhjWviJ42hlvNF0eVLa306Jyhv7psEIW7KMjP19Bg6+mfF7wL4pv4tE8U/DLw7p+jXDCFbvSUMN1ZgnAff/Fjqen0PSoPhTcaf44+G2u/C641G303Vbm8TVNIluX2RTzKoVoWbsSBx9fbFV9A/Zr8a/wBsBvFNjH4e0S1cPe6jd3MYjjiByxXDHcSOnagDi/id4Gm+HPjbUvDks32iO2YNBPjHmxMAyN9cEZ9wav8Awe8AQ/EPxgthf3LWmk2dvJfajcL96O3jGWx7kkDPbJPan/G3xrZePfiLqWr6WrDTlEdtaFhgvFGoUNg+uCfoRXZ/ssW9jda14xg1Oc29hL4buUuZgMmOIsgZvwGT+FAEFx8afBGnXbaXo/wn8NTeHlOwG9VmvZk6bjLztY9e+PWue+MPgjRfD7aJ4k8KNP8A8I34ktTdWkU5y9s6nEkJPfaSOfqOcZq/P+zT8RG1RYNM0y31TTpSGg1W2uYzayxdpNxbIGOcYz9ad8bdW0nTtK8K/D3RtQh1KLwxbSrd3kBzHLdysGkCHuqkdffHagDA+CWnWerfFbwzY39rBd2k96qSwTIHR1weCDwRWN8QLaCz8d+Ira1hSCCHU7mOOKMYVFErAADsAK6H4Aj/AIvJ4T7/AOnL/wCgtWH8Shj4ieJxjH/E2uv/AEa1AHV/CHwR4fvNJ13x14zWabw94fVAbOFtr31w5+SLPYdM/Uds1tWXxp8D6xdppPiH4VeGrbQZD5Zk01DHd2ynjeJOCxHXtmoPg7c6b4t8D+J/hjeahb6Zf6tJFfaXcXDbYpLiPH7pj23ADH498A0rP9m7x5DfyHxBYQ6DpFsS13ql3cR+TDEPvMMMSxx0AHPHSgDnPi54BX4ceNrvRbe6N3YsiXNnOeskEgypPuOQfXGe9cZXtX7V6W0fxD0xLMs1suh2giLDBKAvt/TFeK0AFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABU9xe3N5s+0TyzeWoRPMcttUdAM9B7VBRQBNBeXFtHLHDPLEkq7ZFRyA49CB1H1qGiigCa1u7iymWe2nlglX7skblWH0I5qxJrepy3i3smoXb3S8LO0zGQfRs5qjRQA53aRizElicknvSA4pKKALtxrWpXdstrcahdzQLjbFJMzIPoCcVSoooAmtru4s5DJbTywuQVLRuVOD1GR2qGiigCSGeW3kWWGR45FOVZCQVPsRS3N1PezNPczSTyt955GLMfqTzUVFACg4q5da1qd9bpb3WoXdxAn3I5ZmdV+gJwKpUUAFeqfAfX9K0FvGp1XUbax+1+Gru1t/Ofb50rbdqL6sfSvK6KALsWs6lBZtZQ393Hat96BJmEZ+qg4qnSUUASQXEtrMs0ErxSocq6MVZT7EdKSWV5pGkkZndiWZmOSSe5NMooAUHFXLnWdSvLdba5v7ueBPuxSTMyL9ATiqVFAE1zeXF64e5nlmdVCBpHLEAdBk9qhoooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigD/2Q==">
+    <div class="ob-appname">habitopia</div>
+    <div class="ob-tagline">Görevlerini tamamla, karakterini büyüt, bahçeni yeşert.</div>
+    <button class="ob-btn" onclick="obGoGender()">Başla</button>
+  </div>
+
+  <div class="ob-step ob-gender" id="obGender">
+    <div class="ob-eyebrow">Karakterin</div>
+    <div class="ob-question">Kadın mısın, erkek misin?</div>
+    <div class="ob-gender-row">
+      <button class="ob-gender-card" data-gender="female" onclick="obSelectGender('female')">
+        <div class="ob-gender-emoji">👩</div><div>Kadın</div>
+      </button>
+      <button class="ob-gender-card" data-gender="male" onclick="obSelectGender('male')">
+        <div class="ob-gender-emoji">👨</div><div>Erkek</div>
+      </button>
+    </div>
+  </div>
+
+  <div class="ob-step ob-character" id="obCharacter">
+    <div class="ob-eyebrow">Son adım</div>
+    <div class="ob-question">Karakterini seç</div>
+    <div class="ob-char-row" id="obCharRow"></div>
+    <button class="ob-btn" id="obConfirmBtn" onclick="obConfirmCharacter()" disabled>Onayla ve Başla</button>
+  </div>
+</div>
 
 <div class="phone">
   <header class="top">
     <div class="top-row">
       <div class="avatar-badge" id="headAvatar">🌱</div>
       <div class="top-info">
-        <div class="name">Filiz Kurul</div>
+        <input class="name-input" id="profileNameInput" maxlength="24" placeholder="İsmini yaz" autocomplete="off">
         <div class="level" id="levelLabel">Seviye 1</div>
         <div class="xp-bar"><div class="xp-fill" id="xpFill" style="width:0%"></div></div>
       </div>
@@ -512,7 +623,7 @@
 
       <div class="wheel-card">
         <div class="wheel-wrap">
-          <div class="wheel-pointer">▼</div>
+          <div class="wheel-pointer"></div>
           <div class="wheel-disc" id="wheelDisc"></div>
         </div>
         <button class="wheel-spin-btn" id="wheelSpinBtn" onclick="spinWheel()">Çevir</button>
@@ -554,6 +665,8 @@
 
       <h2 class="section-title">Avatarını Özelleştir</h2>
       <div class="customize-block" id="customizeBlock">
+        <div class="cz-label" style="margin-top:0;">Cinsiyet</div>
+        <div class="swatch-row" id="genderRow"></div>
         <div class="cz-label">Ten Tonu</div>
         <div class="swatch-row" id="skinRow"></div>
         <div class="cz-label">Saç Stili</div>
@@ -897,6 +1010,7 @@ const CLOTHES_COLORS = ['#3F6C4C','#C1543C','#3B82C4','#9B59B6','#E8A33D','#2C4E
 const SHOES_COLORS = ['#2C1B12','#5B3A21','#3F6C4C','#C1543C','#B0B0B0'];
 const HAIR_STYLE_OPTIONS = [{id:'short',label:'Kısa'},{id:'long',label:'Uzun'},{id:'bald',label:'Kel'}];
 const ACCESSORY_OPTIONS = [{id:'none',icon:'Yok'},{id:'glasses',icon:'🕶️'},{id:'hat',icon:'🎩'},{id:'bow',icon:'🎀'}];
+const GENDER_OPTIONS = [{id:'female',label:'👩 Kadın'},{id:'male',label:'👨 Erkek'}];
 
 const PLANT_STAGES = ['🌰','🌱','🌿','🪴','🌳'];
 
@@ -950,7 +1064,7 @@ function grantRandomShopItem(){
 }
 function buildWheelSVG(size){
   const n = WHEEL_SLICES.length;
-  const cx = size/2, cy = size/2, r = size/2 - 2;
+  const cx = size/2, cy = size/2, r = size/2 - 12;
   const sliceAngle = 360/n;
   let inner = '';
   for(let i=0;i<n;i++){
@@ -966,8 +1080,22 @@ function buildWheelSVG(size){
     inner += '<path d="M'+cx+','+cy+' L'+x1.toFixed(2)+','+y1.toFixed(2)+' A'+r+','+r+' 0 0 1 '+x2.toFixed(2)+','+y2.toFixed(2)+' Z" fill="'+WHEEL_SLICES[i].color+'" stroke="#fff" stroke-width="1.5"/>';
     inner += '<text x="'+lx.toFixed(2)+'" y="'+ly.toFixed(2)+'" font-size="9.5" fill="#fff" font-family="Inter,sans-serif" font-weight="700" text-anchor="middle" dominant-baseline="middle">'+WHEEL_SLICES[i].label+'</text>';
   }
-  return '<svg viewBox="0 0 '+size+' '+size+'" width="'+size+'" height="'+size+'">' + inner +
-    '<circle cx="'+cx+'" cy="'+cy+'" r="8" fill="#fff" stroke="#223324" stroke-width="2"/></svg>';
+  let bulbs = '';
+  const bulbCount = 16;
+  for(let i=0;i<bulbCount;i++){
+    const a = (360/bulbCount)*i - 90;
+    const bx = cx + (r+8)*Math.cos(a*Math.PI/180);
+    const by = cy + (r+8)*Math.sin(a*Math.PI/180);
+    bulbs += '<circle cx="'+bx.toFixed(2)+'" cy="'+by.toFixed(2)+'" r="2.6" fill="'+(i%2===0 ? '#FFEBB0' : '#E8A33D')+'"/>';
+  }
+  const gloss = '<ellipse cx="'+cx+'" cy="'+(cy-r*0.42)+'" rx="'+(r*0.62)+'" ry="'+(r*0.28)+'" fill="rgba(255,255,255,0.16)"/>';
+  return '<svg viewBox="0 0 '+size+' '+size+'" width="'+size+'" height="'+size+'" style="display:block;">' +
+    '<defs><radialGradient id="hubGrad" cx="35%" cy="35%" r="75%">' +
+      '<stop offset="0%" stop-color="#FFF3CE"/><stop offset="100%" stop-color="'+'#E8A33D'+'"/>' +
+    '</radialGradient></defs>' +
+    bulbs + inner + gloss +
+    '<circle cx="'+cx+'" cy="'+cy+'" r="10" fill="url(#hubGrad)" stroke="#3A2A0D" stroke-width="1.5"/>' +
+  '</svg>';
 }
 let wheelSpinning = false;
 let wheelRotation = 0;
@@ -1017,7 +1145,7 @@ function spinWheel(){
 function renderWheel(){
   const disc = document.getElementById('wheelDisc');
   if(disc && !disc.dataset.built){
-    disc.innerHTML = buildWheelSVG(148);
+    disc.innerHTML = buildWheelSVG(172);
     disc.dataset.built = '1';
   }
   const today = todayStr();
@@ -1026,6 +1154,7 @@ function renderWheel(){
   const sub = document.getElementById('wheelSub');
   if(btn){
     btn.disabled = usedToday || wheelSpinning;
+    btn.classList.toggle('ready', !usedToday && !wheelSpinning);
     if(!wheelSpinning) btn.textContent = usedToday ? 'Bugün çevrildi ✓' : 'Çevir';
   }
   if(sub) sub.textContent = usedToday ? 'Yarın tekrar çevirebilirsin.' : 'Günde bir kez ücretsiz çevirebilirsin.';
@@ -1035,6 +1164,9 @@ let selectedDifficulty = 'medium';
 
 function defaultState(){
   return {
+    profileName: '',
+    gender: null,
+    onboardingDone: false,
     coins: 0,
     xp: 0,
     level: 1,
@@ -1071,7 +1203,7 @@ function defaultState(){
     water: { date: null, glasses: 0, goal: 8, streak: 0, longestStreak: 0, totalGlasses: 0 },
     moodState: 'neutral',
     avatar: {
-      skin:'#F1C27D', hairStyle:'short', hairColor:'#3B2519', eyeColor:'#3B2519',
+      gender:null, skin:'#F1C27D', hairStyle:'short', hairColor:'#3B2519', eyeColor:'#3B2519',
       beard:false, clothesColor:'#3F6C4C', shoesColor:'#2C4E36', accessory:'none'
     },
     pet: { typeId: 'cat', level: 1, xp: 0 },
@@ -1112,6 +1244,100 @@ async function loadState(){
   scheduleBlink();
   scheduleWalk();
   setInterval(renderCharacterAvatar, 60000);
+  setupProfileNameInput();
+  applyOnboardingState();
+}
+
+/* ---------- Profile name ---------- */
+function setupProfileNameInput(){
+  const input = document.getElementById('profileNameInput');
+  if(!input) return;
+  input.value = state.profileName || '';
+  input.addEventListener('input', ()=>{
+    state.profileName = input.value;
+    renderStatsView();
+  });
+  input.addEventListener('blur', ()=>{
+    state.profileName = input.value.trim();
+    input.value = state.profileName;
+    saveState();
+    renderStatsView();
+  });
+}
+function displayName(){
+  return (state.profileName && state.profileName.trim()) ? state.profileName.trim() : 'İsimsiz Kâşif';
+}
+
+/* ---------- Onboarding (splash -> gender -> character) ---------- */
+const CHAR_PRESETS = {
+  female: [
+    {skin:'#F1C27D', hairStyle:'long', hairColor:'#3B2519', eyeColor:'#3B2519', clothesColor:'#C1543C', shoesColor:'#7A5B44', accessory:'bow', beard:false},
+    {skin:'#E0AC69', hairStyle:'long', hairColor:'#2B1B12', eyeColor:'#2E6F40', clothesColor:'#9B59B6', shoesColor:'#5B3A21', accessory:'none', beard:false},
+    {skin:'#8D5524', hairStyle:'long', hairColor:'#2B1B12', eyeColor:'#3B2519', clothesColor:'#3B82C4', shoesColor:'#2C1B12', accessory:'bow', beard:false},
+  ],
+  male: [
+    {skin:'#F1C27D', hairStyle:'short', hairColor:'#3B2519', eyeColor:'#3B2519', clothesColor:'#3F6C4C', shoesColor:'#2C4E36', accessory:'none', beard:false},
+    {skin:'#E0AC69', hairStyle:'short', hairColor:'#2B1B12', eyeColor:'#6B4226', clothesColor:'#3B82C4', shoesColor:'#2C1B12', accessory:'glasses', beard:false},
+    {skin:'#8D5524', hairStyle:'short', hairColor:'#2B1B12', eyeColor:'#3B2519', clothesColor:'#7A5B44', shoesColor:'#2C1B12', accessory:'none', beard:true},
+  ]
+};
+let obGender = null;
+let obCharIdx = null;
+
+function applyOnboardingState(){
+  const overlay = document.getElementById('onboardingOverlay');
+  if(!overlay) return;
+  if(state.onboardingDone){
+    overlay.classList.add('hide');
+  } else {
+    overlay.classList.remove('hide');
+    document.querySelectorAll('.ob-step').forEach(s=>s.classList.remove('active'));
+    document.getElementById('obSplash').classList.add('active');
+  }
+}
+function obGoGender(){
+  document.getElementById('obSplash').classList.remove('active');
+  document.getElementById('obGender').classList.add('active');
+}
+function obSelectGender(g){
+  obGender = g;
+  obCharIdx = null;
+  document.querySelectorAll('.ob-gender-card').forEach(c=>c.classList.toggle('selected', c.dataset.gender === g));
+  setTimeout(()=>{
+    document.getElementById('obGender').classList.remove('active');
+    document.getElementById('obCharacter').classList.add('active');
+    renderCharPresets();
+  }, 220);
+}
+function renderCharPresets(){
+  const row = document.getElementById('obCharRow');
+  if(!row) return;
+  const presets = CHAR_PRESETS[obGender] || CHAR_PRESETS.male;
+  row.innerHTML = presets.map((p, i)=>{
+    const av = Object.assign({}, state.avatar, p, { gender: obGender });
+    const svg = buildAvatarSVG(74, av);
+    return '<button class="ob-char-card" data-idx="'+i+'" onclick="obSelectChar('+i+')">' +
+      '<div class="ob-char-svg">'+svg+'</div><div class="ob-char-name">Stil '+(i+1)+'</div></button>';
+  }).join('');
+  const confirmBtn = document.getElementById('obConfirmBtn');
+  if(confirmBtn) confirmBtn.disabled = true;
+}
+function obSelectChar(i){
+  obCharIdx = i;
+  document.querySelectorAll('.ob-char-card').forEach(c=>c.classList.toggle('selected', parseInt(c.dataset.idx, 10) === i));
+  const confirmBtn = document.getElementById('obConfirmBtn');
+  if(confirmBtn) confirmBtn.disabled = false;
+}
+function obConfirmCharacter(){
+  if(obGender == null || obCharIdx == null) return;
+  const preset = CHAR_PRESETS[obGender][obCharIdx];
+  state.avatar = Object.assign({}, state.avatar, preset, { gender: obGender });
+  state.gender = obGender;
+  state.onboardingDone = true;
+  saveState();
+  const overlay = document.getElementById('onboardingOverlay');
+  if(overlay) overlay.classList.add('hide');
+  renderAll();
 }
 
 async function saveState(){
@@ -1360,7 +1586,7 @@ function addQuest(){
   const input = document.getElementById('questInput');
   const val = input.value.trim();
   if(!val) return;
-  state.quests.push({ id: Date.now().toString(), name: val, done: false, difficulty: selectedDifficulty });
+  state.quests.push({ id: Date.now().toString(), name: val, done: false, difficulty: selectedDifficulty, rewarded: false });
   state.totalQuestsAdded += 1;
   input.value = '';
   saveState();
@@ -1368,7 +1594,7 @@ function addQuest(){
   checkNewBadges();
 }
 function addSuggestedQuest(name, difficulty){
-  state.quests.push({ id: Date.now().toString(), name: name, done: false, difficulty: difficulty || 'easy' });
+  state.quests.push({ id: Date.now().toString(), name: name, done: false, difficulty: difficulty || 'easy', rewarded: false });
   state.totalQuestsAdded += 1;
   saveState();
   renderQuests();
@@ -1381,19 +1607,22 @@ function toggleQuest(id){
   const diff = DIFFICULTIES[q.difficulty] || DIFFICULTIES.medium;
   q.done = !q.done;
   if(q.done){
-    addCoins(diff.coin);
-    state.totalCompleted += 1;
-    addXp(diff.xp);
-    bumpDailyCompleted();
-    state.completedLog.unshift({ name: q.name, date: todayStr() });
-    if(state.completedLog.length > 100) state.completedLog.length = 100;
-    showToast('+' + diff.xp + ' XP, +' + diff.coin + ' para 🎉');
+    if(!q.rewarded){
+      q.rewarded = true;
+      addCoins(diff.coin);
+      state.totalCompleted += 1;
+      addXp(diff.xp);
+      bumpDailyCompleted();
+      state.completedLog.unshift({ name: q.name, date: todayStr() });
+      if(state.completedLog.length > 100) state.completedLog.length = 100;
+      showToast('+' + diff.xp + ' XP, +' + diff.coin + ' para 🎉');
+    } else {
+      showToast('Bu görevin ödülü zaten alındı ✓');
+    }
     setMood('happy');
     reactMood('🥳');
     playTing();
   } else {
-    state.coins = Math.max(0, state.coins - diff.coin);
-    state.totalCompleted = Math.max(0, state.totalCompleted - 1);
     setMood('sad');
     reactMood('😔');
   }
@@ -1631,8 +1860,8 @@ function scheduleWalk(){
   }, 5000 + Math.random()*5000);
 }
 
-function buildAvatarParts(){
-  const av = state.avatar;
+function buildAvatarParts(avOverride){
+  const av = avOverride || state.avatar;
   const sleeping = isSleepTime();
   const mood = sleeping ? 'neutral' : (state.moodState || 'neutral');
   const blinking = blinkFlag && !sleeping;
@@ -1696,10 +1925,13 @@ function buildAvatarParts(){
   return { av, eyesMarkup, mouthMarkup, hairMarkup, beardMarkup, accessoryMarkup, zzz, groupClass };
 }
 
-function buildAvatarSVG(width){
+function buildAvatarSVG(width, avOverride){
   const height = Math.round(width * 1.25);
-  const p = buildAvatarParts();
+  const p = buildAvatarParts(avOverride);
   const av = p.av;
+  const skirtMarkup = av.gender === 'female'
+    ? '<path d="M48 148 L112 148 L126 192 L34 192 Z" fill="'+av.clothesColor+'"/>'
+    : '';
 
   return '<svg viewBox="0 0 160 200" width="'+width+'" height="'+height+'" class="char-figure">' +
     '<g class="'+p.groupClass+'">' +
@@ -1712,6 +1944,7 @@ function buildAvatarSVG(width){
       '<rect x="112" y="118" width="18" height="48" rx="9" fill="'+av.clothesColor+'"/>' +
       '<circle cx="39" cy="168" r="9" fill="'+av.skin+'"/>' +
       '<circle cx="121" cy="168" r="9" fill="'+av.skin+'"/>' +
+      skirtMarkup +
       '<rect x="70" y="92" width="20" height="20" fill="'+av.skin+'"/>' +
       '<circle cx="80" cy="66" r="38" fill="'+av.skin+'"/>' +
       p.beardMarkup +
@@ -1728,8 +1961,8 @@ function buildAvatarSVG(width){
 
 /* Cropped headshot version for the small header badge / stats hero card —
    always reflects the current avatar (skin, hair, clothes, accessories). */
-function buildAvatarHeadSVG(size){
-  const p = buildAvatarParts();
+function buildAvatarHeadSVG(size, avOverride){
+  const p = buildAvatarParts(avOverride);
   const av = p.av;
   return '<svg viewBox="26 10 108 118" width="'+size+'" height="'+size+'">' +
     '<g>' +
@@ -1781,6 +2014,7 @@ function renderBeardRow(){
     '<button class="swatch swatch-style '+onSel+'" data-beard="on">Var</button>';
 }
 function renderCustomizer(){
+  renderStyleRow('genderRow', GENDER_OPTIONS, 'gender');
   renderColorRow('skinRow', SKIN_OPTIONS, 'skin');
   renderStyleRow('hairStyleRow', HAIR_STYLE_OPTIONS, 'hairStyle');
   renderColorRow('hairColorRow', HAIR_COLORS, 'hairColor');
@@ -1816,17 +2050,21 @@ function renderPet(){
 function applyDarkMode(){
   document.body.classList.toggle('dark-mode', !!(state.settings && state.settings.darkMode));
 }
+let preSettingsView = 'view-quests';
 function openSettings(){
+  const current = document.querySelector('section.active');
+  if(current && current.id !== 'view-settings') preSettingsView = current.id;
   document.querySelectorAll('section').forEach(s=>s.classList.remove('active'));
   document.getElementById('view-settings').classList.add('active');
   renderSettings();
 }
 function closeSettings(){
   document.querySelectorAll('section').forEach(s=>s.classList.remove('active'));
-  document.getElementById('view-quests').classList.add('active');
+  const target = document.getElementById(preSettingsView) ? preSettingsView : 'view-quests';
+  document.getElementById(target).classList.add('active');
   document.querySelectorAll('nav.tabbar button').forEach(b=>b.classList.remove('active'));
-  const questsBtn = document.querySelector('nav.tabbar button[data-view="view-quests"]');
-  if(questsBtn) questsBtn.classList.add('active');
+  const btn = document.querySelector('nav.tabbar button[data-view="'+target+'"]');
+  if(btn) btn.classList.add('active');
 }
 function toggleSound(){
   state.settings.soundOn = !state.settings.soundOn;
@@ -2091,7 +2329,7 @@ function renderStatsView(){
       '<div class="stats-hero-top">' +
         '<div class="stats-hero-avatar" id="statsHeroAvatar"></div>' +
         '<div class="stats-hero-info">' +
-          '<div class="shi-name">Filiz Kurul</div>' +
+          '<div class="shi-name">' + escapeHtml(displayName()) + '</div>' +
           '<div class="shi-level">Seviye ' + state.level + '</div>' +
           '<div class="xp-bar stats-hero-xpbar"><div class="xp-fill" style="width:' + Math.min(100, (state.xp/needed)*100) + '%"></div></div>' +
         '</div>' +
