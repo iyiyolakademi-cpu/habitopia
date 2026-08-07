@@ -1,0 +1,2232 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Filiz</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #EAF0E3;
+    --surface: #FFFFFF;
+    --ink: #223324;
+    --ink-soft: #5B6E5C;
+    --primary: #3F6C4C;
+    --primary-dark: #2C4E36;
+    --accent: #E8A33D;
+    --soil: #7A5B44;
+    --soil-light: #C9A47D;
+    --danger: #C1543C;
+    --line: #D8E1D0;
+    --radius: 20px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:'Inter',sans-serif;
+    background: radial-gradient(circle at 30% 0%, #DCE8D1 0%, var(--bg) 55%);
+    display:flex;
+    justify-content:center;
+    align-items:flex-start;
+    padding:24px 12px;
+    color:var(--ink);
+    min-height:100vh;
+  }
+  .phone{
+    width:390px;
+    max-width:100%;
+    background:var(--surface);
+    border-radius:36px;
+    box-shadow: 0 30px 60px -20px rgba(44,78,54,0.35), 0 0 0 8px #ffffff, 0 0 0 9px var(--line);
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+    min-height:760px;
+  }
+  header.top{
+    padding:20px 20px 16px;
+    background:linear-gradient(160deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color:#fff;
+    position:relative;
+    overflow:hidden;
+  }
+  .top-row{display:flex; align-items:center; gap:14px;}
+  .avatar-badge{
+    width:56px;height:56px;border-radius:16px;
+    background:rgba(255,255,255,0.15);
+    display:flex;align-items:center;justify-content:center;
+    font-size:28px;
+    border:2px solid rgba(255,255,255,0.35);
+    flex-shrink:0;
+    overflow:hidden;
+  }
+  .avatar-badge svg{ transform:scale(1.35); }
+  .top-info{flex:1; min-width:0;}
+  .top-info .name{font-family:'Fredoka',sans-serif; font-size:19px; font-weight:600; letter-spacing:.2px;}
+  .top-info .level{font-size:12.5px; opacity:.85; margin-top:2px;}
+  .xp-bar{margin-top:10px; height:8px; border-radius:6px; background:rgba(255,255,255,0.2); overflow:hidden;}
+  .xp-fill{height:100%; background:var(--accent); border-radius:6px; transition:width .5s ease;}
+  .coin-pill{
+    display:flex; align-items:center; gap:6px;
+    background:rgba(255,255,255,0.16); padding:6px 12px; border-radius:100px;
+    font-family:'JetBrains Mono',monospace; font-weight:700; font-size:13px; white-space:nowrap;
+  }
+
+  main{flex:1; padding:18px 18px 8px; overflow-y:auto;}
+  section{display:none;}
+  section.active{display:block; animation: fade .25s ease;}
+  @keyframes fade{from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:translateY(0)}}
+
+  h2.section-title{
+    font-family:'Fredoka',sans-serif; font-size:16px; font-weight:600;
+    color:var(--ink); margin:2px 0 12px; display:flex; align-items:center; justify-content:space-between;
+  }
+  .subtle{color:var(--ink-soft); font-size:12.5px; margin: -6px 0 14px;}
+
+  /* Suggested quests */
+  .suggested-row{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:14px;}
+  .suggest-chip{
+    background:#EAF0E3; border:1px solid var(--line); color:var(--primary-dark);
+    border-radius:100px; padding:6px 12px; font-size:11.5px; cursor:pointer; font-weight:600;
+  }
+
+  /* Quests */
+  .add-quest{display:flex; gap:8px; margin-bottom:16px;}
+  .add-quest input{
+    flex:1; border:1.5px solid var(--line); border-radius:12px; padding:10px 12px;
+    font-family:'Inter',sans-serif; font-size:14px; background:#F7FAF4; color:var(--ink);
+  }
+  .add-quest input:focus{outline:none; border-color:var(--primary);}
+  .add-quest button{
+    background:var(--primary); color:#fff; border:none; border-radius:12px; width:44px;
+    font-size:20px; cursor:pointer; font-family:'Fredoka',sans-serif;
+  }
+  .quest{
+    display:flex; align-items:center; gap:12px;
+    background:#F7FAF4; border:1px solid var(--line); border-radius:14px;
+    padding:12px 12px; margin-bottom:10px;
+  }
+  .quest.done{opacity:.55;}
+  .check{
+    width:26px; height:26px; border-radius:8px; border:2px solid var(--primary);
+    flex-shrink:0; cursor:pointer; display:flex; align-items:center; justify-content:center;
+    color:#fff; font-size:14px; background:transparent;
+  }
+  .quest.done .check{background:var(--primary);}
+  .quest .qname{flex:1; font-size:14.5px; font-weight:500;}
+  .quest.done .qname{text-decoration:line-through; color:var(--ink-soft);}
+  .quest .qreward{font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--accent); font-weight:700; white-space:nowrap;}
+  .quest .qdel{background:none;border:none;color:var(--ink-soft);cursor:pointer;font-size:15px;padding:2px 4px;}
+  .empty{
+    text-align:center; padding:30px 10px; color:var(--ink-soft); font-size:13.5px;
+    border:1.5px dashed var(--line); border-radius:14px;
+  }
+
+  /* Difficulty picker */
+  .diff-row{display:flex; gap:6px; margin-bottom:12px; flex-wrap:wrap;}
+  .diff-chip{
+    border:1.5px solid var(--line); background:#F7FAF4; border-radius:100px; padding:6px 11px;
+    font-size:11.5px; font-weight:700; cursor:pointer; color:var(--ink-soft); font-family:'Inter',sans-serif;
+  }
+  .diff-chip.selected{border-color:var(--primary); color:var(--primary-dark); background:#E8F0E2;}
+
+  /* Daily login reward */
+  .login-card{
+    background:linear-gradient(135deg,#FFF6E8,#FDEBC8); border:1px solid #F0D9A0; border-radius:14px;
+    padding:12px 14px; margin-bottom:12px;
+  }
+  .lc-title{
+    font-family:'Fredoka',sans-serif; font-weight:600; font-size:13px; color:var(--soil);
+    margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; gap:6px;
+  }
+  .login-dots{display:flex; gap:5px; justify-content:space-between;}
+  .login-dot{
+    flex:1; text-align:center; font-size:15px; background:#fff; border-radius:10px; padding:6px 2px;
+    border:1.5px solid #F0D9A0; opacity:.45;
+  }
+  .login-dot.claimed{opacity:1; background:#FFE9BD; border-color:var(--accent);}
+  .login-dot.today{opacity:1; border-color:var(--soil); box-shadow:0 0 0 2px #fff, 0 0 0 3px var(--soil);}
+
+  /* Chest */
+  .chest-card{
+    display:flex; align-items:center; gap:12px;
+    background:linear-gradient(135deg,#EAF0E3,#D8E8CB); border:1.5px solid var(--primary); border-radius:14px;
+    padding:12px 14px; margin-bottom:14px;
+  }
+  .chest-icon{font-size:30px; flex-shrink:0;}
+  .chest-info{flex:1; min-width:0;}
+  .chest-title{font-family:'Fredoka',sans-serif; font-weight:600; font-size:13.5px;}
+  .chest-sub{font-size:11px; color:var(--ink-soft); margin-top:2px;}
+  .chest-btn{
+    background:var(--accent); color:#3A2A0D; border:none; border-radius:10px; padding:9px 16px;
+    font-family:'Fredoka',sans-serif; font-weight:600; font-size:13px; cursor:pointer; flex-shrink:0;
+  }
+
+  /* Character / avatar */
+  .particle-host{position:relative; overflow:visible;}
+  .avatar-stage{
+    position:relative;
+    background:linear-gradient(180deg,#F1F6EC 0%, #E4EEDB 100%);
+    border-radius:20px; padding:14px 10px 6px; text-align:center; margin-bottom:16px; border:1px solid var(--line);
+    min-height:180px; display:flex; align-items:flex-end; justify-content:center;
+  }
+  .char-figure{ display:block; margin:0 auto; }
+  .char-body-group{
+    transform-box: fill-box; transform-origin: 50% 100%;
+    animation: breathe 3.6s ease-in-out infinite;
+  }
+  .char-body-group.walking{ animation: breathe 3.6s ease-in-out infinite, walkBob .9s ease-in-out infinite; }
+  .char-body-group.sleeping-slow{ animation: breatheSlow 5s ease-in-out infinite; }
+  @keyframes breathe{0%,100%{transform:scaleY(1);}50%{transform:scaleY(1.025);}}
+  @keyframes breatheSlow{0%,100%{transform:scaleY(1);}50%{transform:scaleY(1.015);}}
+  @keyframes walkBob{0%,100%{transform:translateX(0) rotate(0deg);}25%{transform:translateX(-4px) rotate(-2deg);}75%{transform:translateX(4px) rotate(2deg);}}
+  .zzz{ animation: zzzFloat 2.4s ease-in-out infinite; }
+  @keyframes zzzFloat{0%{opacity:0;transform:translateY(6px);}30%{opacity:1;}100%{opacity:0;transform:translateY(-14px);}}
+  .mood-bubble{ position:absolute; top:6px; right:14px; font-size:30px; animation: moodPop .9s ease forwards; pointer-events:none; }
+  @keyframes moodPop{0%{transform:scale(.4) translateY(10px);opacity:0;}30%{transform:scale(1.15) translateY(-4px);opacity:1;}100%{transform:scale(1) translateY(-30px);opacity:0;}}
+
+  .customize-block{margin-bottom:18px;}
+  .cz-label{font-size:11.5px; color:var(--ink-soft); font-weight:600; margin:10px 0 6px;}
+  .swatch-row{display:flex; flex-wrap:wrap; gap:8px;}
+  .swatch{
+    width:30px; height:30px; border-radius:50%; border:2px solid transparent; cursor:pointer;
+    display:flex; align-items:center; justify-content:center; font-size:14px; background:#fff; padding:0;
+  }
+  .swatch.selected{border-color:var(--primary); box-shadow:0 0 0 2px #fff, 0 0 0 4px var(--primary);}
+  .swatch-style{width:auto; border-radius:10px; padding:0 10px; font-size:11px; font-weight:700; height:28px; background:#F0F3EA;}
+
+  .stat-grid{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:6px;}
+  .stat-box{background:#F7FAF4; border:1px solid var(--line); border-radius:14px; padding:11px; display:flex; align-items:center; gap:10px;}
+  .stat-box .sbi{font-size:19px; flex-shrink:0; width:30px; height:30px; border-radius:9px; background:#fff; display:flex; align-items:center; justify-content:center; border:1px solid var(--line);}
+  .stat-box .sbtext{min-width:0;}
+  .stat-box .num{font-family:'JetBrains Mono',monospace; font-size:16px; font-weight:700; color:var(--primary-dark); line-height:1.15; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .stat-box .lbl{font-size:10px; color:var(--ink-soft); margin-top:1px;}
+  .stat-group-title{font-size:11.5px; font-weight:700; color:var(--primary-dark); margin:16px 0 8px; text-transform:uppercase; letter-spacing:.4px;}
+  .stat-group-title:first-child{margin-top:0;}
+
+  /* Stats hero card */
+  .stats-hero{
+    background:linear-gradient(160deg, var(--primary) 0%, var(--primary-dark) 100%);
+    border-radius:18px; padding:16px; color:#fff; margin-bottom:6px;
+  }
+  .stats-hero-top{display:flex; align-items:center; gap:12px; margin-bottom:14px;}
+  .stats-hero-avatar{
+    width:54px;height:54px;border-radius:15px; background:rgba(255,255,255,0.15);
+    border:2px solid rgba(255,255,255,0.35); overflow:hidden; display:flex;
+    align-items:center; justify-content:center; flex-shrink:0;
+  }
+  .stats-hero-avatar svg{ transform:scale(1.35); }
+  .stats-hero-info{flex:1; min-width:0;}
+  .shi-name{font-family:'Fredoka',sans-serif; font-weight:600; font-size:15px;}
+  .shi-level{font-size:12px; opacity:.85; margin:2px 0 7px;}
+  .stats-hero-xpbar{height:7px; margin-top:0;}
+  .stats-hero-row{display:flex; justify-content:space-between; text-align:center; border-top:1px solid rgba(255,255,255,0.22); padding-top:12px;}
+  .shr-item{flex:1;}
+  .shr-num{font-family:'JetBrains Mono',monospace; font-weight:700; font-size:17px;}
+  .shr-lbl{font-size:10px; opacity:.8; margin-top:2px;}
+
+  /* Wheel of fortune */
+  .wheel-card{
+    background:linear-gradient(135deg,#F7FAF4,#EAF0E3); border:1.5px solid var(--primary);
+    border-radius:16px; padding:16px; margin-bottom:14px; text-align:center;
+  }
+  .wheel-wrap{position:relative; width:148px; height:148px; margin:0 auto 12px;}
+  .wheel-pointer{position:absolute; top:-9px; left:50%; transform:translateX(-50%); font-size:18px; color:var(--danger); z-index:5; filter:drop-shadow(0 1px 1px rgba(0,0,0,0.3));}
+  .wheel-disc{width:148px; height:148px; border-radius:50%; transition:transform 3.2s cubic-bezier(.13,.78,.13,1); box-shadow:0 4px 14px rgba(0,0,0,0.22); background:#fff;}
+  .wheel-spin-btn{width:100%; border:none; border-radius:12px; padding:11px; background:var(--accent); color:#3A2A0D; font-family:'Fredoka',sans-serif; font-weight:600; font-size:14px; cursor:pointer;}
+  .wheel-spin-btn:disabled{background:var(--line); color:var(--ink-soft); cursor:default;}
+  .wheel-sub{font-size:11px; color:var(--ink-soft); margin-top:8px;}
+  body.dark-mode .wheel-card{ background:linear-gradient(135deg,#1C261C,#212C21); }
+  body.dark-mode .stats-hero{ box-shadow:none; }
+
+  /* Challenges */
+  .challenge-card{display:flex; gap:12px; align-items:center; background:#F7FAF4; border:1px solid var(--line); border-radius:14px; padding:10px 12px; margin-bottom:10px;}
+  .challenge-card.done{border-color:var(--accent); background:#FFF6E8;}
+  .ch-icon{font-size:24px;}
+  .ch-info{flex:1;}
+  .ch-label{font-size:13px; font-weight:600;}
+  .ch-bar{height:6px; background:var(--line); border-radius:4px; overflow:hidden; margin-top:6px;}
+  .ch-fill{height:100%; background:var(--accent);}
+  .ch-sub{font-size:11px; color:var(--ink-soft); margin-top:4px; font-family:'JetBrains Mono',monospace;}
+
+  .badge-summary{font-size:12px; color:var(--ink-soft); margin:-8px 0 12px;}
+  .badge-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:18px;}
+  .badge{
+    aspect-ratio:1; border-radius:14px; display:flex; align-items:center; justify-content:center;
+    font-size:22px; background:#F0F3EA; border:1px solid var(--line); position:relative;
+  }
+  .badge.locked{filter:grayscale(1); opacity:.35;}
+
+  .shop-item{
+    display:flex; align-items:center; gap:12px; background:#F7FAF4; border:1px solid var(--line);
+    border-radius:14px; padding:10px 12px; margin-bottom:10px;
+  }
+  .shop-item .icon{width:38px;height:38px;border-radius:10px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:20px;border:1px solid var(--line);}
+  .shop-item .info{flex:1;}
+  .shop-item .info .n{font-size:13.5px; font-weight:600;}
+  .shop-item .info .p{font-size:11px; color:var(--ink-soft); margin-top:2px;}
+  .shop-item button{
+    border:none; border-radius:10px; padding:8px 12px; font-size:12px; font-weight:700;
+    font-family:'JetBrains Mono',monospace; cursor:pointer; white-space:nowrap;
+  }
+  .buy-btn{background:var(--accent); color:#3A2A0D;}
+  .equip-btn{background:var(--primary); color:#fff;}
+  .owned-btn{background:var(--line); color:var(--ink-soft); cursor:default;}
+
+  /* Home / house */
+  .room{
+    position:relative;
+    background:linear-gradient(180deg,#F3EAD9 0%, #E8DCC4 55%, #D8C7A3 100%);
+    border:1px solid var(--line); border-radius:20px; padding:16px 16px 76px;
+    margin-bottom:16px; min-height:150px;
+  }
+  .room-slots{display:grid; grid-template-columns:repeat(4,1fr); gap:10px;}
+  .room-slot{
+    aspect-ratio:1; border-radius:12px; display:flex; align-items:center; justify-content:center;
+    font-size:24px; background:rgba(255,255,255,0.55); border:1.5px dashed #C9A47D;
+  }
+  .room-slot.filled{border-style:solid; background:#fff;}
+  .room-slot.empty{opacity:.4; font-size:14px;}
+  .room-character{position:absolute; bottom:8px; left:12px; z-index:5;}
+
+  /* Garden */
+  .garden{
+    background:linear-gradient(180deg,#DCEAD0 0%, #C9DFC0 100%);
+    border-radius:20px; padding:24px 16px; text-align:center; margin-bottom:16px; border:1px solid var(--line);
+  }
+  .plant-visual{font-size:80px; margin-bottom:6px; transform-origin:bottom center; animation: sway 3.4s ease-in-out infinite;}
+  @keyframes sway{0%,100%{transform:rotate(-4deg);}50%{transform:rotate(4deg);}}
+  @keyframes waterBump{0%{transform:scale(1) rotate(0deg);}30%{transform:scale(1.22) rotate(-7deg);}60%{transform:scale(0.92) rotate(6deg);}100%{transform:scale(1) rotate(0deg);}}
+  .water-bump{animation: waterBump .6s ease !important;}
+  .streak-text{font-family:'Fredoka',sans-serif; font-weight:600; font-size:15px; color:var(--primary-dark);}
+  .streak-sub{font-size:12px; color:var(--ink-soft); margin-top:2px;}
+  .water-btn{
+    margin-top:16px; background:var(--primary); color:#fff; border:none; border-radius:14px;
+    padding:13px 20px; font-family:'Fredoka',sans-serif; font-weight:600; font-size:14.5px;
+    cursor:pointer; width:100%;
+  }
+  .water-btn:disabled{background:var(--line); color:var(--ink-soft); cursor:default;}
+  .stage-track{display:flex; justify-content:space-between; margin-top:16px; padding:0 4px;}
+  .stage-dot{width:8px;height:8px;border-radius:50%; background:var(--line);}
+  .stage-dot.on{background:var(--accent);}
+
+  .plot-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:16px;}
+  .plot-card{background:#F7FAF4; border:1px solid var(--line); border-radius:14px; padding:10px; text-align:center;}
+  .plot-locked{opacity:.75;}
+  .plot-emoji{font-size:28px;}
+  .plot-name{font-size:11px; font-weight:600; margin-top:4px;}
+  .plot-sub{font-size:10px; color:var(--ink-soft); margin-top:2px;}
+  .plot-unlock-btn{
+    margin-top:6px; border:none; border-radius:8px; padding:5px 8px; background:var(--accent);
+    color:#3A2A0D; font-size:10.5px; font-weight:700; cursor:pointer; font-family:'JetBrains Mono',monospace;
+  }
+
+  /* Water tracker */
+  .water-card{background:#EAF4FB; border:1px solid #C7E1F2; border-radius:16px; padding:14px 16px; margin-bottom:16px;}
+  .water-header{
+    display:flex; justify-content:space-between; align-items:center;
+    font-family:'Fredoka',sans-serif; font-weight:600; font-size:14px; color:#2C5C7A; margin-bottom:10px;
+  }
+  .water-cups{display:flex; flex-wrap:wrap; gap:6px; margin-bottom:12px;}
+  .water-cup{font-size:21px; opacity:.25; transition:opacity .25s, transform .25s;}
+  .water-cup.filled{opacity:1; transform:scale(1.08);}
+  .water-btn-row{display:flex; gap:8px;}
+  .water-add-btn{
+    flex:1; background:#3B82C4; color:#fff; border:none; border-radius:12px; padding:11px;
+    font-family:'Fredoka',sans-serif; font-weight:600; font-size:13.5px; cursor:pointer;
+  }
+  .water-minus-btn{
+    width:42px; background:#fff; border:1.5px solid #C7E1F2; color:#2C5C7A; border-radius:12px;
+    font-size:18px; cursor:pointer; font-weight:700;
+  }
+  .water-sub{font-size:11.5px; color:#4A7A99; margin-top:9px; text-align:center;}
+
+  /* Stats + log */
+  .log-row{
+    display:flex; justify-content:space-between; align-items:center; gap:10px;
+    background:#F7FAF4; border:1px solid var(--line); border-radius:12px;
+    padding:9px 12px; margin-bottom:8px; font-size:13px;
+  }
+  .log-row .ln{font-weight:500; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+  .log-row .ld{color:var(--ink-soft); font-size:11px; font-family:'JetBrains Mono',monospace; flex-shrink:0;}
+
+  nav.tabbar{display:flex; border-top:1px solid var(--line); background:#fff;}
+  nav.tabbar button{
+    flex:1; border:none; background:none; padding:10px 2px 9px; cursor:pointer;
+    display:flex; flex-direction:column; align-items:center; gap:3px; color:var(--ink-soft);
+    font-family:'Inter',sans-serif; font-size:9.5px; font-weight:600;
+  }
+  nav.tabbar button .ic{font-size:17px;}
+  nav.tabbar button.active{color:var(--primary);}
+  nav.tabbar button.active .ic{transform:translateY(-1px);}
+
+  .toast{
+    position:fixed; bottom:24px; left:50%; transform:translateX(-50%);
+    background:var(--ink); color:#fff; padding:10px 18px; border-radius:100px;
+    font-size:13px; opacity:0; pointer-events:none; transition:opacity .3s, transform .3s;
+    z-index:50; white-space:nowrap;
+  }
+  .toast.show{opacity:1; transform:translateX(-50%) translateY(-6px);}
+
+  /* Achievement / story popup (Steam-style) */
+  .achievement-popup{
+    position:fixed; top:16px; left:50%; transform:translate(-50%,-140%);
+    background:linear-gradient(135deg, var(--primary-dark), var(--primary));
+    color:#fff; border-radius:16px; padding:12px 16px; display:flex; align-items:center; gap:12px;
+    box-shadow:0 12px 30px rgba(0,0,0,0.3); z-index:60; width:300px; max-width:88vw;
+    transition: transform .5s cubic-bezier(.34,1.56,.64,1);
+  }
+  .achievement-popup.show{transform:translate(-50%,0);}
+  .ap-icon{font-size:30px; flex-shrink:0;}
+  .ap-title{font-size:10.5px; text-transform:uppercase; letter-spacing:.5px; opacity:.85; font-family:'JetBrains Mono',monospace;}
+  .ap-label{font-family:'Fredoka',sans-serif; font-weight:600; font-size:13.5px; margin-top:2px;}
+
+  /* Gain animations */
+  .float-gain{
+    position:absolute; font-family:'JetBrains Mono',monospace; font-weight:700; font-size:12.5px;
+    pointer-events:none; z-index:40; animation: floatUp 1s ease-out forwards;
+  }
+  @keyframes floatUp{0%{transform:translateY(0); opacity:1;}100%{transform:translateY(-46px); opacity:0;}}
+  @keyframes coinPulse{0%{transform:scale(1);}50%{transform:scale(1.2);}100%{transform:scale(1);}}
+  .coin-pulse{animation: coinPulse .4s ease;}
+  @keyframes xpPulse{0%{transform:scale(1);}45%{transform:scale(1.4);}100%{transform:scale(1);}}
+  .xp-pulse{display:inline-block; animation: xpPulse .5s ease;}
+  .particle{position:absolute; top:40%; font-size:20px; pointer-events:none; animation: particleFloat 1s ease-out forwards;}
+  @keyframes particleFloat{0%{transform:translateY(0) scale(0.6); opacity:1;}100%{transform:translateY(-60px) scale(1.1); opacity:0;}}
+
+  /* Settings button in header */
+  .header-actions{display:flex; align-items:center; gap:8px; flex-shrink:0;}
+  .settings-btn{
+    width:34px; height:34px; border-radius:11px; border:none; flex-shrink:0;
+    background:rgba(255,255,255,0.16); color:#fff; font-size:16px; cursor:pointer;
+  }
+
+  /* Pet / companion */
+  .pet-card{display:flex; align-items:center; gap:12px; background:#F7FAF4; border:1px solid var(--line); border-radius:14px; padding:12px 14px; margin-bottom:12px;}
+  .pet-emoji{font-size:36px; flex-shrink:0;}
+  .pet-info{flex:1; min-width:0;}
+  .pet-name{font-family:'Fredoka',sans-serif; font-weight:600; font-size:14px;}
+  .pet-level{font-size:11.5px; color:var(--ink-soft); margin:2px 0 6px;}
+  .pet-xp-bar{height:7px; border-radius:6px; background:var(--line); overflow:hidden;}
+  .pet-xp-bar .xp-fill{height:100%; background:var(--accent); border-radius:6px; transition:width .5s ease;}
+
+  /* Badge "daha fazlası" */
+  .badge-more-btn{
+    display:block; width:100%; margin:-6px 0 18px; padding:10px; border:1.5px dashed var(--line);
+    background:#F7FAF4; border-radius:12px; color:var(--primary-dark); font-weight:700; font-size:12.5px;
+    cursor:pointer; font-family:'Inter',sans-serif;
+  }
+
+  /* Settings page */
+  .settings-back{background:none; border:none; color:var(--primary); font-size:12px; font-weight:600; cursor:pointer; font-family:'Inter',sans-serif;}
+  .settings-card{background:#F7FAF4; border:1px solid var(--line); border-radius:16px; padding:2px 14px; margin-bottom:16px;}
+  .settings-row{display:flex; align-items:center; justify-content:space-between; gap:10px; padding:14px 0; border-bottom:1px solid var(--line);}
+  .settings-row:last-child{border-bottom:none;}
+  .settings-row-col{flex-direction:column; align-items:stretch;}
+  .srl-title{font-size:13.5px; font-weight:600;}
+  .srl-sub{font-size:11px; color:var(--ink-soft); margin-top:2px;}
+  .toggle-switch{width:46px; height:26px; border-radius:100px; border:none; background:var(--line); position:relative; cursor:pointer; flex-shrink:0; transition:background .2s;}
+  .toggle-switch.on{background:var(--primary);}
+  .toggle-knob{position:absolute; top:3px; left:3px; width:20px; height:20px; border-radius:50%; background:#fff; transition:left .2s; box-shadow:0 1px 3px rgba(0,0,0,0.3);}
+  .toggle-switch.on .toggle-knob{left:23px;}
+  .water-goal-stepper{display:flex; align-items:center; gap:16px; justify-content:center; margin-top:10px;}
+  .water-goal-num{font-family:'JetBrains Mono',monospace; font-weight:700; font-size:18px; min-width:26px; text-align:center;}
+
+  /* Dark mode */
+  body.dark-mode{
+    --bg:#10160F;
+    --surface:#1C261C;
+    --ink:#E7EFE3;
+    --ink-soft:#93AC93;
+    --line:#2B3A2C;
+  }
+  body.dark-mode .phone{ box-shadow:0 30px 60px -20px rgba(0,0,0,0.6), 0 0 0 8px #1C261C, 0 0 0 9px var(--line); }
+  body.dark-mode .suggest-chip,
+  body.dark-mode .add-quest input,
+  body.dark-mode .quest,
+  body.dark-mode .diff-chip,
+  body.dark-mode .stat-box,
+  body.dark-mode .challenge-card,
+  body.dark-mode .shop-item,
+  body.dark-mode .plot-card,
+  body.dark-mode .log-row,
+  body.dark-mode .swatch-style,
+  body.dark-mode .badge,
+  body.dark-mode .login-dot,
+  body.dark-mode .swatch,
+  body.dark-mode .shop-item .icon,
+  body.dark-mode .room-slot.filled,
+  body.dark-mode .pet-card,
+  body.dark-mode .settings-card,
+  body.dark-mode .badge-more-btn,
+  body.dark-mode .water-minus-btn{ background:#212C21; color:var(--ink); border-color:var(--line); }
+  body.dark-mode .login-card{ background:linear-gradient(135deg,#2B2416,#332A16); border-color:#4A3D22; }
+  body.dark-mode .lc-title{ color:#E8C98A; }
+  body.dark-mode .chest-card{ background:linear-gradient(135deg,#1C261C,#20301F); }
+  body.dark-mode .avatar-stage{ background:linear-gradient(180deg,#182118 0%, #131C13 100%); }
+  body.dark-mode .room{ background:linear-gradient(180deg,#26201A 0%, #1E1912 55%, #16130E 100%); }
+  body.dark-mode .room-slot{ background:rgba(255,255,255,0.05); }
+  body.dark-mode .garden{ background:linear-gradient(180deg,#182318 0%, #131C13 100%); }
+  body.dark-mode .water-card{ background:#15202A; border-color:#25384A; }
+  body.dark-mode .water-header{ color:#8FC1E8; }
+  body.dark-mode .water-sub{ color:#7FA8C2; }
+  body.dark-mode nav.tabbar{ background:#1C261C; border-color:var(--line); }
+  body.dark-mode .toast{ background:#000; }
+  body.dark-mode .pet-xp-bar{ background:var(--line); }
+  body.dark-mode .stat-box .sbi{ background:#151E15; border-color:var(--line); }
+</style>
+</head>
+<body>
+
+<div class="phone">
+  <header class="top">
+    <div class="top-row">
+      <div class="avatar-badge" id="headAvatar">🌱</div>
+      <div class="top-info">
+        <div class="name">Filiz Kurul</div>
+        <div class="level" id="levelLabel">Seviye 1</div>
+        <div class="xp-bar"><div class="xp-fill" id="xpFill" style="width:0%"></div></div>
+      </div>
+      <div class="header-actions">
+        <div class="coin-pill">🪙 <span id="coinCount">0</span></div>
+        <button class="settings-btn" onclick="openSettings()" title="Ayarlar">⚙️</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section id="view-quests" class="active">
+      <h2 class="section-title">Bugünün Görevleri</h2>
+      <p class="subtle">Kendi görevini ekle, tamamladıkça XP ve para kazan.</p>
+
+      <div class="login-card" id="loginCard"></div>
+      <div class="chest-card" id="chestCard" style="display:none;">
+        <div class="chest-icon">🎁</div>
+        <div class="chest-info">
+          <div class="chest-title" id="chestTitle">Sandığın var!</div>
+          <div class="chest-sub">İçinde ne olduğunu gör</div>
+        </div>
+        <button class="chest-btn" onclick="openChest()">Aç</button>
+      </div>
+
+      <div class="wheel-card">
+        <div class="wheel-wrap">
+          <div class="wheel-pointer">▼</div>
+          <div class="wheel-disc" id="wheelDisc"></div>
+        </div>
+        <button class="wheel-spin-btn" id="wheelSpinBtn" onclick="spinWheel()">Çevir</button>
+        <div class="wheel-sub" id="wheelSub">Günde bir kez ücretsiz çevirebilirsin.</div>
+      </div>
+
+      <div class="cz-label" style="margin-top:0;">Zorluk Seç</div>
+      <div class="diff-row" id="diffRow">
+        <button class="diff-chip" data-diff="easy">🟢 Kolay</button>
+        <button class="diff-chip" data-diff="medium">🔵 Orta</button>
+        <button class="diff-chip" data-diff="hard">🟣 Zor</button>
+        <button class="diff-chip" data-diff="legendary">🟡 Efsane</button>
+      </div>
+      <div class="add-quest">
+        <input id="questInput" type="text" placeholder="örn: 30 dk spor yap" maxlength="40">
+        <button onclick="addQuest()">+</button>
+      </div>
+      <div class="suggested-row" id="suggestedList"></div>
+      <div id="questList"></div>
+    </section>
+
+    <section id="view-character">
+      <h2 class="section-title">Karakterim</h2>
+      <div class="avatar-stage particle-host" id="avatarStageHost">
+        <div id="avatarStageSvg"></div>
+      </div>
+
+      <h2 class="section-title">Yoldaşım</h2>
+      <div class="pet-card">
+        <div class="pet-emoji" id="petEmoji">🐱</div>
+        <div class="pet-info">
+          <div class="pet-name" id="petName">Kedi</div>
+          <div class="pet-level" id="petLevel">Seviye 1</div>
+          <div class="pet-xp-bar"><div class="xp-fill" id="petXpFill" style="width:0%"></div></div>
+        </div>
+      </div>
+      <div class="cz-label" style="margin-top:0;">Yoldaş Seç</div>
+      <div class="swatch-row" id="petTypeRow" style="margin-bottom:16px;"></div>
+
+      <h2 class="section-title">Avatarını Özelleştir</h2>
+      <div class="customize-block" id="customizeBlock">
+        <div class="cz-label">Ten Tonu</div>
+        <div class="swatch-row" id="skinRow"></div>
+        <div class="cz-label">Saç Stili</div>
+        <div class="swatch-row" id="hairStyleRow"></div>
+        <div class="cz-label">Saç Rengi</div>
+        <div class="swatch-row" id="hairColorRow"></div>
+        <div class="cz-label">Göz Rengi</div>
+        <div class="swatch-row" id="eyeColorRow"></div>
+        <div class="cz-label">Sakal</div>
+        <div class="swatch-row" id="beardRow"></div>
+        <div class="cz-label">Kıyafet Rengi</div>
+        <div class="swatch-row" id="clothesColorRow"></div>
+        <div class="cz-label">Ayakkabı Rengi</div>
+        <div class="swatch-row" id="shoesColorRow"></div>
+        <div class="cz-label">Aksesuar</div>
+        <div class="swatch-row" id="accessoryRow"></div>
+      </div>
+      <div class="stat-grid">
+        <div class="stat-box"><div class="num" id="statCompleted">0</div><div class="lbl">Tamamlanan görev</div></div>
+        <div class="stat-box"><div class="num" id="statStreak">0</div><div class="lbl">Fidan serisi (gün)</div></div>
+      </div>
+      <h2 class="section-title">Meydan Okumalar</h2>
+      <div id="challengeList"></div>
+      <h2 class="section-title">Rozetler</h2>
+      <p class="subtle badge-summary" id="badgeSummary">0 / 0 rozet açıldı</p>
+      <div class="badge-grid" id="badgeGrid"></div>
+      <button class="badge-more-btn" id="badgeMoreBtn" onclick="showMoreBadges()">Daha fazlası</button>
+      <h2 class="section-title">Aksesuar Mağazası</h2>
+      <p class="subtle">Kazandığın parayla karakterine aksesuar al.</p>
+      <div id="shopList"></div>
+      <button class="badge-more-btn" id="shopMoreBtn" onclick="showMoreShop()">Daha fazlası</button>
+    </section>
+
+    <section id="view-home">
+      <h2 class="section-title">Evim</h2>
+      <p class="subtle">Kazandıkça evini eşyalarla doldur.</p>
+      <div class="room">
+        <div class="room-character" id="homeCharSvg"></div>
+        <div class="room-slots" id="roomScene"></div>
+      </div>
+      <h2 class="section-title">Ev Eşyaları</h2>
+      <div id="homeShopList"></div>
+    </section>
+
+    <section id="view-garden">
+      <h2 class="section-title">Fidanım</h2>
+      <div class="garden particle-host" id="gardenParticleHost">
+        <div class="plant-visual" id="plantVisual">🌰</div>
+        <div class="streak-text" id="streakText">Henüz dikilmedi</div>
+        <div class="streak-sub" id="streakSub">Sulamaya başla, büyümesini izle.</div>
+        <div class="stage-track">
+          <div class="stage-dot" data-s="0"></div>
+          <div class="stage-dot" data-s="1"></div>
+          <div class="stage-dot" data-s="2"></div>
+          <div class="stage-dot" data-s="3"></div>
+          <div class="stage-dot" data-s="4"></div>
+        </div>
+        <button class="water-btn" id="waterBtn" onclick="waterPlant()">Fidanı sula</button>
+      </div>
+      <p class="subtle" style="text-align:center;">Bir gün atlarsan seri sıfırlanır. Sulama tüm bitkilerini büyütür.</p>
+
+      <h2 class="section-title">Günlük Su Takibi</h2>
+      <div class="water-card">
+        <div class="water-header">
+          <span>💧 Su İçtim</span>
+          <span id="waterCountText">0 / 8 bardak</span>
+        </div>
+        <div class="water-cups" id="waterCups"></div>
+        <div class="water-btn-row">
+          <button class="water-minus-btn" onclick="removeWaterGlass()">−</button>
+          <button class="water-add-btn" onclick="addWaterGlass()">+1 Bardak Su</button>
+        </div>
+        <div class="water-sub" id="waterSub"></div>
+      </div>
+
+      <h2 class="section-title">Bahçe Parselleri</h2>
+      <div class="plot-grid" id="plotGrid"></div>
+    </section>
+
+    <section id="view-stats">
+      <h2 class="section-title">İstatistikler</h2>
+      <p class="subtle">Şimdiye kadar neler yaptığının özeti.</p>
+      <div class="stats-hero" id="statsHero"></div>
+      <div id="statGroups"></div>
+      <h2 class="section-title">Son Tamamlanan Görevler</h2>
+      <div id="completedLogList"></div>
+    </section>
+
+    <section id="view-settings">
+      <h2 class="section-title">Ayarlar <button class="settings-back" onclick="closeSettings()">← Geri</button></h2>
+      <div class="settings-card">
+        <div class="settings-row">
+          <div class="settings-row-label">
+            <div class="srl-title">🔊 Ses</div>
+            <div class="srl-sub">Görev, ödül ve sandık sesleri</div>
+          </div>
+          <button class="toggle-switch" id="soundToggle" onclick="toggleSound()"><span class="toggle-knob"></span></button>
+        </div>
+        <div class="settings-row">
+          <div class="settings-row-label">
+            <div class="srl-title">🌙 Karanlık Mod</div>
+            <div class="srl-sub">Akşam kullanımı için</div>
+          </div>
+          <button class="toggle-switch" id="darkToggle" onclick="toggleDarkMode()"><span class="toggle-knob"></span></button>
+        </div>
+        <div class="settings-row settings-row-col">
+          <div class="settings-row-label">
+            <div class="srl-title">💧 Günlük Su Hedefi</div>
+            <div class="srl-sub">Kaç bardak su içmeyi hedefliyorsun</div>
+          </div>
+          <div class="water-goal-stepper">
+            <button class="water-minus-btn" onclick="changeWaterGoal(-1)">−</button>
+            <div class="water-goal-num" id="waterGoalNum">8</div>
+            <button class="water-minus-btn" onclick="changeWaterGoal(1)">+</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <nav class="tabbar">
+    <button class="active" data-view="view-quests" onclick="showView('view-quests', this)"><span class="ic">✅</span>Görevler</button>
+    <button data-view="view-character" onclick="showView('view-character', this)"><span class="ic">🧑‍🌾</span>Karakter</button>
+    <button data-view="view-home" onclick="showView('view-home', this)"><span class="ic">🏡</span>Ev</button>
+    <button data-view="view-garden" onclick="showView('view-garden', this)"><span class="ic">🪴</span>Bahçe</button>
+    <button data-view="view-stats" onclick="showView('view-stats', this)"><span class="ic">📊</span>İstatistik</button>
+  </nav>
+</div>
+
+<div class="toast" id="toast"></div>
+<div class="achievement-popup" id="achievementPopup">
+  <div class="ap-icon" id="apIcon">🏆</div>
+  <div class="ap-text">
+    <div class="ap-title" id="apTitle">Yeni Başarı!</div>
+    <div class="ap-label" id="apLabel"></div>
+  </div>
+</div>
+
+<script>
+const STORAGE_KEY = 'filiz-game-state-v2';
+
+/* ---------- Quest difficulty tiers ---------- */
+const DIFFICULTIES = {
+  easy:      {label:'Kolay',   xp:5,   coin:3,  color:'#3FA34D', dot:'🟢'},
+  medium:    {label:'Orta',    xp:15,  coin:8,  color:'#3B82C4', dot:'🔵'},
+  hard:      {label:'Zor',     xp:40,  coin:20, color:'#9B59B6', dot:'🟣'},
+  legendary: {label:'Efsane',  xp:100, coin:50, color:'#E8C93D', dot:'🟡'}
+};
+
+/* ---------- Daily login rewards (7 gün döngüsü) ---------- */
+const LOGIN_REWARDS = [
+  {type:'coin',    amount:20,           label:'20 coin',              icon:'🪙'},
+  {type:'coin',    amount:30,           label:'30 coin',               icon:'🪙'},
+  {type:'chest',   amount:1,            label:'Sandık',                icon:'🎁'},
+  {type:'coinxp',  coin:40, xp:20,      label:'40 coin + 20 XP',       icon:'🎊'},
+  {type:'chest',   amount:1,            label:'Sandık',                icon:'🎁'},
+  {type:'xp',      amount:60,           label:'60 XP',                 icon:'✨'},
+  {type:'costume',                      label:'Ücretsiz kostüm + sandık', icon:'👑'},
+];
+
+/* ---------- Chest reward pool ---------- */
+const CHEST_POOL = [
+  {type:'coin',  weight:30, min:15, max:60},
+  {type:'xp',    weight:25, min:10, max:40},
+  {type:'item',  weight:20},
+  {type:'plant', weight:15},
+  {type:'home',  weight:10},
+];
+
+/* ---------- Shop (aksesuar) ---------- */
+const SHOP_ITEMS = [
+  {id:'i01', name:'Bahçıvan Şapkası', price:25, icon:'👒'},
+  {id:'i02', name:'Örgü Atkı', price:35, icon:'🧣'},
+  {id:'i03', name:'Bahçe Botları', price:45, icon:'🥾'},
+  {id:'i04', name:'Bahçıvan Eldiveni', price:40, icon:'🧤'},
+  {id:'i05', name:'Güneş Gözlüğü', price:55, icon:'🕶️'},
+  {id:'i06', name:'Kasket', price:40, icon:'🧢'},
+  {id:'i07', name:'Bahçıvan Önlüğü', price:50, icon:'🥼'},
+  {id:'i08', name:'Şık Fötr Şapka', price:70, icon:'🎩'},
+  {id:'i09', name:'Çizgili Çorap', price:30, icon:'🧦'},
+  {id:'i10', name:'İpek Elbise', price:90, icon:'👗'},
+  {id:'i11', name:'Kimono', price:110, icon:'👘'},
+  {id:'i12', name:'Rahat Şort', price:35, icon:'🩳'},
+  {id:'i13', name:'Bol Pantolon', price:45, icon:'👖'},
+  {id:'i14', name:'Basit Tişört', price:25, icon:'👕'},
+  {id:'i15', name:'Kalın Kaban', price:120, icon:'🧥'},
+  {id:'i16', name:'Ev Terliği', price:20, icon:'🥿'},
+  {id:'i17', name:'Deri Bot', price:130, icon:'👞'},
+  {id:'i18', name:'Spor Ayakkabı', price:100, icon:'👟'},
+  {id:'i19', name:'Bale Ayakkabısı', price:95, icon:'🩰'},
+  {id:'i20', name:'İnci Kolye', price:150, icon:'📿'},
+  {id:'i21', name:'Nazar Boncuğu Kolye', price:60, icon:'🧿'},
+  {id:'i22', name:'Altın Yüzük', price:180, icon:'💍'},
+  {id:'i23', name:'Elmas Taç', price:400, icon:'👑'},
+  {id:'i24', name:'Saç Kurdelesi', price:20, icon:'🎀'},
+  {id:'i25', name:'Kiraz Çiçeği Tacı', price:160, icon:'🌸'},
+  {id:'i26', name:'Papatya Tacı', price:70, icon:'🌼'},
+  {id:'i27', name:'Ay Çiçeği Süsü', price:80, icon:'🌻'},
+  {id:'i28', name:'Yonca Broşu', price:65, icon:'🍀'},
+  {id:'i29', name:'Mantar Şapka', price:75, icon:'🍄'},
+  {id:'i30', name:'Kelebek Kanatları', price:220, icon:'🦋'},
+  {id:'i31', name:'Uğur Böceği Pini', price:55, icon:'🐞'},
+  {id:'i32', name:'Gökkuşağı Şalı', price:200, icon:'🌈'},
+  {id:'i33', name:'Yıldız Tozu Eşarp', price:190, icon:'✨'},
+  {id:'i34', name:'Parlayan Kolye', price:210, icon:'⭐'},
+  {id:'i35', name:'Ateş Küre Amuleti', price:260, icon:'🔥'},
+  {id:'i36', name:'Su Damlası Küpe', price:140, icon:'💧'},
+  {id:'i37', name:'Ay Işığı Pelerini', price:300, icon:'🌙'},
+  {id:'i38', name:'Güneş Madalyonu', price:280, icon:'☀️'},
+  {id:'i39', name:'Balon Demeti', price:50, icon:'🎈'},
+  {id:'i40', name:'Hediye Kutusu Sırt Çantası', price:170, icon:'🎁'},
+  {id:'i41', name:'Uçan Fener', price:230, icon:'🪅'},
+  {id:'i42', name:'Sihirli Değnek', price:350, icon:'🪄'},
+  {id:'i43', name:'Gizemli Muska', price:240, icon:'🔮'},
+  {id:'i44', name:'Baykuş Dostu', price:320, icon:'🦉'},
+  {id:'i45', name:'Arı Kovanı Broş', price:120, icon:'🐝'},
+  {id:'i46', name:'Kuş Tüyü Aksesuar', price:100, icon:'🪶'},
+  {id:'i47', name:'Ejderha Yavrusu', price:600, icon:'🐉'},
+  {id:'i48', name:'Zafer Rozeti', price:450, icon:'🏵️'},
+  {id:'i49', name:'Şampiyon Kupası', price:500, icon:'🥇'},
+  {id:'i50', name:'Efsanevi Taç', price:1500, icon:'👑'},
+];
+
+/* ---------- Home / house items ---------- */
+const HOME_ITEMS = [
+  {id:'bitki', name:'Bitki', price:25, icon:'🪴'},
+  {id:'pencere', name:'Pencere', price:40, icon:'🪟'},
+  {id:'hali', name:'Halı', price:55, icon:'🟫'},
+  {id:'kitaplik', name:'Kitaplık', price:90, icon:'📚'},
+  {id:'masa', name:'Masa', price:70, icon:'🪑'},
+  {id:'televizyon', name:'Televizyon', price:140, icon:'📺'},
+  {id:'bilgisayar', name:'Bilgisayar', price:220, icon:'💻'},
+  {id:'yatak', name:'Yatak', price:180, icon:'🛏️'},
+];
+
+function rarityOf(price){
+  if(price >= 700) return {label:'Mitik', color:'#E8C93D', dot:'🟡'};
+  if(price >= 400) return {label:'Efsanevi', color:'#9B59B6', dot:'🟣'};
+  if(price >= 200) return {label:'Destansı', color:'#3B82C4', dot:'🔵'};
+  if(price >= 90)  return {label:'Nadir', color:'#3FA34D', dot:'🟢'};
+  return {label:'Normal', color:'#9AA79C', dot:'⚪'};
+}
+
+/* ---------- Garden plant types ---------- */
+const GARDEN_PLANTS = [
+  {id:'flower', name:'Çiçek', unlockCost:0, stages:['🌰','🌱','🌷','🌸'], thresholds:[0,2,5,10]},
+  {id:'tomato', name:'Domates', unlockCost:20, stages:['🌰','🌱','🌿','🍅'], thresholds:[0,3,6,12]},
+  {id:'carrot', name:'Havuç', unlockCost:15, stages:['🌰','🌱','🌿','🥕'], thresholds:[0,2,4,8]},
+  {id:'tree', name:'Ağaç', unlockCost:60, stages:['🌰','🌱','🌿','🌲'], thresholds:[0,5,12,25]},
+  {id:'sunflower', name:'Ayçiçeği', unlockCost:35, stages:['🌰','🌱','🌿','🌻'], thresholds:[0,4,9,18]},
+  {id:'appletree', name:'Elma Ağacı', unlockCost:100, stages:['🌰','🌱','🌿','🍎'], thresholds:[0,8,18,35]},
+];
+
+/* ---------- Achievements ---------- */
+const ICONS_CYCLE = ['🥉','🥈','🥇','🏆','💎','👑'];
+function tierBadges(prefix, tiers, statFn, labelFn){
+  return tiers.map((t, i) => ({
+    id: prefix + '_' + t,
+    icon: ICONS_CYCLE[i % ICONS_CYCLE.length],
+    label: labelFn(t),
+    check: s => statFn(s) >= t
+  }));
+}
+const SPECIAL_BADGES = [
+  {id:'sade_yasam', icon:'🧘', label:'Hiç eşya almadan 50 görev tamamla', check: s => s.inventory.length===0 && s.totalCompleted>=50},
+  {id:'cimri', icon:'🪙', label:'Hiç harcamadan 200 para biriktir', check: s => s.totalSpent===0 && s.coins>=200},
+  {id:'hizli_eller', icon:'⚡', label:'Bir günde 5 görev tamamla', check: s => s.maxDailyCompleted>=5},
+  {id:'gorev_makinesi', icon:'🚀', label:'Bir günde 10 görev tamamla', check: s => s.maxDailyCompleted>=10},
+  {id:'planlayici', icon:'📋', label:'Aynı anda 10 aktif görev listele', check: s => s.quests.filter(q=>!q.done).length>=10},
+  {id:'efsane_ciftci', icon:'🌟', label:'Efsanevi çiftçi: 2500 görev', check: s => s.totalCompleted>=2500},
+  {id:'zengin_efsane', icon:'💎', label:'Efsanevi zenginlik: 25000 para', check: s => s.coins>=25000},
+  {id:'yeniden_baslangic', icon:'🔄', label:'10 görev sil, olsun, devam et', check: s => s.deletedCount>=10},
+  {id:'maksimum_seviye', icon:'👑', label:'Seviye 200 - Zirve!', check: s => s.level>=200},
+  {id:'koleksiyoncu_supreme', icon:'🎁', label:'Tüm aksesuarları satın al ve birini giy', check: s => s.inventory.length>=SHOP_ITEMS.length && !!s.equipped},
+  {id:'ilk_sulama', icon:'🌅', label:'İlk fidanı sula', check: s => s.totalWaterings>=1},
+  {id:'ev_sahibi', icon:'🏡', label:'Evini tamamen döşe', check: s => s.home.length>=HOME_ITEMS.length},
+  {id:'bahce_ustasi', icon:'🌾', label:'Tüm bahçe parsellerini aç', check: s => GARDEN_PLANTS.every(p => s.plants[p.id] && s.plants[p.id].unlocked)},
+];
+const ALL_BADGES = [
+  ...tierBadges('completed', [1,3,5,10,15,20,25,30,40,50,60,75,90,100,125,150,175,200,250,300,400,500,750,1000,1500], s=>s.totalCompleted, t=>`${t} görev tamamla`),
+  ...tierBadges('xp', [10,25,50,100,200,300,500,750,1000,1500,2000,3000,4000,5000,7500,10000,15000,20000,30000,50000,75000,100000,150000,200000,300000], s=>s.totalXpEarned, t=>`Toplam ${t} XP kazan`),
+  ...tierBadges('streak', [1,2,3,5,7,10,14,21,30,45,60,90,120,150,180,270,365,500,730,1000,1500,2000], s=>s.plant.longestStreak, t=>`${t} günlük seri`),
+  ...tierBadges('coinsearned', [10,25,50,100,200,300,500,750,1000,1500,2000,3000,4000,5000,7500,10000,15000,20000,30000,50000], s=>s.totalCoinsEarned, t=>`Toplam ${t} para kazan`),
+  ...tierBadges('coinbalance', [20,50,100,200,300,500,750,1000,1500,2000,3000,5000,7500,10000,15000,20000], s=>s.coins, t=>`Aynı anda ${t} para biriktir`),
+  ...tierBadges('level', [2,3,4,5,7,10,12,15,20,25,30,40,50,60,75,100,125,150], s=>s.level, t=>`Seviye ${t}'e ulaş`),
+  ...tierBadges('items', [1,2,3,5,8,10,15,20,25,30,35,40,45,50], s=>s.inventory.length, t=> t>=50 ? 'Tüm aksesuarları topla' : `${t} aksesuar topla`),
+  ...tierBadges('water', [1,3,5,10,20,30,50,75,100,150,200,300,500,750,1000,1500], s=>s.totalWaterings, t=>`Fidanı ${t} kez sula`),
+  ...tierBadges('added', [1,5,10,25,50,100,200,300,500,1000,1500,2000], s=>s.totalQuestsAdded, t=>`${t} görev ekle`),
+  ...tierBadges('neverdel', [10,25,50,100,200,500], s=> (s.deletedCount===0 ? s.totalCompleted : -1), t=>`Hiç silmeden ${t} görev tamamla`),
+  ...tierBadges('spent', [50,100,250,500,1000,2000], s=>s.totalSpent, t=>`${t} para harca`),
+  ...tierBadges('chest', [1,5,10,25,50,100,200], s=>s.chestsOpened, t=>`${t} sandık aç`),
+  ...tierBadges('watercups', [10,25,50,100,200,300,500,1000], s=>s.water.totalGlasses, t=>`${t} bardak su iç`),
+  ...tierBadges('waterstreak', [3,7,14,30,60,100,200], s=>s.water.longestStreak, t=>`${t} gün su hedefini tuttur`),
+  ...tierBadges('loginstreak', [3,7,14,30,60,100,200,365], s=>s.loginStreak, t=>`${t} gün üst üste giriş yap`),
+  ...SPECIAL_BADGES,
+];
+
+/* ---------- Challenges ---------- */
+const CHALLENGES = [
+  {days:7, icon:'🥉', label:'7 Günlük Meydan Okuma'},
+  {days:21, icon:'🥈', label:'21 Günlük Meydan Okuma'},
+  {days:30, icon:'🥇', label:'30 Günlük Meydan Okuma'},
+  {days:90, icon:'🏆', label:'90 Günlük Meydan Okuma'},
+];
+
+/* ---------- Story mode ---------- */
+const STORY_LEVELS = {
+  1: 'Küçük adımlarla başlıyoruz — bugün kendine bir söz ver.',
+  5: 'Beş seviye! Artık bir rutin oluşturuyorsun.',
+  10: 'On adım attın, bu bir tesadüf değil, kararlılık bu.',
+  15: 'İlerlemen gözle görülür hale geldi.',
+  20: 'Yirminci seviye — artık geri dönüşü olmayan bir yoldasın.',
+  25: 'Çeyrek yüzyıllık kararlılık senin bu!',
+  30: 'Otuz seviye — disiplin artık senin bir parçan.',
+  40: 'Kırkıncı seviyedesin, hedeflerin seni bekliyor.',
+  50: 'Artık gerçek bir gelişim yolcususun.',
+  60: 'Altmışıncı seviye — nadir bulunan bir azim bu.',
+  75: 'Yetmiş beş... bu artık bir yaşam biçimi.',
+  100: 'Yüzüncü seviye. Efsane oldun.',
+};
+
+/* ---------- Suggested daily quests (isim + zorluk) ---------- */
+const SUGGESTED_QUESTS = [
+  {name:'2 litre su iç', difficulty:'easy'},
+  {name:'20 dk oku', difficulty:'easy'},
+  {name:'Meditasyon yap', difficulty:'easy'},
+  {name:'Sağlıklı kahvaltı yap', difficulty:'easy'},
+  {name:'5000 adım yürü', difficulty:'medium'},
+  {name:'Erken yat', difficulty:'medium'},
+  {name:'Telefonsuz 1 saat geçir', difficulty:'medium'},
+  {name:'10.000 adım yürü', difficulty:'hard'},
+  {name:'Yeni bir beceri öğren (30 dk)', difficulty:'hard'},
+  {name:'Haftalık plan hazırla', difficulty:'legendary'},
+];
+
+/* ---------- Avatar customizer options ---------- */
+const SKIN_OPTIONS = ['#FFDBB4','#F1C27D','#E0AC69','#C68642','#8D5524'];
+const HAIR_COLORS = ['#2B1B12','#5B3A21','#8B5A2B','#C9A227','#B0B0B0','#E63946'];
+const EYE_COLORS = ['#3B2519','#2E6F40','#2B5DA8','#6B4226'];
+const CLOTHES_COLORS = ['#3F6C4C','#C1543C','#3B82C4','#9B59B6','#E8A33D','#2C4E36'];
+const SHOES_COLORS = ['#2C1B12','#5B3A21','#3F6C4C','#C1543C','#B0B0B0'];
+const HAIR_STYLE_OPTIONS = [{id:'short',label:'Kısa'},{id:'long',label:'Uzun'},{id:'bald',label:'Kel'}];
+const ACCESSORY_OPTIONS = [{id:'none',icon:'Yok'},{id:'glasses',icon:'🕶️'},{id:'hat',icon:'🎩'},{id:'bow',icon:'🎀'}];
+
+const PLANT_STAGES = ['🌰','🌱','🌿','🪴','🌳'];
+
+/* ---------- Pet / companion ---------- */
+const PET_TYPES = [
+  {id:'cat', name:'Kedi', stages:['🐱','😺','🐈']},
+  {id:'dog', name:'Köpek', stages:['🐶','🐕','🦮']},
+  {id:'rabbit', name:'Tavşan', stages:['🐰','🐇','🐇']},
+  {id:'bird', name:'Kuş', stages:['🐣','🐤','🦜']},
+  {id:'fox', name:'Tilki', stages:['🦊','🦊','🦊']},
+  {id:'panda', name:'Panda', stages:['🐼','🐼','🐼']},
+];
+function petXpForLevel(level){ return level * 30; }
+function petStage(petType, level){
+  if(level >= 7) return petType.stages[2];
+  if(level >= 3) return petType.stages[1];
+  return petType.stages[0];
+}
+function addPetXp(amount){
+  if(!state.pet) return;
+  state.pet.xp += amount;
+  let needed = petXpForLevel(state.pet.level);
+  while(state.pet.xp >= needed){
+    state.pet.xp -= needed;
+    state.pet.level += 1;
+    needed = petXpForLevel(state.pet.level);
+    const petType = PET_TYPES.find(p=>p.id===state.pet.typeId) || PET_TYPES[0];
+    showToast(petType.name + ' yoldaşın seviye atladı! Şimdi seviye ' + state.pet.level + ' 🐾');
+  }
+}
+
+/* ---------- Wheel of fortune (Şans Çarkı) ---------- */
+const WHEEL_SLICES = [
+  {label:'20 🪙', color:'#3F6C4C', weight:18, apply:()=>{ addCoins(20); }},
+  {label:'40 XP', color:'#3B82C4', weight:16, apply:()=>{ addXp(40); }},
+  {label:'🎁 Sandık', color:'#E8A33D', weight:10, apply:()=>{ state.chestsAvailable += 1; }},
+  {label:'60 🪙', color:'#7A5B44', weight:14, apply:()=>{ addCoins(60); }},
+  {label:'80 XP', color:'#9B59B6', weight:12, apply:()=>{ addXp(80); }},
+  {label:'🎀 Eşya', color:'#C1543C', weight:8, apply:()=>{ grantRandomShopItem(); }},
+  {label:'10 🪙', color:'#2C4E36', weight:16, apply:()=>{ addCoins(10); }},
+  {label:'💎 Jackpot', color:'#E8C93D', weight:6, apply:()=>{ addCoins(150); addXp(100); }},
+];
+function grantRandomShopItem(){
+  const unowned = SHOP_ITEMS.filter(i => !state.inventory.includes(i.id));
+  if(unowned.length){
+    const pick = unowned[Math.floor(Math.random()*unowned.length)];
+    state.inventory.push(pick.id);
+  } else {
+    state.coins += 50; state.totalCoinsEarned += 50;
+  }
+}
+function buildWheelSVG(size){
+  const n = WHEEL_SLICES.length;
+  const cx = size/2, cy = size/2, r = size/2 - 2;
+  const sliceAngle = 360/n;
+  let inner = '';
+  for(let i=0;i<n;i++){
+    const startA = i*sliceAngle - 90;
+    const endA = (i+1)*sliceAngle - 90;
+    const x1 = cx + r*Math.cos(startA*Math.PI/180);
+    const y1 = cy + r*Math.sin(startA*Math.PI/180);
+    const x2 = cx + r*Math.cos(endA*Math.PI/180);
+    const y2 = cy + r*Math.sin(endA*Math.PI/180);
+    const midA = (startA+endA)/2;
+    const lx = cx + (r*0.62)*Math.cos(midA*Math.PI/180);
+    const ly = cy + (r*0.62)*Math.sin(midA*Math.PI/180);
+    inner += '<path d="M'+cx+','+cy+' L'+x1.toFixed(2)+','+y1.toFixed(2)+' A'+r+','+r+' 0 0 1 '+x2.toFixed(2)+','+y2.toFixed(2)+' Z" fill="'+WHEEL_SLICES[i].color+'" stroke="#fff" stroke-width="1.5"/>';
+    inner += '<text x="'+lx.toFixed(2)+'" y="'+ly.toFixed(2)+'" font-size="9.5" fill="#fff" font-family="Inter,sans-serif" font-weight="700" text-anchor="middle" dominant-baseline="middle">'+WHEEL_SLICES[i].label+'</text>';
+  }
+  return '<svg viewBox="0 0 '+size+' '+size+'" width="'+size+'" height="'+size+'">' + inner +
+    '<circle cx="'+cx+'" cy="'+cy+'" r="8" fill="#fff" stroke="#223324" stroke-width="2"/></svg>';
+}
+let wheelSpinning = false;
+let wheelRotation = 0;
+function spinWheel(){
+  if(wheelSpinning) return;
+  const today = todayStr();
+  if(state.wheel && state.wheel.lastSpinDate === today){
+    showToast('Bugünlük çarkı çevirdin, yarın tekrar gel! 🎡');
+    return;
+  }
+  wheelSpinning = true;
+  const btn = document.getElementById('wheelSpinBtn');
+  if(btn){ btn.disabled = true; btn.textContent = 'Dönüyor...'; }
+
+  const n = WHEEL_SLICES.length;
+  const sliceAngle = 360/n;
+  const totalWeight = WHEEL_SLICES.reduce((a,s)=>a+s.weight,0);
+  let r = Math.random()*totalWeight;
+  let idx = 0;
+  for(let i=0;i<n;i++){
+    if(r < WHEEL_SLICES[i].weight){ idx = i; break; }
+    r -= WHEEL_SLICES[i].weight;
+  }
+  const targetMid = idx*sliceAngle + sliceAngle/2;
+  const extraSpins = 5 + Math.floor(Math.random()*3);
+  const currentMod = ((wheelRotation % 360) + 360) % 360;
+  const neededToAlign = ((360 - targetMid) - currentMod + 360) % 360;
+  wheelRotation += extraSpins*360 + neededToAlign;
+
+  const disc = document.getElementById('wheelDisc');
+  if(disc) disc.style.transform = 'rotate(' + wheelRotation + 'deg)';
+  playCling();
+
+  setTimeout(()=>{
+    const slice = WHEEL_SLICES[idx];
+    slice.apply();
+    state.wheel = state.wheel || {};
+    state.wheel.lastSpinDate = today;
+    saveState();
+    showPopup('🎡', 'Çark Ödülü!', slice.label);
+    playTada();
+    wheelSpinning = false;
+    renderAll();
+    checkNewBadges();
+  }, 3300);
+}
+function renderWheel(){
+  const disc = document.getElementById('wheelDisc');
+  if(disc && !disc.dataset.built){
+    disc.innerHTML = buildWheelSVG(148);
+    disc.dataset.built = '1';
+  }
+  const today = todayStr();
+  const usedToday = !!(state.wheel && state.wheel.lastSpinDate === today);
+  const btn = document.getElementById('wheelSpinBtn');
+  const sub = document.getElementById('wheelSub');
+  if(btn){
+    btn.disabled = usedToday || wheelSpinning;
+    if(!wheelSpinning) btn.textContent = usedToday ? 'Bugün çevrildi ✓' : 'Çevir';
+  }
+  if(sub) sub.textContent = usedToday ? 'Yarın tekrar çevirebilirsin.' : 'Günde bir kez ücretsiz çevirebilirsin.';
+}
+
+let selectedDifficulty = 'medium';
+
+function defaultState(){
+  return {
+    coins: 0,
+    xp: 0,
+    level: 1,
+    totalCompleted: 0,
+    totalQuestsAdded: 0,
+    deletedCount: 0,
+    totalXpEarned: 0,
+    totalCoinsEarned: 0,
+    totalSpent: 0,
+    totalWaterings: 0,
+    dailyCompletedDate: null,
+    dailyCompletedCount: 0,
+    maxDailyCompleted: 0,
+    completedLog: [],
+    unlockedBadges: [],
+    quests: [],
+    inventory: [],
+    equipped: null,
+    home: [],
+    loginStreak: 0,
+    lastLoginDate: null,
+    totalLogins: 0,
+    chestsAvailable: 0,
+    chestsOpened: 0,
+    plant: { streak: 0, longestStreak: 0, lastWatered: null },
+    plants: {
+      flower:{unlocked:true, watered:0},
+      tomato:{unlocked:false, watered:0},
+      carrot:{unlocked:false, watered:0},
+      tree:{unlocked:false, watered:0},
+      sunflower:{unlocked:false, watered:0},
+      appletree:{unlocked:false, watered:0},
+    },
+    water: { date: null, glasses: 0, goal: 8, streak: 0, longestStreak: 0, totalGlasses: 0 },
+    moodState: 'neutral',
+    avatar: {
+      skin:'#F1C27D', hairStyle:'short', hairColor:'#3B2519', eyeColor:'#3B2519',
+      beard:false, clothesColor:'#3F6C4C', shoesColor:'#2C4E36', accessory:'none'
+    },
+    pet: { typeId: 'cat', level: 1, xp: 0 },
+    settings: { soundOn: true, darkMode: false },
+    wheel: { lastSpinDate: null }
+  };
+}
+
+let state = defaultState();
+let blinkFlag = false;
+let walkFlag = false;
+
+async function loadState(){
+  try{
+    const res = await window.storage.get(STORAGE_KEY, false);
+    if(res && res.value){
+      const saved = JSON.parse(res.value);
+      const base = defaultState();
+      state = Object.assign(base, saved);
+      state.plant = Object.assign(base.plant, saved.plant || {});
+      state.plants = Object.assign({}, base.plants, saved.plants || {});
+      state.avatar = Object.assign({}, base.avatar, saved.avatar || {});
+      state.water = Object.assign({}, base.water, saved.water || {});
+      state.home = saved.home || [];
+      state.unlockedBadges = saved.unlockedBadges || [];
+      state.completedLog = saved.completedLog || [];
+      state.pet = Object.assign({}, base.pet, saved.pet || {});
+      state.settings = Object.assign({}, base.settings, saved.settings || {});
+      state.wheel = Object.assign({}, base.wheel, saved.wheel || {});
+    }
+  }catch(e){
+    console.log('Kayıtlı veri yok, yeni başlıyoruz.', e);
+    state = defaultState();
+  }
+  applyDarkMode();
+  processDailyLogin();
+  renderAll();
+  scheduleBlink();
+  scheduleWalk();
+  setInterval(renderCharacterAvatar, 60000);
+}
+
+async function saveState(){
+  try{
+    await window.storage.set(STORAGE_KEY, JSON.stringify(state), false);
+  }catch(e){
+    console.error('Kaydetme hatası', e);
+  }
+}
+
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(showToast._tm);
+  showToast._tm = setTimeout(()=>t.classList.remove('show'), 1800);
+}
+
+function showPopup(icon, title, text){
+  const pop = document.getElementById('achievementPopup');
+  document.getElementById('apIcon').textContent = icon;
+  document.getElementById('apTitle').textContent = title;
+  document.getElementById('apLabel').textContent = text;
+  pop.classList.add('show');
+  clearTimeout(showPopup._tm);
+  showPopup._tm = setTimeout(()=>pop.classList.remove('show'), 3400);
+}
+
+function showView(id, btn){
+  document.querySelectorAll('section').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('nav.tabbar button').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function xpForLevel(level){ return level * 50; }
+
+/* ---------- Sound effects (Web Audio API, dosya gerektirmez) ---------- */
+let audioCtx = null;
+function getAudioCtx(){
+  try{
+    if(!audioCtx){
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if(audioCtx.state === 'suspended') audioCtx.resume();
+    return audioCtx;
+  }catch(e){ return null; }
+}
+function playTone(freq, duration, type, delay, gainVal){
+  if(state.settings && state.settings.soundOn === false) return;
+  const ctx = getAudioCtx();
+  if(!ctx) return;
+  try{
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = type || 'sine';
+    osc.frequency.value = freq;
+    gain.gain.value = 0;
+    osc.connect(gain); gain.connect(ctx.destination);
+    const t0 = ctx.currentTime + (delay||0);
+    gain.gain.setValueAtTime(0, t0);
+    gain.gain.linearRampToValueAtTime(gainVal||0.15, t0+0.02);
+    gain.gain.exponentialRampToValueAtTime(0.001, t0+duration);
+    osc.start(t0);
+    osc.stop(t0+duration+0.03);
+  }catch(e){ /* sessiz geç */ }
+}
+function playTing(){ playTone(880,0.15,'sine',0,0.18); playTone(1320,0.18,'sine',0.06,0.12); }
+function playCling(){ playTone(1568,0.12,'triangle',0,0.15); playTone(2093,0.14,'triangle',0.05,0.1); }
+function playTada(){ playTone(523,0.12,'square',0,0.09); playTone(659,0.12,'square',0.1,0.09); playTone(784,0.12,'square',0.2,0.09); playTone(1046,0.28,'square',0.3,0.11); }
+function playDroplet(){ playTone(660,0.1,'sine',0,0.12); playTone(880,0.1,'sine',0.05,0.08); }
+
+/* ---------- Gain animations ---------- */
+function flyCoin(amount){
+  const header = document.querySelector('header.top');
+  if(!header) return;
+  const el = document.createElement('div');
+  el.className = 'float-gain';
+  el.style.color = 'var(--accent)';
+  el.style.top = '14px';
+  el.style.right = '18px';
+  el.textContent = '+' + amount + ' 🪙';
+  header.appendChild(el);
+  setTimeout(()=>el.remove(), 1000);
+  const pill = document.querySelector('.coin-pill');
+  if(pill){ pill.classList.remove('coin-pulse'); void pill.offsetWidth; pill.classList.add('coin-pulse'); }
+}
+function flyXp(amount){
+  const header = document.querySelector('header.top');
+  if(!header) return;
+  const el = document.createElement('div');
+  el.className = 'float-gain';
+  el.style.color = '#fff';
+  el.style.top = '52px';
+  el.style.left = '76px';
+  el.textContent = '+' + amount + ' XP';
+  header.appendChild(el);
+  setTimeout(()=>el.remove(), 1000);
+  const lvl = document.getElementById('levelLabel');
+  if(lvl){ lvl.classList.remove('xp-pulse'); void lvl.offsetWidth; lvl.classList.add('xp-pulse'); }
+  burstParticles(header, ['🎉','✨'], 4);
+}
+function bumpPlant(){
+  const p = document.getElementById('plantVisual');
+  if(!p) return;
+  p.classList.remove('water-bump');
+  void p.offsetWidth;
+  p.classList.add('water-bump');
+  setTimeout(()=>p.classList.remove('water-bump'), 650);
+}
+function burstParticles(container, emojis, count){
+  if(!container) return;
+  for(let i=0;i<count;i++){
+    const el = document.createElement('div');
+    el.className = 'particle';
+    el.textContent = emojis[i % emojis.length];
+    el.style.left = (10 + Math.random()*80) + '%';
+    el.style.animationDelay = (Math.random()*0.3) + 's';
+    container.appendChild(el);
+    setTimeout(()=>el.remove(), 1200);
+  }
+}
+function reactMood(emoji){
+  const stage = document.getElementById('avatarStageHost');
+  if(!stage) return;
+  const el = document.createElement('div');
+  el.className = 'mood-bubble';
+  el.textContent = emoji;
+  stage.appendChild(el);
+  setTimeout(()=>el.remove(), 1600);
+}
+function setMood(m){
+  state.moodState = m;
+  renderCharacterAvatar();
+  clearTimeout(setMood._tm);
+  setMood._tm = setTimeout(()=>{ state.moodState = 'neutral'; renderCharacterAvatar(); }, 4000);
+}
+
+/* ---------- Core economy ---------- */
+function addXp(amount){
+  state.xp += amount;
+  state.totalXpEarned += amount;
+  addPetXp(amount);
+  flyXp(amount);
+  let needed = xpForLevel(state.level);
+  while(state.xp >= needed){
+    state.xp -= needed;
+    state.level += 1;
+    needed = xpForLevel(state.level);
+    if(STORY_LEVELS[state.level]){
+      showPopup('🌱', 'Filiz diyor ki', STORY_LEVELS[state.level]);
+    } else {
+      showToast('Seviye atladın! Şimdi seviye ' + state.level);
+    }
+  }
+}
+function absorbXp(amount){
+  state.xp += amount;
+  state.totalXpEarned += amount;
+  addPetXp(amount);
+  let needed = xpForLevel(state.level);
+  while(state.xp >= needed){
+    state.xp -= needed;
+    state.level += 1;
+    needed = xpForLevel(state.level);
+  }
+}
+function addCoins(amount){
+  state.coins += amount;
+  state.totalCoinsEarned += amount;
+  flyCoin(amount);
+  playCling();
+}
+function bumpDailyCompleted(){
+  const today = todayStr();
+  if(state.dailyCompletedDate !== today){
+    state.dailyCompletedDate = today;
+    state.dailyCompletedCount = 0;
+  }
+  state.dailyCompletedCount += 1;
+  if(state.dailyCompletedCount > state.maxDailyCompleted){
+    state.maxDailyCompleted = state.dailyCompletedCount;
+  }
+}
+function checkNewBadges(){
+  const unlockedNow = ALL_BADGES.filter(b => { try{ return b.check(state); }catch(e){ return false; } }).map(b=>b.id);
+  const prev = state.unlockedBadges || [];
+  const newly = unlockedNow.filter(id => !prev.includes(id));
+  state.unlockedBadges = unlockedNow;
+  if(newly.length){
+    const b = ALL_BADGES.find(x=>x.id===newly[0]);
+    if(b){ showPopup('🏆', 'Yeni Başarı!', b.label); playTada(); }
+  }
+}
+
+/* ---------- Daily login reward ---------- */
+function processDailyLogin(){
+  const today = todayStr();
+  if(state.lastLoginDate === today) return;
+  const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0,10);
+  if(state.lastLoginDate === yesterday){
+    state.loginStreak += 1;
+  } else {
+    state.loginStreak = 1;
+  }
+  state.lastLoginDate = today;
+  state.totalLogins += 1;
+  const dayIdx = (state.loginStreak - 1) % 7;
+  const reward = LOGIN_REWARDS[dayIdx];
+  applyLoginReward(reward);
+  saveState();
+}
+function applyLoginReward(reward){
+  let desc = '';
+  if(reward.type === 'coin'){
+    state.coins += reward.amount; state.totalCoinsEarned += reward.amount;
+    desc = '+' + reward.amount + ' 🪙';
+  } else if(reward.type === 'xp'){
+    absorbXp(reward.amount);
+    desc = '+' + reward.amount + ' XP';
+  } else if(reward.type === 'coinxp'){
+    state.coins += reward.coin; state.totalCoinsEarned += reward.coin;
+    absorbXp(reward.xp);
+    desc = '+' + reward.coin + ' 🪙 & +' + reward.xp + ' XP';
+  } else if(reward.type === 'chest'){
+    state.chestsAvailable += reward.amount;
+    desc = '+' + reward.amount + ' 🎁 sandık';
+  } else if(reward.type === 'costume'){
+    const unowned = SHOP_ITEMS.filter(i => !state.inventory.includes(i.id));
+    if(unowned.length){
+      const pick = unowned[Math.floor(Math.random()*unowned.length)];
+      state.inventory.push(pick.id);
+      desc = 'Ücretsiz: ' + pick.icon + ' ' + pick.name;
+    } else {
+      state.coins += 100; state.totalCoinsEarned += 100;
+      desc = '+100 🪙 (tüm kıyafetler zaten sende!)';
+    }
+    state.chestsAvailable += 1;
+    desc += ' + 1 🎁 sandık';
+  }
+  showPopup(reward.icon, state.loginStreak + '. Gün Giriş Ödülü', desc);
+}
+
+/* ---------- Quests ---------- */
+function addQuest(){
+  const input = document.getElementById('questInput');
+  const val = input.value.trim();
+  if(!val) return;
+  state.quests.push({ id: Date.now().toString(), name: val, done: false, difficulty: selectedDifficulty });
+  state.totalQuestsAdded += 1;
+  input.value = '';
+  saveState();
+  renderQuests();
+  checkNewBadges();
+}
+function addSuggestedQuest(name, difficulty){
+  state.quests.push({ id: Date.now().toString(), name: name, done: false, difficulty: difficulty || 'easy' });
+  state.totalQuestsAdded += 1;
+  saveState();
+  renderQuests();
+  checkNewBadges();
+}
+
+function toggleQuest(id){
+  const q = state.quests.find(q=>q.id===id);
+  if(!q) return;
+  const diff = DIFFICULTIES[q.difficulty] || DIFFICULTIES.medium;
+  q.done = !q.done;
+  if(q.done){
+    addCoins(diff.coin);
+    state.totalCompleted += 1;
+    addXp(diff.xp);
+    bumpDailyCompleted();
+    state.completedLog.unshift({ name: q.name, date: todayStr() });
+    if(state.completedLog.length > 100) state.completedLog.length = 100;
+    showToast('+' + diff.xp + ' XP, +' + diff.coin + ' para 🎉');
+    setMood('happy');
+    reactMood('🥳');
+    playTing();
+  } else {
+    state.coins = Math.max(0, state.coins - diff.coin);
+    state.totalCompleted = Math.max(0, state.totalCompleted - 1);
+    setMood('sad');
+    reactMood('😔');
+  }
+  saveState();
+  renderAll();
+  checkNewBadges();
+}
+
+function deleteQuest(id){
+  state.quests = state.quests.filter(q=>q.id!==id);
+  state.deletedCount += 1;
+  saveState();
+  renderQuests();
+}
+
+function todayStr(){ return new Date().toISOString().slice(0,10); }
+
+/* ---------- Chest ---------- */
+function weightedPick(pool){
+  const total = pool.reduce((s,p)=>s+p.weight,0);
+  let r = Math.random()*total;
+  for(const p of pool){ if(r < p.weight) return p; r -= p.weight; }
+  return pool[0];
+}
+function openChest(){
+  if(state.chestsAvailable <= 0) return;
+  state.chestsAvailable -= 1;
+  state.chestsOpened += 1;
+  const pick = weightedPick(CHEST_POOL);
+  let icon = '🎁', desc = '';
+  if(pick.type === 'coin'){
+    const amt = Math.floor(pick.min + Math.random()*(pick.max-pick.min));
+    state.coins += amt; state.totalCoinsEarned += amt;
+    icon = '🪙'; desc = '+' + amt + ' para kazandın!';
+  } else if(pick.type === 'xp'){
+    const amt = Math.floor(pick.min + Math.random()*(pick.max-pick.min));
+    absorbXp(amt);
+    icon = '✨'; desc = '+' + amt + ' XP kazandın!';
+  } else if(pick.type === 'item'){
+    const rare = SHOP_ITEMS.filter(i => i.price>=90 && !state.inventory.includes(i.id));
+    if(rare.length){
+      const item = rare[Math.floor(Math.random()*rare.length)];
+      state.inventory.push(item.id);
+      icon = item.icon; desc = 'Nadir eşya: ' + item.name + '!';
+    } else {
+      state.coins += 40; state.totalCoinsEarned += 40;
+      icon = '🪙'; desc = '+40 para (tüm nadir eşyalar zaten sende)!';
+    }
+  } else if(pick.type === 'plant'){
+    const locked = GARDEN_PLANTS.filter(p => !state.plants[p.id].unlocked);
+    if(locked.length){
+      const p = locked[Math.floor(Math.random()*locked.length)];
+      state.plants[p.id].unlocked = true;
+      icon = '🌱'; desc = 'Yeni bitki açıldı: ' + p.name + '!';
+    } else {
+      state.coins += 30; state.totalCoinsEarned += 30;
+      icon = '🪙'; desc = '+30 para (tüm bitkiler zaten açık)!';
+    }
+  } else if(pick.type === 'home'){
+    const unowned = HOME_ITEMS.filter(i => !state.home.includes(i.id));
+    if(unowned.length){
+      const item = unowned[Math.floor(Math.random()*unowned.length)];
+      state.home.push(item.id);
+      icon = item.icon; desc = 'Ev eşyası: ' + item.name + '!';
+    } else {
+      state.coins += 30; state.totalCoinsEarned += 30;
+      icon = '🪙'; desc = '+30 para (evin zaten dolu)!';
+    }
+  }
+  playTada();
+  showPopup(icon, 'Sandık Açıldı!', desc);
+  saveState();
+  renderAll();
+  checkNewBadges();
+}
+
+/* ---------- Garden watering ---------- */
+function waterPlant(){
+  const today = todayStr();
+  if(state.plant.lastWatered === today) return;
+  const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0,10);
+  if(state.plant.lastWatered === yesterday){
+    state.plant.streak += 1;
+  } else {
+    state.plant.streak = 1;
+  }
+  if(state.plant.streak > state.plant.longestStreak){
+    state.plant.longestStreak = state.plant.streak;
+  }
+  state.plant.lastWatered = today;
+  state.totalWaterings += 1;
+  Object.keys(state.plants).forEach(id=>{
+    if(state.plants[id].unlocked) state.plants[id].watered += 1;
+  });
+  addCoins(3);
+  addXp(5);
+  showToast('Bahçen sulandı 💧');
+  bumpPlant();
+  burstParticles(document.getElementById('gardenParticleHost'), ['💧','✨'], 6);
+  saveState();
+  renderAll();
+  checkNewBadges();
+}
+
+function unlockPlant(id){
+  const def = GARDEN_PLANTS.find(p=>p.id===id);
+  if(!def) return;
+  const st = state.plants[id];
+  if(!st || st.unlocked) return;
+  if(state.coins < def.unlockCost){ showToast('Yeterli paran yok'); return; }
+  state.coins -= def.unlockCost;
+  state.totalSpent += def.unlockCost;
+  st.unlocked = true;
+  showToast(def.name + ' ekildi! 🌱');
+  saveState();
+  renderAll();
+  checkNewBadges();
+}
+
+/* ---------- Daily water tracker ---------- */
+function ensureWaterDay(){
+  const today = todayStr();
+  if(state.water.date !== today){
+    const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0,10);
+    if(!(state.water.date === yesterday && state.water.glasses >= state.water.goal)){
+      state.water.streak = 0;
+    }
+    state.water.date = today;
+    state.water.glasses = 0;
+  }
+}
+function addWaterGlass(){
+  ensureWaterDay();
+  if(state.water.glasses >= state.water.goal){
+    showToast('Bugünkü su hedefine zaten ulaştın! 💧');
+    return;
+  }
+  state.water.glasses += 1;
+  state.water.totalGlasses += 1;
+  playDroplet();
+  if(state.water.glasses >= state.water.goal){
+    state.water.streak += 1;
+    if(state.water.streak > state.water.longestStreak) state.water.longestStreak = state.water.streak;
+    addCoins(8);
+    addXp(12);
+    showPopup('💧', 'Su Hedefi Tamamlandı!', 'Bugün ' + state.water.goal + ' bardak su içtin!');
+  } else {
+    showToast('+1 bardak su 💧');
+  }
+  saveState();
+  renderWater();
+  renderStatsView();
+  checkNewBadges();
+}
+function removeWaterGlass(){
+  ensureWaterDay();
+  if(state.water.glasses <= 0) return;
+  if(state.water.glasses === state.water.goal){
+    state.water.streak = Math.max(0, state.water.streak - 1);
+  }
+  state.water.glasses -= 1;
+  saveState();
+  renderWater();
+  renderStatsView();
+}
+function renderWater(){
+  ensureWaterDay();
+  document.getElementById('waterCountText').textContent = state.water.glasses + ' / ' + state.water.goal + ' bardak';
+  const cupsWrap = document.getElementById('waterCups');
+  let cupsHtml = '';
+  for(let i=0;i<state.water.goal;i++){
+    cupsHtml += '<span class="water-cup ' + (i < state.water.glasses ? 'filled' : '') + '">🥤</span>';
+  }
+  cupsWrap.innerHTML = cupsHtml;
+  const sub = document.getElementById('waterSub');
+  if(state.water.glasses >= state.water.goal){
+    sub.textContent = 'Harika! Bugünkü su hedefine ulaştın. Seri: ' + state.water.streak + ' gün 🔥';
+  } else {
+    sub.textContent = (state.water.goal - state.water.glasses) + ' bardak daha kaldı · En uzun seri: ' + state.water.longestStreak + ' gün';
+  }
+}
+
+/* ---------- Shop ---------- */
+function buyItem(itemId){
+  const item = SHOP_ITEMS.find(i=>i.id===itemId);
+  if(!item) return;
+  if(state.inventory.includes(itemId)) return;
+  if(state.coins < item.price){ showToast('Yeterli paran yok'); return; }
+  state.coins -= item.price;
+  state.totalSpent += item.price;
+  state.inventory.push(itemId);
+  state.equipped = itemId;
+  showToast(item.name + ' satın alındı!');
+  saveState();
+  renderAll();
+  checkNewBadges();
+}
+function equipItem(itemId){
+  state.equipped = itemId;
+  saveState();
+  renderAll();
+}
+
+function buyHomeItem(itemId){
+  const item = HOME_ITEMS.find(i=>i.id===itemId);
+  if(!item) return;
+  if(state.home.includes(itemId)) return;
+  if(state.coins < item.price){ showToast('Yeterli paran yok'); return; }
+  state.coins -= item.price;
+  state.totalSpent += item.price;
+  state.home.push(itemId);
+  showToast(item.name + ' evine eklendi!');
+  saveState();
+  renderAll();
+  checkNewBadges();
+}
+
+/* ---------- Living character (SVG) ---------- */
+function isSleepTime(){
+  const h = new Date().getHours();
+  return h >= 23 || h < 7;
+}
+function scheduleBlink(){
+  setTimeout(()=>{
+    blinkFlag = true;
+    renderCharacterAvatar();
+    setTimeout(()=>{ blinkFlag = false; renderCharacterAvatar(); scheduleBlink(); }, 160);
+  }, 2500 + Math.random()*3000);
+}
+function scheduleWalk(){
+  setTimeout(()=>{
+    walkFlag = true;
+    renderCharacterAvatar();
+    setTimeout(()=>{ walkFlag = false; renderCharacterAvatar(); scheduleWalk(); }, 1400);
+  }, 5000 + Math.random()*5000);
+}
+
+function buildAvatarParts(){
+  const av = state.avatar;
+  const sleeping = isSleepTime();
+  const mood = sleeping ? 'neutral' : (state.moodState || 'neutral');
+  const blinking = blinkFlag && !sleeping;
+
+  let eyesMarkup;
+  if(sleeping || blinking){
+    eyesMarkup =
+      '<path d="M58 62 q8 6 16 0" stroke="#3B2519" stroke-width="3" fill="none" stroke-linecap="round"/>' +
+      '<path d="M86 62 q8 6 16 0" stroke="#3B2519" stroke-width="3" fill="none" stroke-linecap="round"/>';
+  } else {
+    eyesMarkup =
+      '<ellipse cx="66" cy="62" rx="6" ry="7" fill="#fff"/>' +
+      '<ellipse cx="94" cy="62" rx="6" ry="7" fill="#fff"/>' +
+      '<circle cx="67" cy="63" r="3.4" fill="'+av.eyeColor+'"/>' +
+      '<circle cx="95" cy="63" r="3.4" fill="'+av.eyeColor+'"/>';
+  }
+
+  let mouthMarkup;
+  if(mood === 'happy'){
+    mouthMarkup = '<path d="M64 82 Q80 96 96 82" stroke="#7A4B33" stroke-width="3" fill="none" stroke-linecap="round"/>';
+  } else if(mood === 'sad'){
+    mouthMarkup = '<path d="M64 92 Q80 80 96 92" stroke="#7A4B33" stroke-width="3" fill="none" stroke-linecap="round"/>';
+  } else {
+    mouthMarkup = '<path d="M66 86 Q80 90 94 86" stroke="#7A4B33" stroke-width="3" fill="none" stroke-linecap="round"/>';
+  }
+
+  let hairMarkup = '';
+  if(av.hairStyle === 'short'){
+    hairMarkup = '<path d="M40 58 Q40 16 80 16 Q120 16 120 58 Q120 32 80 30 Q40 32 40 58 Z" fill="'+av.hairColor+'"/>';
+  } else if(av.hairStyle === 'long'){
+    hairMarkup =
+      '<path d="M40 60 Q40 14 80 14 Q120 14 120 60 Q120 30 80 30 Q40 30 40 60 Z" fill="'+av.hairColor+'"/>' +
+      '<path d="M42 58 L42 112 Q52 100 52 68 Z" fill="'+av.hairColor+'"/>' +
+      '<path d="M118 58 L118 112 Q108 100 108 68 Z" fill="'+av.hairColor+'"/>';
+  }
+
+  const beardMarkup = av.beard
+    ? '<path d="M50 78 Q80 116 110 78 Q100 94 80 96 Q60 94 50 78 Z" fill="'+av.hairColor+'"/>'
+    : '';
+
+  let accessoryMarkup = '';
+  if(av.accessory === 'glasses'){
+    accessoryMarkup =
+      '<rect x="57" y="57" width="18" height="11" rx="3" fill="none" stroke="#223324" stroke-width="2.5"/>' +
+      '<rect x="85" y="57" width="18" height="11" rx="3" fill="none" stroke="#223324" stroke-width="2.5"/>' +
+      '<line x1="75" y1="62" x2="85" y2="62" stroke="#223324" stroke-width="2.5"/>';
+  } else if(av.accessory === 'hat'){
+    accessoryMarkup =
+      '<rect x="50" y="16" width="60" height="8" rx="3" fill="#223324"/>' +
+      '<rect x="60" y="0" width="40" height="18" rx="4" fill="#223324"/>';
+  } else if(av.accessory === 'bow'){
+    accessoryMarkup =
+      '<path d="M74 44 L64 36 L64 52 Z" fill="#C1543C"/>' +
+      '<path d="M86 44 L96 36 L96 52 Z" fill="#C1543C"/>' +
+      '<circle cx="80" cy="44" r="4" fill="#8B3A2B"/>';
+  }
+
+  const zzz = sleeping ? '<text x="118" y="26" font-size="18" fill="#5B6E5C" class="zzz" font-family="JetBrains Mono, monospace">Zzz</text>' : '';
+  const groupClass = 'char-body-group' + (walkFlag && !sleeping ? ' walking' : '') + (sleeping ? ' sleeping-slow' : '');
+
+  return { av, eyesMarkup, mouthMarkup, hairMarkup, beardMarkup, accessoryMarkup, zzz, groupClass };
+}
+
+function buildAvatarSVG(width){
+  const height = Math.round(width * 1.25);
+  const p = buildAvatarParts();
+  const av = p.av;
+
+  return '<svg viewBox="0 0 160 200" width="'+width+'" height="'+height+'" class="char-figure">' +
+    '<g class="'+p.groupClass+'">' +
+      '<rect x="58" y="168" width="16" height="22" rx="4" fill="'+av.skin+'"/>' +
+      '<rect x="86" y="168" width="16" height="22" rx="4" fill="'+av.skin+'"/>' +
+      '<rect x="54" y="182" width="24" height="12" rx="4" fill="'+av.shoesColor+'"/>' +
+      '<rect x="82" y="182" width="24" height="12" rx="4" fill="'+av.shoesColor+'"/>' +
+      '<rect x="46" y="110" width="68" height="66" rx="18" fill="'+av.clothesColor+'"/>' +
+      '<rect x="30" y="118" width="18" height="48" rx="9" fill="'+av.clothesColor+'"/>' +
+      '<rect x="112" y="118" width="18" height="48" rx="9" fill="'+av.clothesColor+'"/>' +
+      '<circle cx="39" cy="168" r="9" fill="'+av.skin+'"/>' +
+      '<circle cx="121" cy="168" r="9" fill="'+av.skin+'"/>' +
+      '<rect x="70" y="92" width="20" height="20" fill="'+av.skin+'"/>' +
+      '<circle cx="80" cy="66" r="38" fill="'+av.skin+'"/>' +
+      p.beardMarkup +
+      '<circle cx="42" cy="66" r="8" fill="'+av.skin+'"/>' +
+      '<circle cx="118" cy="66" r="8" fill="'+av.skin+'"/>' +
+      p.eyesMarkup +
+      p.mouthMarkup +
+      p.hairMarkup +
+      p.accessoryMarkup +
+    '</g>' +
+    p.zzz +
+  '</svg>';
+}
+
+/* Cropped headshot version for the small header badge / stats hero card —
+   always reflects the current avatar (skin, hair, clothes, accessories). */
+function buildAvatarHeadSVG(size){
+  const p = buildAvatarParts();
+  const av = p.av;
+  return '<svg viewBox="26 10 108 118" width="'+size+'" height="'+size+'">' +
+    '<g>' +
+      '<rect x="46" y="110" width="68" height="66" rx="18" fill="'+av.clothesColor+'"/>' +
+      '<circle cx="80" cy="66" r="38" fill="'+av.skin+'"/>' +
+      p.beardMarkup +
+      '<circle cx="42" cy="66" r="8" fill="'+av.skin+'"/>' +
+      '<circle cx="118" cy="66" r="8" fill="'+av.skin+'"/>' +
+      p.eyesMarkup +
+      p.mouthMarkup +
+      p.hairMarkup +
+      p.accessoryMarkup +
+    '</g>' +
+  '</svg>';
+}
+
+function renderCharacterAvatar(){
+  const bigHost = document.getElementById('avatarStageSvg');
+  const smallHost = document.getElementById('homeCharSvg');
+  const headHost = document.getElementById('headAvatar');
+  const heroHost = document.getElementById('statsHeroAvatar');
+  if(bigHost) bigHost.innerHTML = buildAvatarSVG(150);
+  if(smallHost) smallHost.innerHTML = buildAvatarSVG(60);
+  if(headHost) headHost.innerHTML = buildAvatarHeadSVG(56);
+  if(heroHost) heroHost.innerHTML = buildAvatarHeadSVG(54);
+}
+
+/* ---------- Avatar customizer rendering ---------- */
+function renderColorRow(containerId, options, field){
+  const row = document.getElementById(containerId);
+  row.innerHTML = options.map(c => {
+    const sel = state.avatar[field] === c ? 'selected' : '';
+    return '<button class="swatch '+sel+'" style="background:'+c+'" data-field="'+field+'" data-value="'+c+'"></button>';
+  }).join('');
+}
+function renderStyleRow(containerId, options, field){
+  const row = document.getElementById(containerId);
+  row.innerHTML = options.map(o => {
+    const sel = state.avatar[field] === o.id ? 'selected' : '';
+    return '<button class="swatch swatch-style '+sel+'" data-field="'+field+'" data-value="'+o.id+'">'+(o.label || o.icon)+'</button>';
+  }).join('');
+}
+function renderBeardRow(){
+  const row = document.getElementById('beardRow');
+  const offSel = !state.avatar.beard ? 'selected' : '';
+  const onSel = state.avatar.beard ? 'selected' : '';
+  row.innerHTML =
+    '<button class="swatch swatch-style '+offSel+'" data-beard="off">Yok</button>' +
+    '<button class="swatch swatch-style '+onSel+'" data-beard="on">Var</button>';
+}
+function renderCustomizer(){
+  renderColorRow('skinRow', SKIN_OPTIONS, 'skin');
+  renderStyleRow('hairStyleRow', HAIR_STYLE_OPTIONS, 'hairStyle');
+  renderColorRow('hairColorRow', HAIR_COLORS, 'hairColor');
+  renderColorRow('eyeColorRow', EYE_COLORS, 'eyeColor');
+  renderBeardRow();
+  renderColorRow('clothesColorRow', CLOTHES_COLORS, 'clothesColor');
+  renderColorRow('shoesColorRow', SHOES_COLORS, 'shoesColor');
+  renderStyleRow('accessoryRow', ACCESSORY_OPTIONS, 'accessory');
+}
+
+function renderPet(){
+  if(!state.pet) return;
+  const petType = PET_TYPES.find(p=>p.id===state.pet.typeId) || PET_TYPES[0];
+  const emojiEl = document.getElementById('petEmoji');
+  if(emojiEl) emojiEl.textContent = petStage(petType, state.pet.level);
+  const nameEl = document.getElementById('petName');
+  if(nameEl) nameEl.textContent = petType.name;
+  const lvlEl = document.getElementById('petLevel');
+  if(lvlEl) lvlEl.textContent = 'Seviye ' + state.pet.level;
+  const needed = petXpForLevel(state.pet.level);
+  const fillEl = document.getElementById('petXpFill');
+  if(fillEl) fillEl.style.width = Math.min(100, (state.pet.xp/needed)*100) + '%';
+  const row = document.getElementById('petTypeRow');
+  if(row){
+    row.innerHTML = PET_TYPES.map(p => {
+      const sel = state.pet.typeId === p.id ? 'selected' : '';
+      return '<button class="swatch swatch-style '+sel+'" data-pet="'+p.id+'">'+p.stages[0]+' '+p.name+'</button>';
+    }).join('');
+  }
+}
+
+/* ---------- Settings ---------- */
+function applyDarkMode(){
+  document.body.classList.toggle('dark-mode', !!(state.settings && state.settings.darkMode));
+}
+function openSettings(){
+  document.querySelectorAll('section').forEach(s=>s.classList.remove('active'));
+  document.getElementById('view-settings').classList.add('active');
+  renderSettings();
+}
+function closeSettings(){
+  document.querySelectorAll('section').forEach(s=>s.classList.remove('active'));
+  document.getElementById('view-quests').classList.add('active');
+  document.querySelectorAll('nav.tabbar button').forEach(b=>b.classList.remove('active'));
+  const questsBtn = document.querySelector('nav.tabbar button[data-view="view-quests"]');
+  if(questsBtn) questsBtn.classList.add('active');
+}
+function toggleSound(){
+  state.settings.soundOn = !state.settings.soundOn;
+  saveState();
+  renderSettings();
+}
+function toggleDarkMode(){
+  state.settings.darkMode = !state.settings.darkMode;
+  applyDarkMode();
+  saveState();
+  renderSettings();
+}
+function changeWaterGoal(delta){
+  const next = Math.max(1, Math.min(20, state.water.goal + delta));
+  if(next === state.water.goal) return;
+  state.water.goal = next;
+  saveState();
+  renderSettings();
+  renderWater();
+}
+function renderSettings(){
+  if(!state.settings) return;
+  const soundBtn = document.getElementById('soundToggle');
+  if(soundBtn) soundBtn.classList.toggle('on', !!state.settings.soundOn);
+  const darkBtn = document.getElementById('darkToggle');
+  if(darkBtn) darkBtn.classList.toggle('on', !!state.settings.darkMode);
+  const goalNum = document.getElementById('waterGoalNum');
+  if(goalNum) goalNum.textContent = state.water.goal;
+}
+
+/* ---------- Renderers ---------- */
+function renderTop(){
+  document.getElementById('coinCount').textContent = state.coins;
+  document.getElementById('levelLabel').textContent = 'Seviye ' + state.level;
+  const needed = xpForLevel(state.level);
+  document.getElementById('xpFill').style.width = Math.min(100, (state.xp/needed)*100) + '%';
+}
+
+function renderSuggested(){
+  const row = document.getElementById('suggestedList');
+  row.innerHTML = SUGGESTED_QUESTS.map(sq => {
+    const d = DIFFICULTIES[sq.difficulty] || DIFFICULTIES.easy;
+    return '<button class="suggest-chip" data-name="'+escapeHtml(sq.name)+'" data-diff="'+sq.difficulty+'">'+d.dot+' '+escapeHtml(sq.name)+'</button>';
+  }).join('');
+}
+
+function renderDiffRow(){
+  document.querySelectorAll('.diff-chip').forEach(b=>{
+    b.classList.toggle('selected', b.dataset.diff === selectedDifficulty);
+  });
+}
+
+function renderQuests(){
+  const list = document.getElementById('questList');
+  if(state.quests.length === 0){
+    list.innerHTML = '<div class="empty">Henüz görev yok. Yukarıdan ilk görevini ekle — "kitap oku", "10.000 adım at" gibi.</div>';
+    return;
+  }
+  list.innerHTML = state.quests.map(q => {
+    const diff = DIFFICULTIES[q.difficulty] || DIFFICULTIES.medium;
+    return `
+    <div class="quest ${q.done ? 'done' : ''}">
+      <button class="check" onclick="toggleQuest('${q.id}')">${q.done ? '✓' : ''}</button>
+      <div class="qname">${escapeHtml(q.name)}</div>
+      <div class="qreward" style="color:${diff.color}">${diff.dot} +${diff.xp}xp</div>
+      <button class="qdel" onclick="deleteQuest('${q.id}')">✕</button>
+    </div>
+  `;
+  }).join('');
+}
+
+function renderLoginCard(){
+  const card = document.getElementById('loginCard');
+  const dayIdx = ((state.loginStreak - 1) % 7 + 7) % 7;
+  card.innerHTML =
+    '<div class="lc-title"><span>🔥 ' + state.loginStreak + ' günlük giriş serisi</span><span>Toplam: ' + state.totalLogins + '</span></div>' +
+    '<div class="login-dots">' +
+    LOGIN_REWARDS.map((r,i) => {
+      const claimed = i <= dayIdx;
+      const isToday = i === dayIdx;
+      return '<div class="login-dot ' + (claimed?'claimed':'') + ' ' + (isToday?'today':'') + '" title="' + r.label + '">' + r.icon + '</div>';
+    }).join('') +
+    '</div>';
+}
+
+function renderChestCard(){
+  const card = document.getElementById('chestCard');
+  if(state.chestsAvailable > 0){
+    card.style.display = 'flex';
+    document.getElementById('chestTitle').textContent = state.chestsAvailable + (state.chestsAvailable===1 ? ' Sandığın var!' : ' Sandığın var!');
+  } else {
+    card.style.display = 'none';
+  }
+}
+
+let badgeShowCount = 24;
+function renderBadges(){
+  const grid = document.getElementById('badgeGrid');
+  const unlocked = ALL_BADGES.filter(b=>b.check(state));
+  document.getElementById('badgeSummary').textContent = unlocked.length + ' / ' + ALL_BADGES.length + ' rozet açıldı';
+  const visible = ALL_BADGES.slice(0, badgeShowCount);
+  grid.innerHTML = visible.map(b => {
+    const isUnlocked = b.check(state);
+    return '<div class="badge '+(isUnlocked ? '' : 'locked')+'" title="'+escapeHtml(b.label)+'">'+b.icon+'</div>';
+  }).join('');
+  const moreBtn = document.getElementById('badgeMoreBtn');
+  if(moreBtn){
+    const remaining = ALL_BADGES.length - badgeShowCount;
+    if(remaining > 0){
+      moreBtn.style.display = 'block';
+      moreBtn.textContent = 'Daha fazlası (' + remaining + ')';
+    } else {
+      moreBtn.style.display = 'none';
+    }
+  }
+}
+function showMoreBadges(){
+  badgeShowCount += 24;
+  renderBadges();
+}
+
+let shopShowCount = 12;
+function renderShop(){
+  const list = document.getElementById('shopList');
+  const visible = SHOP_ITEMS.slice(0, shopShowCount);
+  list.innerHTML = visible.map(item => {
+    const owned = state.inventory.includes(item.id);
+    const equipped = state.equipped === item.id;
+    const r = rarityOf(item.price);
+    let btn;
+    if(equipped){ btn = '<button class="owned-btn">Giyildi</button>'; }
+    else if(owned){ btn = '<button class="equip-btn" onclick="equipItem(\''+item.id+'\')">Giy</button>'; }
+    else { btn = '<button class="buy-btn" onclick="buyItem(\''+item.id+'\')">'+item.price+' 🪙</button>'; }
+    return '<div class="shop-item" style="border-left:4px solid '+r.color+';">' +
+      '<div class="icon">'+item.icon+'</div>' +
+      '<div class="info"><div class="n">'+item.name+'</div>' +
+      '<div class="p">'+r.dot+' '+r.label+' · '+(owned ? 'Sahipsin' : item.price+' para')+'</div></div>' +
+      btn + '</div>';
+  }).join('');
+  const moreBtn = document.getElementById('shopMoreBtn');
+  if(moreBtn){
+    const remaining = SHOP_ITEMS.length - shopShowCount;
+    if(remaining > 0){
+      moreBtn.style.display = 'block';
+      moreBtn.textContent = 'Daha fazlası (' + remaining + ')';
+    } else {
+      moreBtn.style.display = 'none';
+    }
+  }
+}
+function showMoreShop(){
+  shopShowCount += 12;
+  renderShop();
+}
+
+function renderHomeShop(){
+  const list = document.getElementById('homeShopList');
+  list.innerHTML = HOME_ITEMS.map(item => {
+    const owned = state.home.includes(item.id);
+    const r = rarityOf(item.price);
+    const btn = owned
+      ? '<button class="owned-btn">Alındı</button>'
+      : '<button class="buy-btn" onclick="buyHomeItem(\''+item.id+'\')">'+item.price+' 🪙</button>';
+    return '<div class="shop-item" style="border-left:4px solid '+r.color+';">' +
+      '<div class="icon">'+item.icon+'</div>' +
+      '<div class="info"><div class="n">'+item.name+'</div>' +
+      '<div class="p">'+r.dot+' '+r.label+' · '+(owned ? 'Sahipsin' : item.price+' para')+'</div></div>' +
+      btn + '</div>';
+  }).join('');
+}
+
+function renderRoom(){
+  const room = document.getElementById('roomScene');
+  room.innerHTML = HOME_ITEMS.map(item => {
+    const owned = state.home.includes(item.id);
+    return '<div class="room-slot '+(owned ? 'filled' : 'empty')+'" title="'+item.name+'">'+(owned ? item.icon : '➕')+'</div>';
+  }).join('');
+}
+
+function renderStatsBoxes(){
+  document.getElementById('statCompleted').textContent = state.totalCompleted;
+  document.getElementById('statStreak').textContent = state.plant.streak;
+}
+
+function renderChallenges(){
+  const wrap = document.getElementById('challengeList');
+  wrap.innerHTML = CHALLENGES.map(c => {
+    const progress = Math.min(100, (state.plant.longestStreak / c.days) * 100);
+    const done = state.plant.longestStreak >= c.days;
+    return '<div class="challenge-card '+(done ? 'done' : '')+'">' +
+      '<div class="ch-icon">'+c.icon+'</div>' +
+      '<div class="ch-info"><div class="ch-label">'+c.label+'</div>' +
+      '<div class="ch-bar"><div class="ch-fill" style="width:'+progress+'%"></div></div>' +
+      '<div class="ch-sub">'+(done ? 'Tamamlandı!' : Math.min(state.plant.longestStreak, c.days) + ' / ' + c.days + ' gün')+'</div>' +
+      '</div></div>';
+  }).join('');
+}
+
+function stageFor(plantDef, watered){
+  let idx = 0;
+  for(let i=0;i<plantDef.thresholds.length;i++){
+    if(watered >= plantDef.thresholds[i]) idx = i;
+  }
+  return plantDef.stages[idx];
+}
+function renderPlotGrid(){
+  const grid = document.getElementById('plotGrid');
+  grid.innerHTML = GARDEN_PLANTS.map(p => {
+    const st = state.plants[p.id] || {unlocked:false, watered:0};
+    if(!st.unlocked){
+      return '<div class="plot-card plot-locked"><div class="plot-emoji">🔒</div>' +
+        '<div class="plot-name">'+p.name+'</div>' +
+        '<button class="plot-unlock-btn" data-plant="'+p.id+'">'+p.unlockCost+' 🪙</button></div>';
+    }
+    const emoji = stageFor(p, st.watered);
+    return '<div class="plot-card"><div class="plot-emoji">'+emoji+'</div>' +
+      '<div class="plot-name">'+p.name+'</div>' +
+      '<div class="plot-sub">'+st.watered+' sulama</div></div>';
+  }).join('');
+}
+
+const STAT_GROUPS = [
+  {title:'🎯 Genel', items:[
+    {icon:'✅', label:'Tamamlanan görev', get:s=>s.totalCompleted},
+    {icon:'➕', label:'Eklenen görev', get:s=>s.totalQuestsAdded},
+    {icon:'🗑️', label:'Silinen görev', get:s=>s.deletedCount},
+    {icon:'⚡', label:'Günlük rekor', get:s=>s.maxDailyCompleted},
+  ]},
+  {title:'💰 Ekonomi', items:[
+    {icon:'🪙', label:'Güncel coin', get:s=>s.coins},
+    {icon:'💎', label:'Kazanılan coin', get:s=>s.totalCoinsEarned},
+    {icon:'✨', label:'Kazanılan XP', get:s=>s.totalXpEarned},
+    {icon:'🛍️', label:'Harcanan coin', get:s=>s.totalSpent},
+  ]},
+  {title:'🌱 Fidan & Bahçe', items:[
+    {icon:'🔥', label:'Güncel seri', get:s=>s.plant.streak + ' gün'},
+    {icon:'🏆', label:'En uzun seri', get:s=>s.plant.longestStreak + ' gün'},
+    {icon:'💧', label:'Toplam sulama', get:s=>s.totalWaterings},
+  ]},
+  {title:'🥤 Su Takibi', items:[
+    {icon:'🥤', label:'Bugünkü su', get:s=>s.water.glasses + ' / ' + s.water.goal},
+    {icon:'📈', label:'En uzun su serisi', get:s=>s.water.longestStreak + ' gün'},
+    {icon:'🧊', label:'Toplam bardak', get:s=>s.water.totalGlasses},
+  ]},
+  {title:'🎒 Koleksiyon', items:[
+    {icon:'👗', label:'Aksesuar', get:s=>s.inventory.length + ' / ' + SHOP_ITEMS.length},
+    {icon:'🏡', label:'Ev eşyası', get:s=>s.home.length + ' / ' + HOME_ITEMS.length},
+    {icon:'🏅', label:'Açılan rozet', get:s=>(s.unlockedBadges||[]).length + ' / ' + ALL_BADGES.length},
+  ]},
+  {title:'📅 Giriş & Şans', items:[
+    {icon:'🔥', label:'Giriş serisi', get:s=>s.loginStreak + ' gün'},
+    {icon:'📆', label:'Toplam giriş', get:s=>s.totalLogins},
+    {icon:'🎁', label:'Açılan sandık', get:s=>s.chestsOpened},
+  ]},
+];
+
+function renderStatsView(){
+  const hero = document.getElementById('statsHero');
+  if(hero){
+    const needed = xpForLevel(state.level);
+    hero.innerHTML =
+      '<div class="stats-hero-top">' +
+        '<div class="stats-hero-avatar" id="statsHeroAvatar"></div>' +
+        '<div class="stats-hero-info">' +
+          '<div class="shi-name">Filiz Kurul</div>' +
+          '<div class="shi-level">Seviye ' + state.level + '</div>' +
+          '<div class="xp-bar stats-hero-xpbar"><div class="xp-fill" style="width:' + Math.min(100, (state.xp/needed)*100) + '%"></div></div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="stats-hero-row">' +
+        '<div class="shr-item"><div class="shr-num">' + state.totalCompleted + '</div><div class="shr-lbl">görev</div></div>' +
+        '<div class="shr-item"><div class="shr-num">' + state.coins + '</div><div class="shr-lbl">coin</div></div>' +
+        '<div class="shr-item"><div class="shr-num">' + state.plant.streak + '</div><div class="shr-lbl">gün seri</div></div>' +
+      '</div>';
+    const avatarHost = document.getElementById('statsHeroAvatar');
+    if(avatarHost) avatarHost.innerHTML = buildAvatarHeadSVG(54);
+  }
+
+  const groupsWrap = document.getElementById('statGroups');
+  if(groupsWrap){
+    groupsWrap.innerHTML = STAT_GROUPS.map(g => {
+      const boxes = g.items.map(it =>
+        '<div class="stat-box"><div class="sbi">' + it.icon + '</div><div class="sbtext"><div class="num">' + it.get(state) + '</div><div class="lbl">' + it.label + '</div></div></div>'
+      ).join('');
+      return '<div class="stat-group-title">' + g.title + '</div><div class="stat-grid">' + boxes + '</div>';
+    }).join('');
+  }
+
+  const logList = document.getElementById('completedLogList');
+  if(!state.completedLog || state.completedLog.length === 0){
+    logList.innerHTML = '<div class="empty">Henüz tamamlanmış görev yok.</div>';
+  } else {
+    logList.innerHTML = state.completedLog.slice(0, 25).map(l => `
+      <div class="log-row"><div class="ln">${escapeHtml(l.name)}</div><div class="ld">${l.date}</div></div>
+    `).join('');
+  }
+}
+
+function renderGarden(){
+  const streak = state.plant.streak;
+  let stageIdx = 0;
+  if(streak >= 30) stageIdx = 4;
+  else if(streak >= 14) stageIdx = 3;
+  else if(streak >= 7) stageIdx = 2;
+  else if(streak >= 1) stageIdx = 1;
+  else stageIdx = 0;
+
+  document.getElementById('plantVisual').textContent = PLANT_STAGES[stageIdx];
+
+  const today = todayStr();
+  const wateredToday = state.plant.lastWatered === today;
+  document.getElementById('streakText').textContent = streak > 0 ? streak + ' günlük seri' : 'Henüz dikilmedi';
+  document.getElementById('streakSub').textContent = wateredToday
+    ? 'Bugün sulandı, yarın tekrar gel.'
+    : (streak > 0 ? 'Bugün sulamayı unutma!' : 'İlk sulamanı yap, fidanın filizlensin.');
+
+  const waterBtn = document.getElementById('waterBtn');
+  waterBtn.disabled = wateredToday;
+  waterBtn.textContent = wateredToday ? 'Bugün sulandı ✓' : 'Fidanı sula';
+
+  document.querySelectorAll('.stage-dot').forEach(dot=>{
+    const s = parseInt(dot.dataset.s, 10);
+    dot.classList.toggle('on', s <= stageIdx);
+  });
+}
+
+function escapeHtml(str){
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+function renderAll(){
+  applyDarkMode();
+  renderTop();
+  renderPet();
+  renderSettings();
+  renderLoginCard();
+  renderChestCard();
+  renderWheel();
+  renderDiffRow();
+  renderSuggested();
+  renderQuests();
+  renderBadges();
+  renderShop();
+  renderHomeShop();
+  renderRoom();
+  renderStatsBoxes();
+  renderChallenges();
+  renderGarden();
+  renderWater();
+  renderPlotGrid();
+  renderStatsView();
+  renderCharacterAvatar();
+  renderCustomizer();
+}
+
+document.getElementById('questInput').addEventListener('keydown', (e)=>{
+  if(e.key === 'Enter') addQuest();
+});
+document.getElementById('suggestedList').addEventListener('click', (e)=>{
+  const btn = e.target.closest('.suggest-chip');
+  if(!btn) return;
+  addSuggestedQuest(btn.dataset.name, btn.dataset.diff);
+});
+document.getElementById('diffRow').addEventListener('click', (e)=>{
+  const btn = e.target.closest('.diff-chip');
+  if(!btn) return;
+  selectedDifficulty = btn.dataset.diff;
+  renderDiffRow();
+});
+document.getElementById('plotGrid').addEventListener('click', (e)=>{
+  const btn = e.target.closest('.plot-unlock-btn');
+  if(!btn) return;
+  unlockPlant(btn.dataset.plant);
+});
+document.getElementById('petTypeRow').addEventListener('click', (e)=>{
+  const btn = e.target.closest('[data-pet]');
+  if(!btn) return;
+  state.pet.typeId = btn.dataset.pet;
+  saveState();
+  renderPet();
+});
+document.getElementById('customizeBlock').addEventListener('click', (e)=>{
+  const beardBtn = e.target.closest('[data-beard]');
+  if(beardBtn){
+    state.avatar.beard = beardBtn.dataset.beard === 'on';
+    saveState();
+    renderAll();
+    return;
+  }
+  const swBtn = e.target.closest('[data-field]');
+  if(swBtn){
+    state.avatar[swBtn.dataset.field] = swBtn.dataset.value;
+    saveState();
+    renderAll();
+  }
+});
+
+loadState();
+</script>
+</body>
+</html>
