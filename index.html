@@ -580,7 +580,17 @@ async function persistNow(){
     return false;
   }
 }
-function pruneData(){trimObject(state.progress.dayCounts);trimObject(state.water.records);state.progress.activeDates=state.progress.activeDates.slice(-420);state.tracking.focusSessions=state.tracking.focusSessions.slice(0,365);state.activity=state.activity.slice(0,80);state.tasks.forEach(x=>x.completedDates=x.completedDates.slice(-420));state.habits.forEach(x=>x.completedDates=x.completedDates.slice(-420))}
+function pruneData(){
+  /* Tüm zamanlar istatistikleri için zaman serilerini silme. */
+  state.activity=(Array.isArray(state.activity)?state.activity:[]).slice(0,200);
+  state.progress.activeDates=[...new Set(Array.isArray(state.progress.activeDates)?state.progress.activeDates:[])].sort();
+  state.tracking.focusSessions=Array.isArray(state.tracking.focusSessions)?state.tracking.focusSessions:[];
+  state.tasks.forEach(x=>x.completedDates=[...new Set(Array.isArray(x.completedDates)?x.completedDates:[])].sort());
+  state.habits.forEach(x=>{
+    x.completedDates=[...new Set(Array.isArray(x.completedDates)?x.completedDates:[])].sort();
+    x.values=x.values&&typeof x.values==="object"?x.values:{};
+  });
+}
 
 function levelInfo(){let xp=state.progress.xp,level=1,need=50;while(xp>=need){xp-=need;level++;need=50+(level-1)*25}return{level,current:xp,need,pct:clamp(xp/need*100,0,100)}}
 function rewardForTask(task){if(task.type==="focus"){const minutes=clamp(Number(task.duration)||25,10,60);return{xp:Math.max(8,Math.round(minutes*.6)),coins:Math.max(3,Math.round(minutes*.2)),energy:Math.max(6,Math.round(minutes*.7)),category:task.category}}const e=EFFORTS[task.effort]||EFFORTS.normal;return{xp:e.xp,coins:e.coins,energy:e.energy,category:task.category}}
@@ -1384,6 +1394,210 @@ button:focus,button:active,a:focus,a:active{outline:none!important;-webkit-tap-h
   .habit-chart-track{max-width:23px}
 }
 
+
+/* =========================================================
+   İSTATİSTİK PERİYOTLARI + TAM EKRAN DETAY
+   Mevcut tasarım korunur; yalnızca istatistik işlevleri eklenir.
+   ========================================================= */
+.stats-period-tabs{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:4px;
+  padding:4px;
+  margin:0 0 12px;
+  border-radius:14px;
+  background:var(--surface-3);
+}
+.stats-period-tabs button{
+  min-height:38px;
+  border:0;
+  border-radius:10px;
+  background:transparent;
+  color:var(--muted);
+  font-size:9.5px;
+  font-weight:850;
+  padding:0 5px;
+  -webkit-tap-highlight-color:transparent;
+}
+.stats-period-tabs button.active{
+  background:var(--surface);
+  color:var(--ink);
+  box-shadow:0 3px 10px rgba(34,64,45,.08);
+}
+.stats-period-title{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:10px;
+  margin:2px 1px 10px;
+}
+.stats-period-title strong{font-size:14px}
+.stats-period-title span{font-size:10px;color:var(--muted)}
+.period-chart{
+  border:1px solid var(--line);
+  border-radius:20px;
+  background:var(--surface);
+  padding:14px 12px 10px;
+  margin-bottom:12px;
+  overflow:hidden;
+}
+.period-chart-bars{
+  height:150px;
+  display:flex;
+  align-items:flex-end;
+  gap:6px;
+  padding:8px 2px 0;
+  position:relative;
+}
+.period-chart-bars:before,.period-chart-bars:after{
+  content:"";
+  position:absolute;
+  left:2px;right:2px;
+  height:1px;
+  background:var(--line);
+  opacity:.55;
+}
+.period-chart-bars:before{top:38%}
+.period-chart-bars:after{top:68%}
+.period-bar{
+  flex:1;
+  min-width:10px;
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-end;
+  align-items:center;
+  gap:5px;
+  position:relative;
+  z-index:1;
+}
+.period-bar-track{
+  width:100%;
+  max-width:25px;
+  height:112px;
+  border-radius:9px;
+  overflow:hidden;
+  background:var(--surface-3);
+  display:flex;
+  align-items:flex-end;
+}
+.period-bar-fill{
+  display:block;
+  width:100%;
+  min-height:3px;
+  height:var(--h,3%);
+  border-radius:9px 9px 5px 5px;
+  background:linear-gradient(180deg,#75a788,var(--primary));
+}
+.period-bar.water .period-bar-fill{background:linear-gradient(180deg,#8dbbd1,var(--blue))}
+.period-bar.focus .period-bar-fill{background:linear-gradient(180deg,#9d89c5,var(--purple))}
+.period-bar.mood .period-bar-fill{background:linear-gradient(180deg,#9fcf91,#5b9d69)}
+.period-bar-label{
+  font-size:7.8px;
+  font-weight:800;
+  color:var(--muted);
+  white-space:nowrap;
+}
+.period-scroll{
+  overflow-x:auto;
+  scrollbar-width:thin;
+  padding-bottom:3px;
+}
+.period-scroll .period-chart-bars{
+  min-width:var(--chart-min,100%);
+}
+.fullscreen-stat{
+  align-items:stretch !important;
+  padding:0 !important;
+}
+.fullscreen-stat .sheet{
+  width:100%;
+  height:100%;
+  max-height:100%;
+  border-radius:0;
+  padding:
+    calc(10px + env(safe-area-inset-top))
+    15px
+    calc(22px + env(safe-area-inset-bottom));
+}
+.fullscreen-stat .handle{display:none}
+.fullscreen-stat .sheet-head{
+  position:sticky;
+  top:0;
+  z-index:5;
+  background:var(--surface-2);
+  padding:4px 0 10px;
+}
+.fullscreen-stat .sheet-head h2{font-size:21px}
+.fullscreen-stat .close{
+  background:var(--surface);
+  border:1px solid var(--line);
+}
+.period-summary-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:8px;
+  margin-bottom:12px;
+}
+.period-summary{
+  border:1px solid var(--line);
+  border-radius:17px;
+  background:var(--surface);
+  padding:12px;
+}
+.period-summary span{
+  display:block;
+  font-size:9.5px;
+  color:var(--muted);
+}
+.period-summary strong{
+  display:block;
+  font-size:18px;
+  margin-top:4px;
+  letter-spacing:-.03em;
+}
+.weight-period-line{
+  width:100%;
+  height:180px;
+  display:block;
+}
+.weight-period-line .grid{stroke:var(--line);stroke-width:1}
+.weight-period-line .line{
+  fill:none;
+  stroke:var(--primary);
+  stroke-width:3;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+.weight-period-line .dot{
+  fill:var(--surface);
+  stroke:var(--primary);
+  stroke-width:2.5;
+}
+.period-empty{
+  min-height:150px;
+  display:grid;
+  place-items:center;
+  text-align:center;
+  color:var(--muted);
+  font-size:11px;
+}
+@media(max-width:370px){
+  .stats-period-tabs button{font-size:8.6px}
+  .period-chart-bars{gap:4px}
+  .period-bar-track{max-width:21px}
+}
+
+
+/* Final stability/mobile polish */
+.fullscreen-stat .sheet{overscroll-behavior:contain}
+.stats-period-tabs{position:sticky;top:57px;z-index:4}
+.fullscreen-stat .stats-period-tabs{top:58px}
+@media(max-width:370px){
+  .fullscreen-stat .sheet{padding-left:11px;padding-right:11px}
+  .stats-period-tabs{gap:3px}
+}
+
 </style>
 
 <div class="focus-alarm" id="focusAlarm" role="alert" aria-live="assertive">
@@ -1761,6 +1975,543 @@ function renderHabitVisualChart(){
     try{renderHabitVisualChart()}catch(error){console.warn("Habit chart:",error)}
     return result;
   };
+})();
+
+
+/* =========================================================
+   HABITOPIA FINAL STABLE ANALYTICS ENGINE
+   Haftalık · Aylık · Yıllık · Tüm zamanlar
+   ========================================================= */
+(function(){
+  'use strict';
+
+  const PERIODS = {
+    week:{tr:'Haftalık',en:'Weekly'},
+    month:{tr:'Aylık',en:'Monthly'},
+    year:{tr:'Yıllık',en:'Yearly'},
+    all:{tr:'Tüm zamanlar',en:'All time'}
+  };
+
+  const HS = window.HabitopiaStats = window.HabitopiaStats || {
+    waterDate: localDateKey(),
+    moodDate: localDateKey()
+  };
+
+  function ensureStatsSettings(){
+    state.settings = state.settings || {};
+    state.settings.statsPeriods = state.settings.statsPeriods || {};
+    const defaults={habits:'week',water:'week',weight:'month',focus:'week',mood:'month'};
+    Object.keys(defaults).forEach(k=>{
+      if(!PERIODS[state.settings.statsPeriods[k]]) state.settings.statsPeriods[k]=defaults[k];
+    });
+
+    /* Görünmeyen eski puan sistemi değerlerini sıfırla. */
+    state.progress.xp=0;
+    state.progress.coins=0;
+    state.achievements=[];
+    state.dailyGiftDates=[];
+    state.unlockedRewards=[];
+    state.inventory={focusBoost:0,pointBoost:0,xpBoost:0,streakShield:0};
+  }
+
+  function period(kind){ensureStatsSettings();return state.settings.statsPeriods[kind]}
+  function periodName(k){const p=PERIODS[k]||PERIODS.week;return state.settings.lang==='en'?p.en:p.tr}
+  function setPeriod(kind,value){
+    ensureStatsSettings();
+    if(PERIODS[value]){
+      state.settings.statsPeriods[kind]=value;
+      scheduleSave();
+    }
+  }
+
+  function tabs(kind){
+    return `<div class="stats-period-tabs">${Object.keys(PERIODS).map(k=>
+      `<button class="${period(kind)===k?'active':''}" data-action="stats-period" data-kind="${kind}" data-period="${k}">${periodName(k)}</button>`
+    ).join('')}</div>`;
+  }
+
+  function keyFromDate(d){
+    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  }
+  function createdDate(item){
+    if(!item?.createdAt)return null;
+    const d=new Date(item.createdAt);
+    return Number.isNaN(d.getTime())?null:keyFromDate(d);
+  }
+  function earliest(values,fallback=localDateKey()){
+    const clean=values.filter(Boolean).sort();
+    return clean[0]||fallback;
+  }
+
+  function periodStart(type, firstDate){
+    const today=localDateKey();
+    if(type==='week') return addDays(today,-6);
+    if(type==='month') return addDays(today,-29);
+    if(type==='year') return `${new Date().getFullYear()}-01-01`;
+    return firstDate||today;
+  }
+
+  function monthLabel(ym){
+    const [y,m]=ym.split('-').map(Number);
+    return new Date(y,m-1,1).toLocaleDateString(state.settings.lang==='en'?'en-US':'tr-TR',{month:'short'});
+  }
+
+  function makeBuckets(type, firstDate){
+    const today=localDateKey();
+
+    if(type==='week'){
+      return Array.from({length:7},(_,i)=>{
+        const date=addDays(today,-6+i);
+        return {label:t(DAY_KEYS[dayIndexMonday(date)]),dates:[date]};
+      });
+    }
+
+    if(type==='month'){
+      const start=addDays(today,-29), out=[];
+      for(let i=0;i<5;i++){
+        const dates=[];
+        for(let j=0;j<6;j++){
+          const d=addDays(start,i*6+j);
+          if(d<=today)dates.push(d);
+        }
+        out.push({label:`${i+1}.`,dates});
+      }
+      return out;
+    }
+
+    if(type==='year'){
+      const now=new Date(),y=now.getFullYear(),out=[];
+      for(let m=1;m<=now.getMonth()+1;m++){
+        const ym=`${y}-${String(m).padStart(2,'0')}`;
+        const last=new Date(y,m,0).getDate(),dates=[];
+        for(let d=1;d<=last;d++){
+          const k=`${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+          if(k<=today)dates.push(k);
+        }
+        out.push({label:monthLabel(ym),dates});
+      }
+      return out;
+    }
+
+    const first=dateFromKey(firstDate||today),now=dateFromKey(today);
+    const months=(now.getFullYear()-first.getFullYear())*12+(now.getMonth()-first.getMonth());
+
+    if(months>18){
+      const out=[];
+      for(let y=first.getFullYear();y<=now.getFullYear();y++){
+        const dates=[],last=(y===now.getFullYear()?today:`${y}-12-31`);
+        let d=`${y}-01-01`;
+        while(d<=last){dates.push(d);d=addDays(d,1)}
+        out.push({label:String(y),dates});
+      }
+      return out;
+    }
+
+    const out=[];
+    let y=first.getFullYear(),m=first.getMonth()+1;
+    while(y<now.getFullYear() || (y===now.getFullYear()&&m<=now.getMonth()+1)){
+      const ym=`${y}-${String(m).padStart(2,'0')}`,lastDay=new Date(y,m,0).getDate(),dates=[];
+      for(let d=1;d<=lastDay;d++){
+        const k=`${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+        if(k>=firstDate&&k<=today)dates.push(k);
+      }
+      out.push({label:monthLabel(ym),dates});
+      m++;if(m>12){m=1;y++}
+    }
+    return out;
+  }
+
+  function bars(values,labels,type=''){
+    const max=Math.max(1,...values.map(Number));
+    const minWidth=values.length>14?Math.max(500,values.length*34):0;
+    return `<div class="period-scroll"${minWidth?` style="--chart-min:${minWidth}px"`:''}>
+      <div class="period-chart-bars">
+        ${values.map((v,i)=>`<div class="period-bar ${type}">
+          <div class="period-bar-track"><i class="period-bar-fill" style="--h:${v>0?Math.max(5,(Number(v)/max)*100):3}%"></i></div>
+          <span class="period-bar-label">${labels[i]||''}</span>
+        </div>`).join('')}
+      </div>
+    </div>`;
+  }
+
+  /* ---------------- ALIŞKANLIKLAR ---------------- */
+  function habitFirstDate(){
+    const dates=[];
+    state.habits.forEach(h=>{
+      dates.push(createdDate(h));
+      (h.completedDates||[]).forEach(d=>dates.push(d));
+      Object.keys(h.values||{}).forEach(d=>dates.push(d));
+    });
+    return earliest(dates);
+  }
+
+  function habitScoreForDates(dates){
+    let due=0,score=0;
+    dates.forEach(date=>{
+      state.habits.forEach(h=>{
+        const born=createdDate(h);
+        if(born && date<born)return;
+        if(!habitDue(h,date) || date>localDateKey())return;
+
+        let st='';
+        try{st=typeof habitStatus==='function'?habitStatus(h,date):''}catch(e){}
+        if(!st) st=habitCompletedOn(h,date)?'done':'';
+
+        if(st==='skip')return;
+        due++;
+        if(st==='done')score+=1;
+        else if(st==='partial')score+=.5;
+      });
+    });
+    return due?Math.round(score/due*100):0;
+  }
+
+  window.renderHabitVisualChart=function(){
+    const table=document.getElementById('habitTable');
+    if(!table)return;
+
+    let host=document.getElementById('habitVisualChart');
+    if(!host){
+      host=document.createElement('section');
+      host.id='habitVisualChart';
+      host.className='habit-visual-chart';
+      const anchor=table.parentElement?.classList.contains('habit-table-wrap')?table.parentElement:table;
+      anchor.parentNode.insertBefore(host,anchor);
+    }
+
+    if(!state.habits.length){host.style.display='none';return}
+    host.style.display='';
+
+    const p=period('habits'),b=makeBuckets(p,habitFirstDate());
+    const values=b.map(x=>habitScoreForDates(x.dates));
+    host.innerHTML=`${tabs('habits')}
+      <div class="habit-visual-chart-head"><div><strong>${gx('Alışkanlık ritmi','Habit rhythm')}</strong><span>${periodName(p)}</span></div></div>
+      ${bars(values,b.map(x=>x.label))}`;
+  };
+
+  const previousRenderHabits = renderHabits;
+  renderHabits=function(){
+    const result=previousRenderHabits.apply(this,arguments);
+    try{window.renderHabitVisualChart()}catch(e){console.warn('Habit chart',e)}
+    return result;
+  };
+
+  /* ---------------- SU ---------------- */
+  function waterRecordSafe(date){
+    state.water=state.water||{defaultGoal:8,records:{}};
+    state.water.records=state.water.records||{};
+    if(!state.water.records[date]){
+      state.water.records[date]={count:0,goal:Number(state.water.defaultGoal)||8,rewarded:false};
+    }
+    return state.water.records[date];
+  }
+
+  function waterFirstDate(){
+    return earliest(Object.keys(state.water.records||{}));
+  }
+
+  function renderWaterStable(){
+    const host=document.getElementById('waterStatsContent');if(!host)return;
+    const p=period('water'),b=makeBuckets(p,waterFirstDate());
+    const ml=clamp(Number(state.water.glassMl)||250,50,1500);
+
+    /* Eksik gün = 0 bardak. Böylece istatistik yapay biçimde yüksek görünmez. */
+    const values=b.map(bucket=>{
+      if(!bucket.dates.length)return 0;
+      return bucket.dates.reduce((sum,date)=>{
+        const r=state.water.records?.[date];
+        return sum+(Number(r?.count)||0);
+      },0)/bucket.dates.length;
+    });
+
+    const r=waterRecordSafe(HS.waterDate);
+    const goal=Number(r.goal)||Number(state.water.defaultGoal)||8;
+
+    host.innerHTML=`${tabs('water')}
+      <div class="period-chart">
+        <div class="stats-period-title"><div><strong>${gx('Su düzeni','Water rhythm')}</strong><span>${periodName(p)}</span></div></div>
+        ${bars(values,b.map(x=>x.label),'water')}
+      </div>
+
+      <div class="water-editor">
+        <div class="water-editor-top">
+          <div><span class="card-sub">${formatDate(HS.waterDate,true)}</span>
+          <strong>${r.count}/${goal}</strong>
+          <div class="card-sub">${r.count*ml} ml ${gx('içildi','drunk')} · ${goal*ml} ml ${gx('hedef','goal')}</div></div>
+          <span class="water-emoji">💧</span>
+        </div>
+        <div class="water-editor-actions">
+          <button data-action="water-history-minus">−</button>
+          <button class="drink" data-action="water-history-plus">+ ${ml} ml</button>
+          <button data-action="water-history-plus">+</button>
+        </div>
+      </div>
+
+      <div class="water-editor">
+        <div class="glass-size-row">
+          <div class="field"><label>${gx('Bir bardak kaç ml?','Glass size (ml)')}</label><input id="glassMlInput" class="text-input" type="number" inputmode="numeric" min="50" max="1500" step="10" value="${ml}"></div>
+          <button class="primary" data-action="save-glass-ml">${t('save')}</button>
+        </div>
+        <div class="glass-size-row">
+          <div class="field"><label>${gx('Günlük hedef kaç bardak?','Daily glass goal')}</label><input id="waterGoalInput" class="text-input" type="number" inputmode="numeric" min="1" max="40" step="1" value="${goal}"></div>
+          <button class="secondary" data-action="save-water-goal">${t('update')}</button>
+        </div>
+      </div>
+
+      <div class="section-head"><h2>${gx('Son 28 gün','Last 28 days')}</h2><span>${gx('Dokunarak düzenle','Tap to edit')}</span></div>
+      <div class="water-history-grid">${lastDays(28).map(d=>{
+        const x=state.water.records?.[d.key]||{count:0,goal:state.water.defaultGoal||8};
+        return `<button class="water-day-btn ${x.count?'has':''} ${x.count>=x.goal?'done':''} ${d.key===HS.waterDate?'selected':''}" data-action="water-day" data-date="${d.key}">
+          <strong>${dateFromKey(d.key).getDate()}</strong><span>${x.count?`${x.count}×💧`:'—'}</span>
+        </button>`;
+      }).join('')}</div>`;
+  }
+
+  renderWaterStats=renderWaterStable;
+  openWaterStats=function(){
+    HS.waterDate=localDateKey();
+    document.getElementById('waterStatsSheet')?.classList.add('fullscreen-stat');
+    renderWaterStable();
+    openSheet('waterStatsSheet');
+  };
+
+  /* ---------------- KİLO ---------------- */
+  function weightFiltered(){
+    const p=period('weight'),first=earliest(state.tracking.weights.map(x=>x.date));
+    const start=periodStart(p,first);
+    return state.tracking.weights.filter(x=>x.date>=start && x.date<=localDateKey());
+  }
+
+  function weightSvg(items){
+    if(!items.length)return `<div class="period-empty">${gx('Bu dönem için kilo kaydı yok.','No weight records for this period.')}</div>`;
+    const vals=items.map(x=>Number(x.value)),min=Math.min(...vals),max=Math.max(...vals),span=Math.max(.5,max-min);
+    const W=330,H=180,P=18;
+    const pts=items.map((x,i)=>({
+      x:items.length===1?W/2:P+i*(W-P*2)/Math.max(1,items.length-1),
+      y:H-P-(Number(x.value)-min)/span*(H-P*2)
+    }));
+    return `<svg class="weight-period-line" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
+      <line class="grid" x1="${P}" y1="${H/3}" x2="${W-P}" y2="${H/3}"/>
+      <line class="grid" x1="${P}" y1="${H*2/3}" x2="${W-P}" y2="${H*2/3}"/>
+      <polyline class="line" points="${pts.map(q=>`${q.x},${q.y}`).join(' ')}"/>
+      ${pts.map(q=>`<circle class="dot" cx="${q.x}" cy="${q.y}" r="4"/>`).join('')}
+    </svg>`;
+  }
+
+  renderWeight=function(){
+    const host=document.getElementById('weightContent');if(!host)return;
+    const items=weightFiltered(),first=items[0],latest=items[items.length-1];
+    const change=first&&latest?Number(latest.value)-Number(first.value):0;
+
+    host.innerHTML=`${tabs('weight')}
+      <div class="period-chart"><div class="stats-period-title"><div><strong>${gx('Kilo değişimi','Weight trend')}</strong><span>${periodName(period('weight'))}</span></div></div>${weightSvg(items)}</div>
+      <div class="period-summary-grid">
+        <div class="period-summary"><span>${gx('Dönemin ilk kaydı','First record')}</span><strong>${first?decimal(first.value)+' kg':'—'}</strong></div>
+        <div class="period-summary"><span>${gx('Son kayıt','Latest')}</span><strong>${latest?decimal(latest.value)+' kg':'—'}</strong></div>
+        <div class="period-summary"><span>${gx('Değişim','Change')}</span><strong>${first&&latest?`${change>0?'+':''}${decimal(change)} kg`:'—'}</strong></div>
+        <div class="period-summary"><span>${gx('Kayıt sayısı','Records')}</span><strong>${items.length}</strong></div>
+      </div>
+      <div class="section-head"><h2>${t('history')}</h2><span>${items.length} ${t('records')}</span></div>
+      <div class="weight-history">${items.length?items.slice().reverse().map(x=>
+        `<div class="weight-record"><div class="weight-record-main"><span>${formatDate(x.date,true)}</span><strong>${decimal(x.value)} kg</strong></div><button class="more" data-action="delete-weight" data-id="${x.id}">×</button></div>`
+      ).join(''):`<div class="empty"><strong>${t('noRecord')}</strong></div>`}</div>`;
+  };
+
+  openWeight=function(){
+    document.getElementById('weightSheet')?.classList.add('fullscreen-stat');
+    document.getElementById('weightDateInput').value=localDateKey();
+    document.getElementById('weightDateInput').max=localDateKey();
+    document.getElementById('weightInput').value='';
+    document.getElementById('targetWeightInput').value=state.profile.targetWeight||'';
+    renderWeight();
+    openSheet('weightSheet');
+  };
+
+  /* ---------------- ODAK ---------------- */
+  function focusFirstDate(){
+    return earliest((state.tracking.focusSessions||[]).map(x=>x.date));
+  }
+
+  renderFocusStats=function(){
+    const host=document.getElementById('focusStatsContent');if(!host)return;
+    const p=period('focus'),b=makeBuckets(p,focusFirstDate()),sessions=state.tracking.focusSessions||[];
+    const values=b.map(bucket=>sessions.filter(x=>bucket.dates.includes(x.date)).reduce((n,x)=>n+Number(x.minutes||0),0));
+    const start=periodStart(p,focusFirstDate());
+    const filtered=sessions.filter(x=>x.date>=start&&x.date<=localDateKey());
+    const total=filtered.reduce((n,x)=>n+Number(x.minutes||0),0);
+    const avg=filtered.length?Math.round(total/filtered.length):0;
+    const longest=filtered.length?Math.max(...filtered.map(x=>Number(x.minutes)||0)):0;
+
+    host.innerHTML=`${tabs('focus')}
+      <div class="period-chart"><div class="stats-period-title"><div><strong>${gx('Odak ritmi','Focus rhythm')}</strong><span>${periodName(p)}</span></div></div>${bars(values,b.map(x=>x.label),'focus')}</div>
+      <div class="period-summary-grid">
+        <div class="period-summary"><span>${t('totalFocus')}</span><strong>${fmt(total)} ${t('minutesShort')}</strong></div>
+        <div class="period-summary"><span>${t('averageSession')}</span><strong>${fmt(avg)} ${t('minutesShort')}</strong></div>
+        <div class="period-summary"><span>${t('longestSession')}</span><strong>${fmt(longest)} ${t('minutesShort')}</strong></div>
+        <div class="period-summary"><span>${t('sessions')}</span><strong>${filtered.length}</strong></div>
+      </div>
+      <div class="focus-history">${filtered.length?filtered.slice().reverse().slice(0,50).map(x=>
+        `<div class="focus-history-item"><div class="feature-icon">${icon('timer',17)}</div><div class="focus-history-main"><strong>${formatDate(x.date)}</strong><span>${categoryName(x.category)}</span></div><b>${x.minutes} ${t('minutesShort')}</b></div>`
+      ).join(''):`<div class="empty"><strong>${t('noRecord')}</strong></div>`}</div>`;
+  };
+
+  openFocusStats=function(){
+    document.getElementById('focusStatsSheet')?.classList.add('fullscreen-stat');
+    renderFocusStats();
+    openSheet('focusStatsSheet');
+  };
+
+  /* ---------------- RUH HALİ ---------------- */
+  function moodFirstDate(){
+    return earliest(Object.keys(state.tracking.moods||{}));
+  }
+
+  function renderMoodStable(){
+    const host=document.getElementById('moodContent');if(!host)return;
+    const p=period('mood'),b=makeBuckets(p,moodFirstDate()),moods=state.tracking.moods||{};
+    const values=b.map(bucket=>{
+      const vals=bucket.dates.map(d=>Number(moods[d])||0).filter(Boolean);
+      return vals.length?vals.reduce((a,c)=>a+c,0)/vals.length:0;
+    });
+    const current=Number(moods[HS.moodDate])||0;
+
+    host.innerHTML=`${tabs('mood')}
+      <div class="period-chart"><div class="stats-period-title"><div><strong>${gx('Ruh hali ritmi','Mood rhythm')}</strong><span>${periodName(p)}</span></div></div>${bars(values,b.map(x=>x.label),'mood')}</div>
+
+      <div class="card">
+        <div class="simple-mood-date">
+          <button data-action="mood-day-prev">‹</button>
+          <div style="text-align:center"><strong>${formatDate(HS.moodDate,true)}</strong><div class="card-sub">${HS.moodDate===localDateKey()?gx('Bugün','Today'):gx('Bu günü düzenliyorsun','Editing this day')}</div></div>
+          <button data-action="mood-day-next" ${HS.moodDate>=localDateKey()?'disabled':''}>›</button>
+        </div>
+        <h3 class="card-title">${gx('Günün nasıl geçti?','How was your day?')}</h3>
+        <div class="mood-grid simple">${MOODS.map(m=>
+          `<button class="mood-option ${current===m.v?'active':''}" data-action="save-mood" data-value="${m.v}"><span>${typeof premiumMood==='function'?premiumMood(m.v):m.e}</span><small>${t(m.k)}</small></button>`
+        ).join('')}</div>
+      </div>
+
+      <div class="section-head"><h2>${gx('Geçmiş günler','Past days')}</h2><span>${gx('Dokunarak düzenle','Tap to edit')}</span></div>
+      <div class="mood-history-simple">${lastDays(35).map(d=>{
+        const v=Number(moods[d.key])||0;
+        return `<button class="mood-history-day ${d.key===HS.moodDate?'selected':''}" data-action="mood-date" data-date="${d.key}">${dateFromKey(d.key).getDate()}${v?`<span>${typeof premiumMood==='function'?premiumMood(v,'xs'):MOODS.find(m=>m.v===v)?.e||''}</span>`:''}</button>`;
+      }).join('')}</div>`;
+  }
+
+  renderMood=renderMoodStable;
+  saveMood=function(value){
+    const v=clamp(Number(value)||3,1,5);
+    const existed=Boolean(state.tracking.moods?.[HS.moodDate]);
+    state.tracking.moods=state.tracking.moods||{};
+    state.tracking.moods[HS.moodDate]=v;
+    scheduleSave();
+    renderMoodStable();
+    renderProfile();
+    renderToday();
+    showToast(t(existed?'moodUpdated':'moodSaved'),'good');
+  };
+
+  openMood=function(){
+    HS.moodDate=localDateKey();
+    document.getElementById('moodSheet')?.classList.add('fullscreen-stat');
+    renderMoodStable();
+    openSheet('moodSheet');
+  };
+
+  /* ---------------- AKSİYON YÖNLENDİRME ---------------- */
+  const baseHandle=handleAction;
+  handleAction=function(action,el){
+    switch(action){
+      case 'stats-period':{
+        const kind=el.dataset.kind, p=el.dataset.period;
+        setPeriod(kind,p);
+        if(kind==='habits')window.renderHabitVisualChart();
+        if(kind==='water')renderWaterStable();
+        if(kind==='weight')renderWeight();
+        if(kind==='focus')renderFocusStats();
+        if(kind==='mood')renderMoodStable();
+        return;
+      }
+
+      case 'water-day':
+        HS.waterDate=el.dataset.date||localDateKey();renderWaterStable();return;
+
+      case 'water-history-plus':{
+        const r=waterRecordSafe(HS.waterDate);
+        r.count=clamp(Number(r.count||0)+1,0,40);
+        r.rewarded=r.count>=r.goal;
+        scheduleSave();renderWaterStable();
+        if(HS.waterDate===localDateKey())renderAll();
+        return;
+      }
+
+      case 'water-history-minus':{
+        const r=waterRecordSafe(HS.waterDate);
+        r.count=clamp(Number(r.count||0)-1,0,40);
+        r.rewarded=r.count>=r.goal;
+        scheduleSave();renderWaterStable();
+        if(HS.waterDate===localDateKey())renderAll();
+        return;
+      }
+
+      case 'save-glass-ml':{
+        const v=Number(document.getElementById('glassMlInput')?.value);
+        if(!Number.isFinite(v)||v<50||v>1500){showToast(gx('50–1500 ml arasında bir değer yaz.','Enter a value from 50–1500 ml.'),'bad');return}
+        state.water.glassMl=Math.round(v);
+        scheduleSave();renderWaterStable();renderAll();
+        showToast(gx('Bardak ölçüsü güncellendi.','Glass size updated.'),'good');
+        return;
+      }
+
+      case 'save-water-goal':{
+        const v=Math.round(Number(document.getElementById('waterGoalInput')?.value));
+        if(!Number.isFinite(v)||v<1||v>40){showToast(gx('1–40 bardak arasında bir hedef yaz.','Enter a goal from 1–40 glasses.'),'bad');return}
+        const r=waterRecordSafe(HS.waterDate);
+        r.goal=v;
+        if(HS.waterDate===localDateKey())state.water.defaultGoal=v;
+        r.rewarded=r.count>=r.goal;
+        scheduleSave();renderWaterStable();renderAll();
+        showToast(gx('Su hedefi güncellendi.','Water goal updated.'),'good');
+        return;
+      }
+
+      case 'mood-date':
+        HS.moodDate=el.dataset.date||localDateKey();renderMoodStable();return;
+
+      case 'mood-day-prev':
+        HS.moodDate=addDays(HS.moodDate,-1);renderMoodStable();return;
+
+      case 'mood-day-next':{
+        const next=addDays(HS.moodDate,1);
+        if(next<=localDateKey())HS.moodDate=next;
+        renderMoodStable();return;
+      }
+
+      default:return baseHandle(action,el);
+    }
+  };
+
+  /* ---------------- BAŞLANGIÇ TEMİZLİĞİ ---------------- */
+  const previousStart=startHabitopia;
+  startHabitopia=async function(){
+    const result=await previousStart.apply(this,arguments);
+    try{
+      ensureStatsSettings();
+      document.getElementById('waterStatsSheet')?.classList.add('fullscreen-stat');
+      document.getElementById('weightSheet')?.classList.add('fullscreen-stat');
+      document.getElementById('focusStatsSheet')?.classList.add('fullscreen-stat');
+      document.getElementById('moodSheet')?.classList.add('fullscreen-stat');
+      if(document.getElementById('habitTable'))window.renderHabitVisualChart();
+    }catch(e){console.warn('Habitopia analytics init',e)}
+    return result;
+  };
+
+  /* Eski görünmeyen istatistik alanları yalnızca JS uyumluluğu için kalır. */
+  try{
+    ['weekActivityChart','habitPerformance','badgeGrid'].forEach(id=>{
+      const el=document.getElementById(id);
+      if(el)el.style.display='none';
+    });
+  }catch(e){}
 })();
 
 </script>
