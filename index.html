@@ -396,7 +396,7 @@ body{background:#e9eee8!important}
 <body>
 
 <div class="app" id="app">
-  <header class="topbar"><div class="top-row"><div class="brand-orb" id="brandIcon"></div><div class="head-copy"><div class="eyebrow"><span class="date-dot"></span><span id="dateLabel"></span></div><div class="greeting" id="greeting"></div></div><button class="coin" data-action="rewards" aria-label="Puan mağazasını aç"><span class="coin-dot">P</span><span class="coin-value" id="coinCount">0</span><span class="coin-copy" id="coinCopy">Puan</span></button></div><div class="progress-card"><span class="level-label" id="levelLabel"></span><span class="xp-value" id="xpValue">0 / 50 XP</span><div class="xp-track"><div class="xp-fill" id="xpFill"></div></div></div></header>
+  <header class="topbar"><div class="top-row"><div class="brand-orb" id="brandIcon"></div><div class="head-copy"><div class="eyebrow"><span class="date-dot"></span><span id="dateLabel"></span></div><div class="greeting" id="greeting"></div></div></div></div></header>
   <main class="main" id="main">
     <section class="view active" id="view-today">
       <div class="page-head"><div><h1 data-i18n="today"></h1><p id="todaySubtitle"></p></div><button class="icon-btn" data-action="gift" id="giftButton"></button></div>
@@ -429,7 +429,7 @@ body{background:#e9eee8!important}
   <nav class="nav"><button class="nav-btn active" data-view="today"></button><button class="nav-btn" data-view="habits"></button><button class="nav-btn" data-view="challenges"></button><button class="nav-btn" data-view="profile"></button></nav>
   <button class="focus-float" id="focusFloat" data-action="reopen-focus"><span id="focusFloatLabel"></span><strong id="focusFloatTime"></strong></button>
 
-  <div class="sheet-backdrop" id="taskSheet"><div class="sheet"><div class="handle"></div><div class="sheet-head"><h2 data-i18n="newTask"></h2><button class="close" data-close="taskSheet">×</button></div><div class="stack"><div class="field"><label data-i18n="taskName"></label><input class="text-input" id="taskTitleInput" maxlength="90"></div><div class="field-row"><div class="field"><label data-i18n="taskType"></label><select class="select-input" id="taskTypeInput"><option value="once" data-i18n="oneTime"></option><option value="focus" data-i18n="focusTask"></option></select></div><div class="field"><label data-i18n="area"></label><select class="select-input" id="taskCategoryInput"></select></div></div><div class="field" id="effortField"><label data-i18n="difficulty"></label><div class="choice-row" id="effortChoices"></div></div><div class="field" id="taskDurationField" hidden><label data-i18n="duration"></label><input class="text-input" id="taskDurationInput" type="number" inputmode="numeric" min="5" max="180" step="1" value="25"></div><button class="primary" data-action="save-task" data-i18n="add"></button></div></div></div>
+  <div class="sheet-backdrop" id="taskSheet"><div class="sheet"><div class="handle"></div><div class="sheet-head"><h2 data-i18n="newTask"></h2><button class="close" data-close="taskSheet">×</button></div><div class="stack"><div class="field"><label data-i18n="taskName"></label><input class="text-input" id="taskTitleInput" maxlength="90"></div><div class="field-row"><div class="field"><label data-i18n="taskType"></label><select class="select-input" id="taskTypeInput"><option value="once" data-i18n="oneTime"></option><option value="focus" data-i18n="focusTask"></option></select></div><div class="field"><label data-i18n="area"></label><select class="select-input" id="taskCategoryInput"></select></div></div><div class="field" id="effortField"><label data-i18n="difficulty"></label><div class="choice-row" id="effortChoices"></div></div><div class="field" id="taskDurationField" hidden><label data-i18n="duration"></label><input class="text-input" id="taskDurationInput" type="number" inputmode="numeric" min="1" max="180" step="1" value="25"></div><button class="primary" data-action="save-task" data-i18n="add"></button></div></div></div>
   <div class="sheet-backdrop" id="habitSheet"><div class="sheet"><div class="handle"></div><div class="sheet-head"><h2 data-i18n="newHabit"></h2><button class="close" data-close="habitSheet">×</button></div><div class="stack"><div class="field"><label data-i18n="habitName"></label><input class="text-input" id="habitTitleInput" maxlength="70"></div><div class="field-row"><div class="field"><label data-i18n="area"></label><select class="select-input" id="habitCategoryInput"></select></div><div class="field"><label>Takip türü / Tracking</label><select class="select-input" id="habitTrackType"><option value="check">Yapıldı / Done</option><option value="value">Sayısal hedef / Numeric</option><option value="duration">Süre / Duration</option></select></div></div><div class="habit-form-quantity" id="habitQuantityFields"><div class="field-row"><div class="field"><label>Günlük hedef / Daily target</label><input class="text-input" id="habitTargetInput" type="number" inputmode="decimal" min="0.1" max="9999" step="0.1" value="20"></div><div class="field"><label>Birim / Unit</label><input class="text-input" id="habitUnitInput" maxlength="16" placeholder="dk, sayfa, km..."></div></div><p class="habit-type-hint">Örn. 20 dk meditasyon, 30 sayfa kitap veya 2 km koşu.</p></div><div class="field"><label data-i18n="activeDays"></label><div class="choice-row" id="habitDayChoices"></div></div><button class="primary" data-action="save-habit" data-i18n="add"></button></div></div></div>
   <div class="sheet-backdrop" id="challengeSheet"><div class="sheet"><div class="handle"></div><div class="sheet-head"><h2 data-i18n="newChallenge"></h2><button class="close" data-close="challengeSheet">×</button></div><div class="stack"><div class="field"><label data-i18n="challengeName"></label><input class="text-input" id="challengeTitleInput" maxlength="70"></div><div class="field-row"><div class="field"><label data-i18n="startDate"></label><input class="text-input" type="date" id="challengeStartInput"></div><div class="field"><label data-i18n="area"></label><select class="select-input" id="challengeCategoryInput"></select></div></div><button class="primary" data-action="save-challenge" data-i18n="create21"></button></div></div></div>
   <div class="sheet-backdrop" id="waterStatsSheet"><div class="sheet"><div class="handle"></div><div class="sheet-head"><h2 data-i18n="waterStats"></h2><button class="close" data-close="waterStatsSheet">×</button></div><div id="waterStatsContent"></div></div></div>
@@ -439,7 +439,7 @@ body{background:#e9eee8!important}
   <div class="sheet-backdrop" id="focusStatsSheet"><div class="sheet"><div class="handle"></div><div class="sheet-head"><h2 data-i18n="focusStats"></h2><button class="close" data-close="focusStatsSheet">×</button></div><div id="focusStatsContent"></div><button class="primary" style="width:100%;margin-top:8px" data-action="open-focus" data-i18n="newFocus"></button></div></div>
   <div class="sheet-backdrop" id="notesSheet"><div class="sheet"><div class="handle"></div><div class="sheet-head"><h2 data-i18n="notebook"></h2><button class="close" data-close="notesSheet">×</button></div><div class="note-compose"><input class="text-input" id="noteTitleInput" maxlength="60" data-i18n-placeholder="noteTitle"><textarea id="noteBodyInput" maxlength="3000" data-i18n-placeholder="noteBody"></textarea><div class="row between gap" style="margin-top:9px"><div class="note-colors" id="noteColors"></div><button class="primary" style="min-height:39px" data-action="save-note" id="noteSaveButton" data-i18n="save"></button></div><input type="hidden" id="editingNoteId"></div><input class="text-input" id="noteSearchInput" style="min-height:42px;margin-bottom:9px" data-i18n-placeholder="searchNotes"><div class="note-grid" id="notesList"></div></div></div>
   <div class="sheet-backdrop" id="noteDetailSheet"><div class="sheet note-detail-sheet"><div class="handle"></div><div class="sheet-head"><h2 data-i18n="noteDetail"></h2><button class="close" data-close="noteDetailSheet">×</button></div><div id="noteDetailContent"></div></div></div>
-  <div class="sheet-backdrop" id="rewardsSheet"><div class="sheet"><div class="handle"></div><div class="sheet-head"><h2 data-i18n="rewardsShop"></h2><button class="close" data-close="rewardsSheet">×</button></div><div id="rewardsContent"></div></div></div>
+</div>
   <div class="sheet-backdrop" id="settingsSheet"><div class="sheet"><div class="handle"></div><div class="sheet-head"><h2 data-i18n="settings"></h2><button class="close" data-close="settingsSheet">×</button></div><div class="field"><label data-i18n="yourName"></label><input class="text-input" id="nameInput" maxlength="28"></div><div class="field" style="margin-top:10px"><label data-i18n="language"></label><select class="select-input" id="languageInput"><option value="tr">Türkçe</option><option value="en">English</option></select></div><div class="field" style="margin-top:10px"><label data-i18n="dailyWaterGoal"></label><select class="select-input" id="waterGoalInput"></select><p class="card-sub" id="waterGoalHelp"></p></div><div class="settings-list" id="settingsList" style="margin-top:12px"></div><div class="stack" style="margin-top:12px"><button class="ghost" data-action="privacy">Gizlilik Politikası / Privacy Policy</button><button class="ghost" data-action="terms">Kullanım Koşulları / Terms</button><button class="ghost" data-action="support">Destek / Support</button><button class="ghost" data-action="export" data-i18n="exportData"></button><button class="ghost" data-action="import" data-i18n="importData"></button><input id="importFile" type="file" accept="application/json" hidden><button class="danger" data-action="reset" data-i18n="resetAll"></button></div><p class="card-sub" style="text-align:center;margin-top:11px">Habitopia v1.9.0</p></div></div>
   
   <div class="sheet-backdrop" id="routineSheet"><div class="sheet"><div class="handle"></div><div class="sheet-head"><h2 id="routineSheetTitle">Rutinler</h2><button class="close" data-close="routineSheet">×</button></div><div id="routineContent"></div></div></div>
@@ -1519,6 +1519,137 @@ button:focus,button:active,a:focus,a:active{outline:none!important;-webkit-tap-h
     const dur=document.getElementById('taskDurationInput');if(dur)dur.min='1';
     const noteBody=document.getElementById('noteBodyInput');if(noteBody)noteBody.maxLength=12000;
     hideLegacyStats();renderToday();renderProfile();
+  };
+})();
+</script>
+
+\n<style id="habitopia-v4-clean-style">
+/* V4 CLEAN: mobile interaction and final visual cleanup */
+html,body,.app,*{ -webkit-tap-highlight-color:transparent!important; }
+button,a,[role="button"],input,select,textarea{ -webkit-tap-highlight-color:transparent!important; }
+button:focus,button:active,a:focus,a:active,[role="button"]:focus,[role="button"]:active{outline:none!important;-webkit-tap-highlight-color:transparent!important}
+.coin,.progress-card,#rewardsSheet{display:none!important}
+.topbar{--top-h:92px;height:calc(92px + env(safe-area-inset-top))!important;flex-basis:calc(92px + env(safe-area-inset-top))!important}
+.top-row{height:100%}.head-copy{align-self:center}.brand-orb{width:48px;height:48px}
+.water-emoji{display:inline-block;margin-left:6px;font-size:16px;vertical-align:-1px}
+/* Light mode */
+:root{--bg:#eef4ef;--surface:#ffffff;--surface-2:#f7faf7;--surface-3:#e8efe9;--ink:#183025;--muted:#718077;--line:#d9e4db;--primary:#376f50;--primary-2:#214b36;--primary-soft:#e0f0e4;--shadow:0 14px 38px rgba(32,69,46,.08)}
+body{background:linear-gradient(180deg,#e3eee5 0,#eef4ef 30%,#f4f7f4 100%)!important}.app{background:#f7faf7!important}.card,.tracker,.growth-action,.chart-card{box-shadow:0 8px 22px rgba(31,66,44,.045)!important}
+/* Dark mode: charcoal/forest rather than pure black */
+.dark{--bg:#121914!important;--surface:#1c2720!important;--surface-2:#161f1a!important;--surface-3:#26332a!important;--ink:#eff5f0!important;--muted:#9daca2!important;--line:#33433a!important;--primary:#79ae89!important;--primary-2:#c4e2ca!important;--primary-soft:#294639!important}
+.dark body,.dark .app{background:#121914!important}.dark body{background:linear-gradient(180deg,#101612,#172019 55%,#121914)!important}.dark .topbar{background:linear-gradient(135deg,#173524,#28553b 58%,#356447 100%)!important}.dark .nav{background:rgba(24,34,28,.97)!important}
+/* Notes should feel like a first-class writing area */
+#notesSheet .sheet{min-height:96%!important;max-height:99%!important}.note-compose textarea{min-height:230px!important}.note-detail-sheet{min-height:97%!important;max-height:99%!important}.note-detail-title{font-size:30px!important}.note-detail-body{font-size:17px!important;line-height:1.8!important}
+/* Removed legacy analytics sections */
+#weeklyActivityChart,#habitPerformance,#badgeGrid{display:none!important}
+</style>
+<script id="habitopia-v4-clean-behavior">
+(function(){
+  'use strict';
+  if(window.__habitopiaV4Clean)return; window.__habitopiaV4Clean=true;
+
+  function safe(fn){try{return fn()}catch(e){console.warn('Habitopia V4',e)}}
+  function gx4(tr,en){return state?.settings?.lang==='en'?en:tr}
+
+  /* There is no points economy in V4. Keep completion counters only because stats/streaks use them. */
+  window.openRewards=function(){}; window.claimGift=function(){};
+  window.checkAchievements=function(){return []};
+  window.rewardForTask=function(task){return {xp:0,coins:0,energy:0,category:task?.category||'mind'}};
+  window.focusReward=function(minutes,category='mind'){return {xp:0,coins:0,energy:0,category:CATEGORIES?.[category]?category:'mind'}};
+  window.applyReward=function(key,reward,{countCompletion=true,activity=''}={}){
+    state.rewardLedger=state.rewardLedger&&typeof state.rewardLedger==='object'?state.rewardLedger:{};
+    if(state.rewardLedger[key])return false;
+    const date=String(key).split(':').pop();
+    state.rewardLedger[key]={xp:0,coins:0,energy:0,category:reward?.category||'mind',countCompletion,date};
+    if(countCompletion){
+      state.progress.totalCompleted=Math.max(0,Number(state.progress.totalCompleted)||0)+1;
+      state.progress.dayCounts[date]=(Number(state.progress.dayCounts[date])||0)+1;
+      if(!state.progress.activeDates.includes(date))state.progress.activeDates.push(date);
+    }
+    if(activity)state.activity.unshift({id:uid('log'),date,text:activity});
+    updateStreak();
+    return true;
+  };
+
+  /* Pomodoro: one source of truth, 1-180 min */
+  window.startNewFocus=function(minutes=25,taskId=null,category='mind'){
+    minutes=clamp(Math.round(Number(minutes)||25),1,180);
+    const sec=minutes*60;
+    state.focusTimer={durationSec:sec,remainingSec:sec,running:false,endAt:0,startedAt:0,taskId:taskId||null,category:CATEGORIES[category]?category:'mind'};
+    scheduleSave();renderFocusDialog();
+  };
+  window.renderFocusSetup=function(){
+    const preferred=clamp(Math.round(Number(state.profile.dailyMinutes)||25),1,180),presets=[1,5,25,45];
+    showDialog(`<div class="focus-setup"><div><h2>${t('customFocus')}</h2><p>${gx4('1 ile 180 dakika arasında bir süre seçebilirsin.','Choose 1 to 180 minutes.')}</p></div><div class="focus-presets">${presets.map(n=>`<button class="focus-preset ${n===preferred?'active':''}" data-action="focus-preset" data-minutes="${n}">${n} ${t('minutesShort')}</button>`).join('')}</div><div class="field"><label>${t('focusMinutesInput')}</label><input class="text-input" id="customFocusMinutes" type="number" inputmode="numeric" min="1" max="180" step="1" value="${preferred}"></div><button class="primary" data-action="start-custom-focus">${t('focusStartCustom')}</button></div>`);
+  };
+  window.startCustomFocus=function(){
+    const minutes=Math.round(Number(document.getElementById('customFocusMinutes')?.value));
+    if(!Number.isFinite(minutes)||minutes<1||minutes>180){showToast(gx4('1–180 dakika arasında bir süre yaz.','Enter 1–180 minutes.'),'bad');return}
+    startNewFocus(minutes,null,goalCategory());
+  };
+
+  /* Water editor: glass size + daily goal + past day count */
+  let v4WaterDate=localDateKey();
+  function glassMl(){state.water.glassMl=clamp(Math.round(Number(state.water.glassMl)||250),50,1500);return state.water.glassMl}
+  function rec(date){if(!state.water.records[date])state.water.records[date]={count:0,goal:Math.max(1,Number(state.water.defaultGoal)||8),rewarded:false};return state.water.records[date]}
+  window.renderWaterStats=function(){
+    const host=document.getElementById('waterStatsContent');if(!host)return;
+    const ml=glassMl(),r=rec(v4WaterDate),days=lastDays(30);
+    host.innerHTML=`<div class="water-editor"><div class="water-editor-top"><div><span class="card-sub">${formatDate(v4WaterDate,true)}</span><strong>${r.count} / ${r.goal} ${gx4('bardak','glasses')}</strong><div class="card-sub">${r.count*ml} ml / ${r.goal*ml} ml</div></div><div style="font-size:30px">💧</div></div><div class="water-editor-actions"><button data-action="v4-water-minus">−</button><button class="drink" data-action="v4-water-plus">+1 ${gx4('bardak','glass')}</button><button data-action="v4-water-plus">+</button></div></div><div class="water-editor"><div class="field-row"><div class="field"><label>${gx4('Bardak boyutu (ml)','Glass size (ml)')}</label><input class="text-input" id="v4GlassMl" type="number" min="50" max="1500" step="10" value="${ml}"></div><div class="field"><label>${gx4('Günlük hedef (bardak)','Daily goal (glasses)')}</label><input class="text-input" id="v4WaterGoal" type="number" min="1" max="40" step="1" value="${r.goal}"></div></div><button class="primary" style="width:100%;margin-top:9px" data-action="v4-save-water-settings">${t('save')}</button></div><div class="section-head"><h2>${gx4('Son 30 gün','Last 30 days')}</h2><span>${gx4('Bir güne dokun ve düzenle','Tap a day to edit')}</span></div><div class="water-history-grid">${days.map(d=>{const x=state.water.records[d.key]||{count:0,goal:state.water.defaultGoal||8};return `<button class="water-day-btn ${x.count?'has':''} ${x.count>=x.goal?'done':''} ${d.key===v4WaterDate?'selected':''}" data-action="v4-water-date" data-date="${d.key}"><strong>${dateFromKey(d.key).getDate()}</strong><span>${x.count?`${x.count}×💧`:'—'}</span></button>`}).join('')}</div>`;
+  };
+  window.openWaterStats=function(){v4WaterDate=localDateKey();renderWaterStats();openSheet('waterStatsSheet')};
+
+  /* Mood: one choice only, editable past days */
+  let v4MoodDate=localDateKey();
+  window.renderMood=function(){
+    const host=document.getElementById('moodContent');if(!host)return;
+    const current=Number((state.tracking.moods||{})[v4MoodDate])||0,days=lastDays(35);
+    host.innerHTML=`<div class="card"><div class="simple-mood-date"><button data-action="v4-mood-prev">‹</button><div style="text-align:center"><strong>${formatDate(v4MoodDate,true)}</strong><div class="card-sub">${v4MoodDate===localDateKey()?gx4('Bugün','Today'):gx4('Geçmiş günü düzenliyorsun','Editing a past day')}</div></div><button data-action="v4-mood-next" ${v4MoodDate>=localDateKey()?'disabled':''}>›</button></div><h3 class="card-title">${gx4('Günün nasıl geçti?','How was your day?')}</h3><div class="mood-grid simple">${MOODS.map(m=>`<button class="mood-option ${current===m.v?'active':''}" data-action="v4-save-mood" data-value="${m.v}"><span>${premiumMood(m.v)}</span><small>${t(m.k)}</small></button>`).join('')}</div></div><div class="section-head"><h2>${gx4('Geçmiş günler','Past days')}</h2><span>${gx4('Dokunarak düzenle','Tap to edit')}</span></div><div class="mood-history-simple">${days.map(d=>{const v=Number(state.tracking.moods[d.key])||0;return `<button class="mood-history-day ${d.key===v4MoodDate?'selected':''}" data-action="v4-mood-date" data-date="${d.key}">${dateFromKey(d.key).getDate()}${v?`<span>${premiumMood(v,'xs')}</span>`:''}</button>`}).join('')}</div>`;
+  };
+  window.openMood=function(){v4MoodDate=localDateKey();renderMood();openSheet('moodSheet')};
+
+  /* Notebook: journal button points to the main notebook */
+  window.openJournal=function(){openNotes()};
+
+  function cleanUi(){
+    document.querySelector('.coin')?.remove();document.querySelector('.progress-card')?.remove();document.getElementById('rewardsSheet')?.remove();
+    const dur=document.getElementById('taskDurationInput');if(dur){dur.min='1';dur.max='180'}
+    document.querySelectorAll('#taskList .reward').forEach(x=>x.remove());
+    const waterTitle=document.querySelector('#view-today .water-card .card-title');if(waterTitle&&!waterTitle.querySelector('.water-emoji'))waterTitle.insertAdjacentHTML('beforeend','<span class="water-emoji">💧</span>');
+    ['weekActivityChart','habitPerformance','badgeGrid'].forEach(id=>{const el=document.getElementById(id);if(!el)return;const box=el.closest('.chart-card,.badge-grid,.card')||el;box.style.display='none';const head=box.previousElementSibling;if(head?.classList.contains('section-head'))head.style.display='none'});
+    const j=document.querySelector('#growthHubActions [data-action="journal"]');if(j){const a=j.querySelector('strong'),b=j.querySelector('span');if(a)a.textContent=gx4('Not Defteri','Notebook');if(b)b.textContent=gx4('Düşüncelerini özgürce yaz','Write freely')}
+  }
+
+  const priorRenderToday=window.renderToday;
+  window.renderToday=function(){priorRenderToday();safe(cleanUi)};
+  const priorRenderProfile=window.renderProfile;
+  window.renderProfile=function(){priorRenderProfile();safe(cleanUi)};
+
+  const priorAction=window.handleAction;
+  window.handleAction=function(action,el){
+    switch(action){
+      case 'gift':case 'rewards':case 'buy-reward':case 'claim-gift':return;
+      case 'stop-focus-alarm':return stopHabitopiaFocusAlarm();
+      case 'v4-water-date':v4WaterDate=el.dataset.date||localDateKey();renderWaterStats();return;
+      case 'v4-water-plus':{const r=rec(v4WaterDate);r.count=clamp(r.count+1,0,80);r.rewarded=r.count>=r.goal;scheduleSave();renderWaterStats();if(v4WaterDate===localDateKey())renderAll();return}
+      case 'v4-water-minus':{const r=rec(v4WaterDate);r.count=clamp(r.count-1,0,80);r.rewarded=r.count>=r.goal;scheduleSave();renderWaterStats();if(v4WaterDate===localDateKey())renderAll();return}
+      case 'v4-save-water-settings':{const ml=Number(document.getElementById('v4GlassMl')?.value),goal=Number(document.getElementById('v4WaterGoal')?.value);if(!Number.isFinite(ml)||ml<50||ml>1500||!Number.isFinite(goal)||goal<1||goal>40){showToast(gx4('Bardak 50–1500 ml, hedef 1–40 arasında olmalı.','Glass must be 50–1500 ml and goal 1–40.'),'bad');return}state.water.glassMl=Math.round(ml);const r=rec(v4WaterDate);r.goal=Math.round(goal);r.rewarded=r.count>=r.goal;if(v4WaterDate===localDateKey())state.water.defaultGoal=r.goal;scheduleSave();renderWaterStats();renderAll();showToast(gx4('Su ayarları güncellendi.','Water settings updated.'),'good');return}
+      case 'v4-mood-date':v4MoodDate=el.dataset.date||localDateKey();renderMood();return;
+      case 'v4-mood-prev':v4MoodDate=addDays(v4MoodDate,-1);renderMood();return;
+      case 'v4-mood-next':{const n=addDays(v4MoodDate,1);if(n<=localDateKey())v4MoodDate=n;renderMood();return}
+      case 'v4-save-mood':{const v=clamp(Number(el.dataset.value)||3,1,5),had=Boolean(state.tracking.moods[v4MoodDate]);state.tracking.moods[v4MoodDate]=v;scheduleSave();renderMood();renderProfile();renderToday();showToast(t(had?'moodUpdated':'moodSaved'),'good');return}
+      case 'mood-factor':case 'save-mood-detail':return;
+      case 'journal':openNotes();return;
+      default:return priorAction(action,el);
+    }
+  };
+
+  const priorStart=window.startHabitopia;
+  window.startHabitopia=async function(account){
+    await priorStart(account);
+    state.progress.xp=0;state.progress.coins=0;state.achievements=[];
+    state.water.glassMl=clamp(Number(state.water.glassMl)||250,50,1500);
+    safe(cleanUi);renderToday();renderProfile();
   };
 })();
 </script>
