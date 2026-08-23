@@ -1146,19 +1146,43 @@ function startPremiumObserver(){premiumizeText()}
 
 let habitopiaStarted=false;
 
+function hasExistingHabitopiaProgress(s){
+  if(!s||typeof s!=="object")return false;
+  return Boolean(
+    (Array.isArray(s.tasks)&&s.tasks.length) ||
+    (Array.isArray(s.habits)&&s.habits.length) ||
+    (Array.isArray(s.challenges)&&s.challenges.length) ||
+    (Array.isArray(s.activity)&&s.activity.length) ||
+    (Array.isArray(s.tracking?.weights)&&s.tracking.weights.length) ||
+    (Array.isArray(s.tracking?.focusSessions)&&s.tracking.focusSessions.length) ||
+    (Array.isArray(s.tracking?.notes)&&s.tracking.notes.length) ||
+    (s.tracking?.moods&&Object.keys(s.tracking.moods).length) ||
+    (s.water?.records&&Object.keys(s.water.records).length) ||
+    Number(s.progress?.totalCompleted)>0 ||
+    Number(s.progress?.focusMinutes)>0
+  );
+}
+
 async function startHabitopia(account){
   state=defaultState();
   bindEvents();
   await loadState();
 
-  // Onboarding is a one-time step per Firebase account.
-  // If it was completed once on this device, do not allow an older cloud snapshot
-  // with onboardingDone:false to reopen the journey screens.
-  if(onboardingWasCompleted()&&!state.onboardingDone){
-    state.onboardingDone=true;
-    await persistNow();
-  }else if(state.onboardingDone){
+  // Onboarding is strictly one-time per Firebase account.
+  // 1) Explicit completion marker wins.
+  // 2) Older accounts that already contain real Habitopia data are migrated
+  //    automatically so an old onboardingDone:false snapshot can never reopen it.
+  const shouldSkipOnboarding =
+    onboardingWasCompleted() ||
+    state.onboardingDone === true ||
+    hasExistingHabitopiaProgress(state);
+
+  if(shouldSkipOnboarding){
+    if(!state.onboardingDone){
+      state.onboardingDone=true;
+    }
     rememberOnboardingCompleted();
+    await persistNow();
   }
 
   if(account?.name&&!state.profile.name)state.profile.name=account.name;
