@@ -420,10 +420,18 @@ body{background:#e9eee8!important}
     <section class="view" id="view-profile">
       <div class="page-head"><div><h1 data-i18n="progress"></h1><p data-i18n="progressSubtitle"></p></div><button class="icon-btn" data-action="settings" id="settingsIcon"></button></div>
       <div class="tracker-grid"><button class="tracker water" data-action="water-stats"><div class="feature-icon" id="trackerWaterIcon"></div><strong data-i18n="water"></strong><b id="trackerWaterValue"></b><span id="trackerWaterCopy"></span></button><button class="tracker weight" data-action="weight"><div class="feature-icon" id="trackerWeightIcon"></div><strong data-i18n="weight"></strong><b id="trackerWeightValue"></b><span id="trackerWeightCopy"></span></button><button class="tracker focus" data-action="focus-stats"><div class="feature-icon" id="trackerFocusIcon"></div><strong data-i18n="focus"></strong><b id="trackerFocusValue"></b><span id="trackerFocusCopy"></span></button><button class="tracker notes" data-action="notes"><div class="feature-icon" id="trackerNotesIcon"></div><strong data-i18n="notebook"></strong><b id="trackerNotesValue"></b><span id="trackerNotesCopy"></span></button><button class="tracker mood" data-action="mood"><div class="feature-icon" id="trackerMoodIcon"><span class="ui-glyph" data-ui-icon="mood-neutral"></span></div><strong data-i18n="mood"></strong><b id="trackerMoodValue"></b><span id="trackerMoodCopy"></span></button><button class="tracker report" data-action="weekly-report"><div class="feature-icon" id="trackerReportIcon"></div><strong data-i18n="weeklyReport"></strong><b id="trackerReportValue"></b><span id="trackerReportCopy"></span></button></div>
-      <div class="section-head hub-section"><h2 id="growthHubTitle">Gelişim Merkezi</h2><span id="growthHubSub">Planla · uygula · değerlendir</span></div><div class="growth-actions" id="growthHubActions"><button class="growth-action" data-action="calendar"><b>📅</b><strong>Takvim</strong><span>Günlük gelişimini gör</span></button><button class="growth-action" data-action="routines"><b>🌅</b><strong>Rutinler</strong><span>Sabah ve akşam</span></button><button class="growth-action" data-action="journal"><b>📖</b><strong>Günlük</strong><span>Gününü düşün ve yaz</span></button><button class="growth-action" data-action="weekly-goals"><b>🎯</b><strong>Haftalık Hedefler</strong><span>Haftanın odağını takip et</span></button><button class="growth-action" data-action="weekly-review"><b>🧠</b><strong>Haftayı Değerlendir</strong><span>Öğren ve yeni haftayı kur</span></button><button class="growth-action" data-action="growth-details"><b>📈</b><strong>Gelişim Skoru</strong><span>Skorunun detaylarını gör</span></button></div><div class="section-head"><h2 data-i18n="generalStats"></h2><span data-i18n="last7Days"></span></div><div class="stat-grid" id="generalStats"></div>
-      <div class="section-head"><h2 data-i18n="weeklyActivity"></h2><span id="weekActivityTotal"></span></div><div class="chart-card"><div class="bar-chart" id="weekActivityChart"></div></div>
-      <div class="section-head"><h2 data-i18n="habitPerformance"></h2><span id="habitPerformanceLabel"></span></div><div class="chart-card" id="habitPerformance"></div>
-      <div class="section-head"><h2 data-i18n="badges"></h2><span id="badgeSummary"></span></div><div class="badge-grid" id="badgeGrid"></div>
+      <div class="section-head hub-section"><h2 id="growthHubTitle">Gelişim Merkezi</h2><span id="growthHubSub">Planla · uygula · değerlendir</span></div><div class="growth-actions" id="growthHubActions"><button class="growth-action" data-action="calendar"><b>📅</b><strong>Takvim</strong><span>Günlük gelişimini gör</span></button><button class="growth-action" data-action="routines"><b>🌅</b><strong>Rutinler</strong><span>Sabah ve akşam</span></button><button class="growth-action" data-action="journal"><b>📖</b><strong>Günlük</strong><span>Gününü düşün ve yaz</span></button><button class="growth-action" data-action="weekly-goals"><b>🎯</b><strong>Haftalık Hedefler</strong><span>Haftanın odağını takip et</span></button><button class="growth-action" data-action="weekly-review"><b>🧠</b><strong>Haftayı Değerlendir</strong><span>Öğren ve yeni haftayı kur</span></button><button class="growth-action" data-action="growth-details"><b>📈</b><strong>Gelişim Skoru</strong><span>Skorunun detaylarını gör</span></button></div>
+      <!-- Eski profil istatistikleri görünümden tamamen kaldırıldı.
+           Aşağıdaki görünmez alanlar yalnızca eski JS fonksiyonlarının hata vermemesi içindir. -->
+      <div style="display:none!important" aria-hidden="true">
+        <div id="generalStats"></div>
+        <span id="weekActivityTotal"></span>
+        <div id="weekActivityChart"></div>
+        <span id="habitPerformanceLabel"></span>
+        <div id="habitPerformance"></div>
+        <span id="badgeSummary"></span>
+        <div id="badgeGrid"></div>
+      </div>
     </section>
   </main>
   <nav class="nav"><button class="nav-btn active" data-view="today"></button><button class="nav-btn" data-view="habits"></button><button class="nav-btn" data-view="challenges"></button><button class="nav-btn" data-view="profile"></button></nav>
@@ -1240,281 +1248,142 @@ init();
 /* service worker disabled inside Flutter app */
 </script>
 <style id="habitopia-v3-polish">
-/* =========================================================
-   SADECE İSTENEN ÖZELLİKLER İÇİN EK STİLLER
-   Mevcut Habitopia tasarımı, boyutları, topbar, kartlar,
-   navigasyon ve ana renk düzeni değiştirilmez.
-   ========================================================= */
+/* ===== Habitopia V3: sade, premium, puansız deneyim ===== */
+:root{
+  --bg:#f1f5ef!important;--surface:#ffffff!important;--surface-2:#f8faf7!important;--surface-3:#e9efe8!important;
+  --ink:#18251d!important;--muted:#6f7d73!important;--line:#dce5dc!important;--primary:#356d4d!important;--primary-2:#244f39!important;
+  --primary-soft:#e4f1e7!important;--blue:#4d83a4!important;--shadow:0 16px 42px rgba(29,55,38,.08)!important;--top-h:88px!important;
+}
+html,body,.app{background:#f1f5ef!important}
+body{background:linear-gradient(180deg,#edf4ec 0%,#f6f8f4 38%,#f1f5ef 100%)!important}
+.topbar{height:calc(88px + env(safe-area-inset-top))!important;flex-basis:calc(88px + env(safe-area-inset-top))!important;background:linear-gradient(135deg,#28563d,#3f7454)!important;box-shadow:0 8px 24px rgba(37,82,56,.12)!important}
+.progress-card,.coin,#giftButton,#rewardsSheet{display:none!important}
+.main{padding-top:18px!important}
+.card,.chart-card,.tracker,.habit-table,.growth-action,.v21-score,.v21-plan,.v21-quick button{box-shadow:0 7px 24px rgba(35,62,43,.045)!important}
+.hero{background:linear-gradient(140deg,#2b5c41,#42785a)!important;border:0!important;box-shadow:0 14px 32px rgba(41,91,62,.16)!important}
+.hero .hero-kicker{opacity:.78!important;letter-spacing:.11em!important}.hero .hero-line{font-size:20px!important;line-height:1.42!important;font-weight:760!important;max-width:100%!important;margin-bottom:7px!important}.hero .pill-row{display:none!important}
+/* dokunma sırasında Android/WebView mavi izi kaldır */
+*,*::before,*::after{-webkit-tap-highlight-color:transparent!important}
+button,a,[role="button"],.task,.note,.tracker,.habit-day,.challenge-day{-webkit-tap-highlight-color:rgba(0,0,0,0)!important;outline:none!important;touch-action:manipulation}
+button:focus,button:active,a:focus,a:active{outline:none!important;-webkit-tap-highlight-color:transparent!important}
+::selection{background:rgba(53,109,77,.14)}
+/* Su */
+.water-card{background:linear-gradient(145deg,#fff,#f5fafc)!important}.water-emoji{font-size:22px;margin-left:7px;vertical-align:-2px}.water-ring{box-shadow:inset 0 0 0 1px rgba(77,131,164,.08)}
+.water-history-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-top:12px}.water-day-btn{min-height:53px;border:1px solid var(--line);border-radius:13px;background:var(--surface);color:var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}.water-day-btn strong{font-size:12px}.water-day-btn span{font-size:8px;color:var(--muted)}.water-day-btn.has{background:#e9f4f9;border-color:#bcd6e4}.water-day-btn.done{background:#dbeef6;border-color:#86b7cf}.water-day-btn.selected{box-shadow:0 0 0 2px var(--blue)}.water-editor{padding:15px;border:1px solid var(--line);border-radius:20px;background:var(--surface);margin-bottom:12px}.water-editor-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}.water-editor-top strong{font-size:22px}.water-editor-actions{display:grid;grid-template-columns:52px 1fr 52px;gap:8px;margin-top:12px}.water-editor-actions button{height:48px;border:0;border-radius:14px;font-size:20px;font-weight:900}.water-editor-actions .drink{background:#dfeff6;color:#326c8d;font-size:12px}.glass-size-row{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:end;margin-top:12px}.glass-size-row .primary{min-height:48px}
+/* Ruh hali */
+.simple-mood-date{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px}.simple-mood-date button{width:42px;height:42px;border:1px solid var(--line);border-radius:13px;background:var(--surface);color:var(--ink)}.simple-mood-date strong{font-size:13px}.mood-grid.simple{grid-template-columns:repeat(5,1fr);gap:7px}.mood-grid.simple .mood-option{min-height:82px;padding:6px}.mood-history-simple{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-top:12px}.mood-history-day{aspect-ratio:1/1;border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--ink);font-size:10px;font-weight:800;display:grid;place-items:center;position:relative}.mood-history-day span{position:absolute;bottom:3px;font-size:14px}.mood-history-day.selected{box-shadow:0 0 0 2px var(--primary)}
+/* Not Defteri - önemli, tam ekran hissi */
+#notesSheet .sheet{min-height:95%;max-height:98%;background:var(--surface-2)!important;border-radius:28px 28px 0 0!important}
+#noteDetailSheet .sheet{min-height:96%;max-height:99%;background:var(--surface-2)!important}
+.note-compose{background:var(--surface)!important;border:1px solid var(--line)!important;border-radius:22px!important;padding:14px!important;box-shadow:0 10px 28px rgba(35,62,43,.05)!important}
+.note-compose textarea{min-height:190px!important;background:transparent!important;border:0!important;padding:14px 2px!important;font-size:15px!important;line-height:1.65!important}.note-compose .text-input{border:0!important;background:transparent!important;font-size:19px!important;font-weight:850!important;padding-left:2px!important}.note-colors{display:none!important}
+.note{border-left:1px solid var(--line)!important;border-radius:18px!important;padding:14px!important}.note-preview{-webkit-line-clamp:2!important;color:var(--muted)!important}.note-detail-hero{background:transparent!important;border:0!important;border-bottom:1px solid var(--line)!important;border-radius:0!important;padding:12px 2px 20px!important}.note-detail-title{font-size:30px!important;line-height:1.15!important}.note-detail-body{font-size:17px!important;line-height:1.82!important;padding:22px 4px 90px!important}.note-detail-actions{padding:12px 0 calc(10px + env(safe-area-inset-bottom))!important}
+/* Pomodoro alarmı */
+.focus-alarm{position:absolute;z-index:180;left:12px;right:12px;top:calc(12px + env(safe-area-inset-top));display:none;align-items:center;gap:12px;padding:14px;border-radius:19px;background:#fff;border:1px solid #d8e5da;box-shadow:0 18px 48px rgba(23,49,32,.22);color:#1d3024}.focus-alarm.show{display:flex;animation:alarmIn .22s ease}.focus-alarm-icon{width:45px;height:45px;border-radius:14px;background:#e4f1e7;display:grid;place-items:center;font-size:23px}.focus-alarm-copy{min-width:0;flex:1}.focus-alarm-copy strong{display:block;font-size:13px}.focus-alarm-copy span{display:block;font-size:10px;color:#718077;margin-top:3px}.focus-alarm-stop{height:42px;border:0;border-radius:13px;padding:0 15px;background:#9e453e;color:#fff;font-weight:850}@keyframes alarmIn{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:none}}
+/* Açık/koyu tema iyileştirmesi */
+.dark{--bg:#111814!important;--surface:#1c2620!important;--surface-2:#151e19!important;--surface-3:#253129!important;--ink:#edf4ef!important;--muted:#9eada3!important;--line:#304038!important;--primary:#76ad87!important;--primary-2:#bde0c6!important;--primary-soft:#294437!important;--blue:#79a9c5!important}
+.dark body,.dark .app{background:#111814!important}.dark body{background:linear-gradient(180deg,#101713,#141d18 50%,#111814)!important}.dark .topbar{background:linear-gradient(135deg,#173424,#28523a)!important}.dark .card,.dark .chart-card,.dark .tracker,.dark .growth-action,.dark .v21-score,.dark .v21-plan,.dark .v21-quick button,.dark .water-editor,.dark .water-day-btn,.dark .mood-history-day{background:#1c2620!important;border-color:#304038!important;color:#edf4ef!important}.dark .nav{background:rgba(24,33,28,.97)!important;border-color:#334139!important}.dark .hero{background:linear-gradient(140deg,#20452f,#326047)!important}.dark .note-compose,.dark #notesSheet .sheet,.dark #noteDetailSheet .sheet{background:#171f1a!important;border-color:#304038!important}.dark .note{background:#1c2620!important;border-color:#304038!important}.dark .text-input,.dark .select-input,.dark textarea{background:#202b24!important;color:#edf4ef!important;border-color:#35453b!important}.dark .focus-alarm{background:#1d2821;border-color:#385043;color:#eef5ef}.dark .water-day-btn.has{background:#20333a!important}.dark .water-day-btn.done{background:#244451!important}
+/* kaldırılan bölümler */
+.legacy-stat-hidden{display:none!important}
+@media(max-width:370px){.water-history-grid,.mood-history-simple{gap:4px}.water-day-btn{min-height:48px}.note-detail-title{font-size:27px!important}}
 
-/* Android / WebView mavi dokunma izini kaldır */
-*, *::before, *::after{
-  -webkit-tap-highlight-color:transparent !important;
-}
-button, a, [role="button"], .task, .note, .tracker,
-.habit-day, .challenge-day, .mood-option, .water-day-btn{
-  -webkit-tap-highlight-color:transparent !important;
-  touch-action:manipulation;
-}
-
-/* Puan / XP / ödül alanlarını görünümden kaldır */
-.coin,
-.progress-card,
-#giftButton,
-#rewardsSheet{
-  display:none !important;
-}
-.reward{
-  display:none !important;
-}
-
-/* Kullanıcı tarafından kaldırılması istenen istatistik bölümleri */
-.legacy-stat-hidden{
-  display:none !important;
-}
-
-/* Su takibi - mevcut tasarımı bozmadan ek özellikler */
-.water-emoji{
-  font-size:20px;
-  margin-left:6px;
-  vertical-align:-2px;
-}
-.water-history-grid{
-  display:grid;
-  grid-template-columns:repeat(7,1fr);
-  gap:6px;
-  margin-top:12px;
-}
-.water-day-btn{
-  min-height:52px;
-  border:1px solid var(--line);
-  border-radius:13px;
+/* ===== Alışkanlıklar: sade görsel istatistik grafiği ===== */
+.habit-visual-chart{
+  margin:0 0 12px;
+  padding:14px 14px 12px;
   background:var(--surface);
-  color:var(--ink);
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  gap:2px;
-  padding:4px;
-}
-.water-day-btn strong{font-size:12px}
-.water-day-btn span{font-size:8px;color:var(--muted)}
-.water-day-btn.has{
-  background:#e9f4f9;
-  border-color:#bcd6e4;
-}
-.water-day-btn.done{
-  background:#dbeef6;
-  border-color:#86b7cf;
-}
-.water-day-btn.selected{
-  box-shadow:0 0 0 2px var(--blue);
-}
-.water-editor{
-  padding:15px;
   border:1px solid var(--line);
   border-radius:20px;
-  background:var(--surface);
+  box-shadow:0 5px 20px rgba(34,64,45,.04);
+}
+.habit-visual-chart-head{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:10px;
   margin-bottom:12px;
 }
-.water-editor-top{
-  display:flex;
-  justify-content:space-between;
-  align-items:flex-start;
-  gap:10px;
-}
-.water-editor-top strong{font-size:22px}
-.water-editor-actions{
-  display:grid;
-  grid-template-columns:52px 1fr 52px;
-  gap:8px;
-  margin-top:12px;
-}
-.water-editor-actions button{
-  height:48px;
-  border:0;
-  border-radius:14px;
-  font-size:20px;
+.habit-visual-chart-head strong{
+  font-size:13px;
   font-weight:900;
 }
-.water-editor-actions .drink{
-  background:#dfeff6;
-  color:#326c8d;
-  font-size:12px;
-}
-.glass-size-row{
-  display:grid;
-  grid-template-columns:1fr auto;
-  gap:8px;
-  align-items:end;
-  margin-top:12px;
-}
-.glass-size-row .primary{min-height:48px}
-
-/* Ruh hali - sadece gün ve ruh hali seçimi */
-.simple-mood-date{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:8px;
-  margin-bottom:12px;
-}
-.simple-mood-date button{
-  width:42px;
-  height:42px;
-  border:1px solid var(--line);
-  border-radius:13px;
-  background:var(--surface);
-  color:var(--ink);
-}
-.simple-mood-date strong{font-size:13px}
-.mood-grid.simple{
-  grid-template-columns:repeat(5,1fr);
-  gap:7px;
-}
-.mood-grid.simple .mood-option{
-  min-height:76px;
-  padding:6px;
-}
-.mood-history-simple{
-  display:grid;
-  grid-template-columns:repeat(7,1fr);
-  gap:6px;
-  margin-top:12px;
-}
-.mood-history-day{
-  aspect-ratio:1/1;
-  border:1px solid var(--line);
-  border-radius:12px;
-  background:var(--surface);
-  color:var(--ink);
-  font-size:10px;
-  font-weight:800;
-  display:grid;
-  place-items:center;
-  position:relative;
-}
-.mood-history-day span{
-  position:absolute;
-  bottom:3px;
-  font-size:14px;
-}
-.mood-history-day.selected{
-  box-shadow:0 0 0 2px var(--primary);
-}
-
-/* Not Defteri - mevcut sheet tasarımını koruyup yazma alanını genişlet */
-#notesSheet .sheet{
-  min-height:92%;
-  max-height:96%;
-}
-#noteDetailSheet .sheet{
-  min-height:94%;
-  max-height:98%;
-}
-.note-compose textarea{
-  min-height:180px;
-  font-size:15px;
-  line-height:1.65;
-}
-.note-compose .text-input{
-  font-size:18px;
-  font-weight:850;
-}
-.note-colors{
-  display:none !important;
-}
-.note-preview{
-  -webkit-line-clamp:2 !important;
-}
-.note-detail-title{
-  font-size:27px;
-  line-height:1.18;
-}
-.note-detail-body{
-  font-size:16px;
-  line-height:1.8;
-  padding-bottom:80px;
-}
-
-/* Pomodoro alarmı */
-.focus-alarm{
-  position:absolute;
-  z-index:180;
-  left:12px;
-  right:12px;
-  top:calc(12px + env(safe-area-inset-top));
-  display:none;
-  align-items:center;
-  gap:12px;
-  padding:14px;
-  border-radius:19px;
-  background:var(--surface);
-  border:1px solid var(--line);
-  box-shadow:var(--shadow);
-  color:var(--ink);
-}
-.focus-alarm.show{display:flex}
-.focus-alarm-icon{
-  width:45px;
-  height:45px;
-  border-radius:14px;
-  background:var(--primary-soft);
-  display:grid;
-  place-items:center;
-  font-size:23px;
-}
-.focus-alarm-copy{
-  min-width:0;
-  flex:1;
-}
-.focus-alarm-copy strong{
+.habit-visual-chart-head span{
   display:block;
-  font-size:13px;
-}
-.focus-alarm-copy span{
-  display:block;
-  font-size:10px;
-  color:var(--muted);
   margin-top:3px;
+  font-size:9.5px;
+  color:var(--muted);
 }
-.focus-alarm-stop{
-  height:42px;
-  border:0;
-  border-radius:13px;
-  padding:0 15px;
-  background:var(--red);
-  color:#fff;
+.habit-visual-chart-body{
+  position:relative;
+  height:118px;
+  display:flex;
+  align-items:flex-end;
+  gap:8px;
+  padding:10px 3px 0;
+}
+.habit-visual-chart-body:before,
+.habit-visual-chart-body:after{
+  content:"";
+  position:absolute;
+  left:3px;
+  right:3px;
+  height:1px;
+  background:var(--line);
+  opacity:.55;
+  pointer-events:none;
+}
+.habit-visual-chart-body:before{top:35%}
+.habit-visual-chart-body:after{top:68%}
+.habit-chart-col{
+  position:relative;
+  z-index:1;
+  flex:1;
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-end;
+  align-items:center;
+  gap:6px;
+}
+.habit-chart-track{
+  width:100%;
+  max-width:26px;
+  height:82px;
+  display:flex;
+  align-items:flex-end;
+  border-radius:9px;
+  overflow:hidden;
+  background:var(--surface-3);
+}
+.habit-chart-fill{
+  width:100%;
+  min-height:4px;
+  height:var(--habit-h,4%);
+  border-radius:9px 9px 6px 6px;
+  background:linear-gradient(180deg,#6fa27d 0%,var(--primary) 100%);
+  transition:height .35s cubic-bezier(.2,.8,.2,1);
+}
+.habit-chart-col.today .habit-chart-track{
+  box-shadow:0 0 0 2px rgba(49,112,78,.14);
+}
+.habit-chart-col.empty .habit-chart-fill{
+  opacity:.28;
+}
+.habit-chart-day{
+  font-size:8.5px;
   font-weight:850;
+  color:var(--muted);
 }
-
-/* Koyu modda sadece yeni eklenen alanların mevcut temaya uyumu */
-.dark .water-editor,
-.dark .water-day-btn,
-.dark .mood-history-day,
-.dark .focus-alarm{
+.dark .habit-visual-chart{
   background:var(--surface);
-  color:var(--ink);
   border-color:var(--line);
 }
-.dark .water-day-btn.has{
-  background:#263b42;
-}
-.dark .water-day-btn.done{
-  background:#294854;
-}
-.dark .water-editor-actions .drink{
-  background:#294854;
-  color:#b8d9e9;
+@media(max-width:370px){
+  .habit-visual-chart{padding-left:11px;padding-right:11px}
+  .habit-visual-chart-body{gap:5px}
+  .habit-chart-track{max-width:23px}
 }
 
-/* Küçük telefonlarda sadece yeni eklenen alanların uyumu */
-@media(max-width:370px){
-  .water-history-grid,
-  .mood-history-simple{gap:4px}
-  .water-day-btn{min-height:48px}
-  .note-detail-title{font-size:24px}
-}
 </style>
 
 <div class="focus-alarm" id="focusAlarm" role="alert" aria-live="assertive">
@@ -1590,20 +1459,80 @@ button, a, [role="button"], .task, .note, .tracker,
   const oldRenderFocusDialog=renderFocusDialog;
   renderFocusDialog=function(){oldRenderFocusDialog();const p=document.querySelector('#dialogBackdrop .timer>p');if(p&&!p.textContent.trim())p.remove()};
 
-  let alarmInterval=null;
-  function alarmTone(){
+
+/* ===== Focus alarm audio unlock ===== */
+(function(){
+  let focusAudioUnlocked=false;
+
+  async function unlockFocusAudio(){
+    if(focusAudioUnlocked && audioContext && audioContext.state==="running") return true;
     try{
       audioContext=audioContext||new(window.AudioContext||window.webkitAudioContext)();
-      if(audioContext.state==='suspended')audioContext.resume();
+      if(audioContext.state==="suspended") await audioContext.resume();
+
+      /* Çok kısa, sessiz bir ses üretmek WebView'ın ses motorunu kullanıcı
+         dokunuşuna bağlar. Sonradan sayaç bitince alarm çalabilir. */
+      const o=audioContext.createOscillator();
+      const g=audioContext.createGain();
       const now=audioContext.currentTime;
-      [0,0.22,0.48].forEach((d,i)=>{
-        const o=audioContext.createOscillator(),g=audioContext.createGain();
-        o.type='sine';o.frequency.value=i===1?660:880;
-        g.gain.setValueAtTime(.001,now+d);g.gain.exponentialRampToValueAtTime(.16,now+d+.02);g.gain.exponentialRampToValueAtTime(.001,now+d+.18);
-        o.connect(g).connect(audioContext.destination);o.start(now+d);o.stop(now+d+.2);
+      g.gain.setValueAtTime(0.00001,now);
+      o.frequency.value=440;
+      o.connect(g).connect(audioContext.destination);
+      o.start(now);
+      o.stop(now+0.025);
+
+      focusAudioUnlocked=true;
+      return true;
+    }catch(e){
+      return false;
+    }
+  }
+
+  window.unlockHabitopiaFocusAudio=unlockFocusAudio;
+
+  /* İlk gerçek kullanıcı dokunuşunda sesi hazırla. */
+  ["pointerdown","touchstart","click"].forEach(type=>{
+    document.addEventListener(type,unlockFocusAudio,{passive:true});
+  });
+
+  /* Odak başlatma/durdurma butonuna basıldığında da garantiye al. */
+  document.addEventListener("click",e=>{
+    if(e.target.closest('[data-action="toggle-focus"],[data-action="start-custom-focus"],[data-action="open-focus"],[data-action="focus-preset"]')){
+      unlockFocusAudio();
+    }
+  });
+})();
+
+  let alarmInterval=null;
+  async function alarmTone(){
+    try{
+      audioContext=audioContext||new(window.AudioContext||window.webkitAudioContext)();
+      if(audioContext.state==='suspended')await audioContext.resume();
+
+      const now=audioContext.currentTime;
+      const tones=[
+        {d:0.00,f:880,t:.28},
+        {d:0.34,f:1046,t:.28},
+        {d:0.68,f:880,t:.38}
+      ];
+
+      tones.forEach(({d,f,t})=>{
+        const o=audioContext.createOscillator();
+        const g=audioContext.createGain();
+        o.type='square';
+        o.frequency.setValueAtTime(f,now+d);
+        g.gain.setValueAtTime(.0001,now+d);
+        g.gain.exponentialRampToValueAtTime(.22,now+d+.025);
+        g.gain.exponentialRampToValueAtTime(.0001,now+d+t);
+        o.connect(g).connect(audioContext.destination);
+        o.start(now+d);
+        o.stop(now+d+t+.03);
       });
-    }catch(e){}
-    try{navigator.vibrate?.([350,180,350])}catch(e){}
+    }catch(e){
+      try{await window.unlockHabitopiaFocusAudio?.()}catch(_){}
+    }
+
+    try{navigator.vibrate?.([450,180,450,180,650])}catch(e){}
   }
   window.stopHabitopiaFocusAlarm=function(){
     if(alarmInterval){clearInterval(alarmInterval);alarmInterval=null}
@@ -1618,7 +1547,7 @@ button, a, [role="button"], .task, .note, .tracker,
     if(text)text.textContent=en?'Tap stop to silence the alarm.':'Alarmı durdurmak için butona dokun.';
     if(btn)btn.textContent=en?'Stop':'Durdur';
     document.getElementById('focusAlarm')?.classList.add('show');
-    alarmTone(); alarmInterval=setInterval(alarmTone,1300);
+    alarmTone(); alarmInterval=setInterval(alarmTone,1800);
   };
   completeFocus=function(){
     const f=state.focusTimer,minutes=Math.max(1,Math.round(f.durationSec/60)),date=localDateKey(),sessionId=uid('focus'),task=f.taskId?state.tasks.find(x=>x.id===f.taskId):null,category=task?.category||f.category||'mind';
@@ -1758,6 +1687,82 @@ button, a, [role="button"], .task, .note, .tracker,
     hideLegacyStats();renderToday();renderProfile();
   };
 })();
+
+
+/* ===== Alışkanlıklar: sade görsel istatistik grafiği ===== */
+function renderHabitVisualChart(){
+  const table=document.getElementById("habitTable");
+  if(!table)return;
+
+  let host=document.getElementById("habitVisualChart");
+  if(!host){
+    host=document.createElement("section");
+    host.id="habitVisualChart";
+    host.className="habit-visual-chart";
+    const anchor=table.parentElement&&table.parentElement.classList.contains("habit-table-wrap")
+      ? table.parentElement
+      : table;
+    anchor.parentNode.insertBefore(host,anchor);
+  }
+
+  if(!state.habits.length){
+    host.style.display="none";
+    return;
+  }
+
+  host.style.display="";
+  const today=localDateKey();
+  const days=Array.from({length:7},(_,i)=>addDays(today,i-6));
+  const values=days.map(date=>{
+    let due=0,done=0;
+    state.habits.forEach(h=>{
+      if(!habitDue(h,date))return;
+      due++;
+      if(typeof habitStatus==="function"){
+        if(habitStatus(h,date)==="done")done++;
+      }else if(habitCompletedOn(h,date)){
+        done++;
+      }
+    });
+    return due?Math.round(done/due*100):0;
+  });
+
+  const labels=state.settings.lang==="en"
+    ? ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"]
+    : ["Pt","Sa","Ça","Pe","Cu","Ct","Pz"];
+
+  host.innerHTML=`
+    <div class="habit-visual-chart-head">
+      <div>
+        <strong>${state.settings.lang==="en"?"Weekly rhythm":"Haftalık ritim"}</strong>
+        <span>${state.settings.lang==="en"?"Your habit consistency at a glance":"Alışkanlık düzenini tek bakışta gör"}</span>
+      </div>
+    </div>
+    <div class="habit-visual-chart-body">
+      ${days.map((date,i)=>{
+        const d=dateFromKey(date);
+        const mondayIndex=(d.getDay()+6)%7;
+        const pct=values[i];
+        return `
+          <div class="habit-chart-col ${date===today?"today":""} ${pct===0?"empty":""}">
+            <div class="habit-chart-track">
+              <i class="habit-chart-fill" style="--habit-h:${Math.max(4,pct)}%"></i>
+            </div>
+            <span class="habit-chart-day">${labels[mondayIndex]}</span>
+          </div>`;
+      }).join("")}
+    </div>`;
+}
+
+(function(){
+  const originalRenderHabits=renderHabits;
+  renderHabits=function(){
+    const result=originalRenderHabits.apply(this,arguments);
+    try{renderHabitVisualChart()}catch(error){console.warn("Habit chart:",error)}
+    return result;
+  };
+})();
+
 </script>
 
 </body>
