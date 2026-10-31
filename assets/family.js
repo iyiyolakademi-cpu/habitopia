@@ -98,7 +98,7 @@ function renderHome(){
  const radarView=upcoming.length?upcoming.map(r=>'<div class="flow-date-item"><span class="flow-date-symbol">'+esc(cats[r.cat]?.[1]||"◉")+'</span><div><strong>'+esc(r.title)+'</strong><small>'+stampTime(r.dueAt)+' · '+esc(memberName(r.assignee))+'</small></div></div>').join(""):empty("◉","Yaklaşan hatırlatma yok","Fatura, garanti veya önemli bir tarih ekle.");
  const nextEventView=nextEvent?'<div class="flow-event-row"><span class="flow-event-date"><strong>'+new Date(nextEvent.date+"T12:00:00").getDate()+'</strong><small>'+new Date(nextEvent.date+"T12:00:00").toLocaleDateString("tr-TR",{month:"short"})+'</small></span><div><strong>'+esc(nextEvent.title)+'</strong><small>'+esc(nextEvent.time)+' · '+esc((nextEvent.invitees||[]).length)+' davetli</small></div></div>':empty("▦","Takvim henüz boş","İlk aile etkinliğini planlayabilirsin.");
  const remainingShopping=state.shopping.filter(x=>!x.bought).length;
- return '<div class="flow-page"><div class="flow-welcome"><div><span class="flow-overline">✳ &nbsp; '+esc(todayLabel.toLocaleUpperCase("tr-TR"))+'</span><h1>'+greeting+', <em>'+esc(currentName())+'.</em></h1><p>'+esc(state.familyName)+' için bugün her şeyi bir arada tutalım.</p></div><div class="flow-family-stamp"><span>⌂</span><strong>'+esc(state.familyName)+'</strong><small>'+state.members.length+' kişi birlikte</small></div></div>'+
+ return '<div class="flow-page"><div class="flow-welcome"><div><span class="flow-overline">'+esc(todayLabel.toLocaleUpperCase("tr-TR"))+'</span><h1>'+greeting+', <em>'+esc(currentName())+'.</em></h1><p>'+esc(state.familyName)+' için bugün her şeyi bir arada tutalım.</p></div><div class="flow-family-stamp"><span>⌂</span><strong>'+esc(state.familyName)+'</strong><small>'+state.members.length+' kişi birlikte</small></div></div>'+
  '<div class="flow-layout"><div class="flow-primary"><section class="flow-focus"><div class="flow-focus-top"><span>BUGÜNÜN ÖNCELİĞİ</span><span class="flow-focus-decor">◌</span></div><div class="flow-focus-inner"><div><h2>'+(pending.length?'Birlikte halledeceğiz.':'Günün planı hazır.')+'</h2><p>'+(pending.length?'Seni bekleyen '+pending.length+' görev var. İşleri tamamladıkça herkes durumunu görebilir.':'Henüz sana atanmış bir görev yok. Ailen için yeni bir plan oluşturabilirsin.')+'</p>'+button(pending.length?"Görevlerimi gör ↗":"İlk görevi oluştur ↗",pending.length?"goto-tasks":"new-task","btn flow-focus-button")+'</div><div class="flow-focus-number" aria-hidden="true"><strong>'+pending.length+'</strong><span>GÖREV</span></div></div></section>'+
  '<section class="flow-sheet"><div class="flow-sheet-head"><div><span class="flow-overline">BİRLİKTE YAPILACAKLAR</span><h2>Görevlerim <span class="flow-count">'+pending.length+'</span></h2></div>'+button("Yeni görev ＋","new-task","btn-muted btn-small")+'</div><div class="list flow-task-list">'+tasksView+'</div></section>'+
  '<section class="flow-sheet"><div class="flow-sheet-head"><div><span class="flow-overline">AİLE RADARI</span><h2>Unutulmasın</h2></div>'+button("Tümünü gör ↗","goto-radar","btn-muted btn-small")+'</div><div class="flow-reminders">'+radarView+'</div></section></div>'+
@@ -188,13 +188,20 @@ function renderSettings(){
  '<div class="settings-stack"><div class="settings-block"><h3>Aile bilgilerim</h3><p>Aile alanı: <strong>'+esc(state.familyName)+'</strong></p>'+button("Aile adını değiştir","rename-family","btn-muted")+' '+button("Hesabım ve davetler","show-invite","btn-light")+'</div><div class="settings-block"><h3>Hatırlatmalar</h3><p>Zamanı gelen görev ve Radar kayıtları sunucuda uygulama içi bildirim olarak saklanır. Telefon tamamen kapalıyken işletim sistemi push bildirimi henüz desteklenmez.</p><div class="settings-actions">'+button("Bildirim izni iste","request-permission","btn-light")+button("Bildirimleri gör","show-notifications","btn-muted")+'</div></div><div class="settings-block"><h3>Verilerim ve yedek</h3><p>Aile bilgileriniz Supabase üzerinde aile üyeliğine göre korunur ve hesaplar arasında eşzamanlanır. Daha önce kullandığın yerel Habitopia kayıtları otomatik aktarılmaz.</p><div class="settings-actions">'+button("Bilgilerimi indir","export","btn-muted")+'</div><p class="archive-note">Bu indirme kişisel bir JSON kopyası oluşturur; bulut hesabını veya diğer aile üyelerinin kayıtlarını silmez.</p></div></div>';
 }
 function updateHeader(){
- $("#topbar-heading").textContent=pageTitle[page];$("#topbar-eyebrow").textContent=state.familyName.toLocaleUpperCase("tr-TR").slice(0,30);
- $("#sidebar-family").textContent=state.familyName;$("#current-initial").textContent=currentName().slice(0,1).toLocaleUpperCase("tr-TR");
+ $("#topbar-heading").textContent=pageTitle[page];
+ $("#topbar-eyebrow").textContent=state.familyName.toLocaleUpperCase("tr-TR").slice(0,30);
+ $("#sidebar-family").textContent=state.familyName;
+ $("#current-initial").textContent=currentName().slice(0,1).toLocaleUpperCase("tr-TR");
  $("#today-small").textContent=now().toLocaleDateString("tr-TR",{day:"numeric",month:"long"});
  $$(".nav-link").forEach(b=>b.classList.toggle("active",b.dataset.page===page));
- 
  $$(".mobile-bottom-nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===page));
- $("#notification-dot").hidden=notificationsForMember().length===0;
+ const unread=unreadNotifications().length;
+ const badge=$("#notification-count");
+ if(badge){badge.textContent=unread>99?"99+":String(unread);badge.hidden=unread===0;}
+ const dot=$("#notification-dot");
+ if(dot)dot.hidden=unread===0;
+ const bell=$("#notification-open");
+ if(bell){bell.setAttribute("aria-label",unread?unread+" okunmamış hatırlatma, bildirimleri aç":"Bildirimleri aç");bell.classList.toggle("has-notifications",unread>0);}
 }
 function render(){
  updateHeader();
@@ -205,13 +212,45 @@ function render(){
 function navigate(next){
  if(!pageTitle[next])return;page=next;closeMenu();render();window.scrollTo({top:0,behavior:"instant"});try{history.replaceState({},"","#"+next)}catch{}
 }
-function closeMenu(){$("#sidebar").classList.remove("open");$("#mobile-shade").hidden=true;$("#menu-toggle").setAttribute("aria-expanded","false");}
-function toggleMenu(){const open=!$("#sidebar").classList.contains("open");$("#sidebar").classList.toggle("open",open);$("#mobile-shade").hidden=!open;$("#menu-toggle").setAttribute("aria-expanded",String(open));}
-function openModal(title,description,body,kind){
- const modal=$("#modal");modal.innerHTML='<button type="button" class="modal-close" data-action="close-modal" aria-label="Kapat">×</button><div class="modal-header"><h2 id="modal-title">'+esc(title)+'</h2><p class="modal-intro">'+esc(description)+'</p></div><form data-form="'+kind+'">'+body+'<div class="form-actions"><button type="button" class="btn btn-muted" data-action="close-modal">Vazgeç</button><button type="submit" class="btn btn-primary">Kaydet ve tamamla ↗</button></div></form>';
- $("#overlay").hidden=false;document.body.style.overflow="hidden";modal.querySelector("input,textarea,select")?.focus();
+function closeMenu(){
+ const sidebar=$("#sidebar"),shade=$("#mobile-shade"),toggle=$("#menu-toggle");
+ sidebar.classList.remove("open");
+ shade.hidden=true;
+ toggle.setAttribute("aria-expanded","false");
+ document.documentElement?.classList?.remove("menu-visible");
 }
-function closeModal(){$("#overlay").hidden=true;$("#modal").innerHTML="";document.body.style.overflow="";}
+function toggleMenu(){
+ const sidebar=$("#sidebar"),shade=$("#mobile-shade"),toggle=$("#menu-toggle");
+ const open=!sidebar.classList.contains("open");
+ sidebar.classList.toggle("open",open);
+ shade.hidden=!open;
+ toggle.setAttribute("aria-expanded",String(open));
+ document.documentElement?.classList?.toggle("menu-visible",open);
+ if(open){sidebar.scrollTop=0;}
+}
+function openModal(title,description,body,kind){
+ closeMenu();
+ const overlay=$("#overlay"),modal=$("#modal");
+ const isTask=kind==="new-task";
+ overlay.classList.toggle("form-fullscreen",isTask);
+ overlay.classList.remove("is-notification-screen");
+ modal.classList.toggle("modal-create-task",isTask);
+ const actionLabel=isTask?"Görev listesini oluştur ✓":"Kaydet ve tamamla ✓";
+ modal.innerHTML='<div class="form-screen-top"><button type="button" class="form-back-button" data-action="close-modal" aria-label="Geri dön">←</button><span class="form-logo"><img src="./assets/habitopia-logo-transparent.png" width="32" height="30" alt=""> <strong>habitopia <small>AİLE</small></strong></span><span class="form-top-spacer" aria-hidden="true"></span></div>'+
+ '<div class="modal-header"><span class="modal-section-eyebrow">AİLENLE BİRLİKTE PLANLA</span><h2 id="modal-title">'+esc(title)+'</h2><p class="modal-intro">'+esc(description)+'</p></div>'+
+ '<form data-form="'+kind+'"><div class="form-screen-fields">'+body+'</div><div class="form-actions"><button type="button" class="btn btn-muted" data-action="close-modal">Vazgeç</button><button type="submit" class="btn btn-primary">'+actionLabel+'</button></div></form>';
+ overlay.hidden=false;
+ document.body.style.overflow="hidden";
+ modal.querySelector("input,textarea,select")?.focus({preventScroll:true});
+}
+function closeModal(){
+ const overlay=$("#overlay");
+ overlay.hidden=true;
+ overlay.classList.remove("form-fullscreen","is-notification-screen");
+ $("#modal").classList.remove("modal-create-task");
+ $("#modal").innerHTML="";
+ document.body.style.overflow="";
+}
 const field=(label,name,type="text",attrs="",value="",extra="")=>'<label class="field"><span>'+esc(label)+'</span><input name="'+name+'" type="'+type+'" '+attrs+' value="'+esc(value)+'">'+extra+'</label>';
 const selectField=(label,name,options,selected)=>'<label class="field"><span>'+esc(label)+'</span><select name="'+name+'">'+options.map(([value,text])=>'<option value="'+esc(value)+'" '+(selected===value?"selected":"")+'>'+esc(text)+'</option>').join("")+'</select></label>';
 const memberField=(label,name,selected=current())=>selectField(label,name,state.members.map(m=>[m.id,m.name]),selected);
@@ -332,8 +371,25 @@ function act(action,id,value,path){
  if(action==="reset"){if(!noConfirm("Bu cihazdaki Habitopia Aile verilerini silmek istiyor musun? Önce yedek almanı öneririz."))return;state=sample();save();navigate("home");toast("Örnek aileye dönüldü.");return}
  if(action==="request-permission"){if(!("Notification" in window)){toast("Bu tarayıcı bildirimleri desteklemiyor.");return}if(!window.isSecureContext){toast("Bildirimler için güvenli HTTPS gerekir.");return}Notification.requestPermission().then(p=>toast(p==="granted"?"Uygulama açıkken bildirim izni verildi.":"Bildirim izni verilmedi.")).catch(()=>toast("Bildirim izni alınamadı."));return}
  if(action==="show-notifications"){showNotifications();return}
- if(action==="mark-notification"){window.HabitopiaCloud?.acknowledge?.(id).then(()=>showNotifications()).catch(e=>toast("Bildirim güncellenemedi: "+e.message));return;}
+ if(action==="mark-notification"){markNotificationRead(id);updateHeader();showNotifications();return;}
  if(action==="notification-go"){closeModal();navigate(value==="tasks"?"tasks":value==="shopping"?"shopping":"radar");if(value==="tasks"&&id){setTimeout(()=>document.getElementById("list-"+id)?.scrollIntoView({block:"center",behavior:"smooth"}),40);}return}
+}
+function notificationReadKey(){
+ return "habitopia-aile-read:"+(window.HabitopiaCloud?.household||"local")+":"+current();
+}
+function notificationReadIds(){
+ try{const ids=JSON.parse(localStorage.getItem(notificationReadKey())||"[]");return new Set(Array.isArray(ids)?ids:[]);}
+ catch{return new Set();}
+}
+function unreadNotifications(){
+ const read=notificationReadIds();
+ return notificationsForMember().filter(n=>!read.has(n.id));
+}
+function markNotificationRead(id){
+ if(!id)return;
+ const seen=notificationReadIds();
+ seen.add(id);
+ try{localStorage.setItem(notificationReadKey(),JSON.stringify([...seen].slice(-300)));}catch{}
 }
 function notificationsForMember(){
  const out=[];const ts=Date.now();
@@ -355,11 +411,20 @@ function notificationsForMember(){
  return out.sort((a,b)=>b.at.localeCompare(a.at));
 }
 function showNotifications(){
- const notices=notificationsForMember();
- const content='<div class="notice">'+(window.HabitopiaCloud?.active?"Zamanı gelen görevler sunucuda da kaydedilir. Telefon tamamen kapalıyken push bildirim henüz etkin değildir.":"Bildirimler yalnızca bu cihazdaki seçili kişiye aittir. Uygulama kapalıyken otomatik gönderim henüz etkin değildir.")+'</div>'+
- (notices.length?notices.map(n=>'<div class="notification-card"><strong>'+esc(n.title)+'</strong><p>'+esc(n.message)+' · '+stampTime(n.at)+'</p><button type="button" data-action="notification-go" data-id="'+esc(n.group||"")+'" data-value="'+esc(n.type)+'">İlgili listeyi aç ↗</button>'+(n.serverId?'<button type="button" data-action="mark-notification" data-id="'+esc(n.serverId)+'">Okundu</button>':"")+'</div>').join(""):empty("✓","Yeni bildirim yok","Zamanı gelmiş bekleyen hatırlatma görünmüyor."));
- $("#modal").innerHTML='<button type="button" class="modal-close" data-action="close-modal" aria-label="Kapat">×</button><h2 id="modal-title">Bildirimler</h2><p class="modal-intro">Sana ait hatırlatmalar</p>'+content;
- $("#overlay").hidden=false;document.body.style.overflow="hidden";
+ closeMenu();
+ const notices=unreadNotifications();
+ const noticeIcon='<svg aria-hidden="true" viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9Z"/><path d="M10 21h4"/></svg>';
+ const content=(notices.length?notices.map((n,i)=>
+ '<article class="notification-entry"><span class="notification-entry-icon">'+noticeIcon+'</span><div class="notification-entry-content"><div class="notification-entry-top"><span class="notification-type">'+(n.type==="tasks"?"Aile görevi":n.type==="shopping"?"Alışveriş":"Aile Radarı")+'</span><time>'+stampTime(n.at)+'</time></div><strong>'+esc(n.title)+'</strong><p>'+esc(n.message)+'</p><div class="notification-entry-actions"><button type="button" class="btn btn-light btn-small" data-action="notification-go" data-id="'+esc(n.group||"")+'" data-value="'+esc(n.type)+'" data-notice-id="'+esc(n.id)+'" data-server-id="'+esc(n.serverId||"")+'">Ayrıntıları gör ↗</button>'+
+ '<button type="button" class="btn btn-muted btn-small" data-action="mark-notification" data-id="'+esc(n.id)+'" data-server-id="'+esc(n.serverId||"")+'">Okundu</button>'+'</div></div></article>'
+ ).join(""):'<div class="notifications-empty"><div class="notifications-empty-icon">'+noticeIcon+'</div><h3>Her şey yolunda!</h3><p>Henüz okunmamış bir hatırlatman yok. Yeni görevler ve önemli tarihler burada görünecek.</p></div>');
+ const modal=$("#modal"),overlay=$("#overlay");
+ overlay.classList.remove("form-fullscreen");
+ overlay.classList.add("is-notification-screen");
+ modal.classList.remove("modal-create-task");
+ modal.innerHTML='<div class="notification-screen-head"><button type="button" class="form-back-button" data-action="close-modal" aria-label="Bildirimlerden geri dön">←</button><div><span class="modal-section-eyebrow">HABITOPIA AİLE</span><h2 id="modal-title">Bildirimler <span class="notifications-heading-count">'+notices.length+'</span></h2><p>Görevler, alışveriş ve hatırlatmalar tek yerde.</p></div><span class="notification-screen-logo"><img src="./assets/habitopia-logo-transparent.png" width="37" height="35" alt=""></span></div><div class="notification-screen-content"><div class="notification-info">Bildirim saatini sen belirlersin. Uygulama kapalıyken telefonuna push bildirim gönderimi henüz aktif değildir.</div>'+content+'</div>';
+ overlay.hidden=false;
+ document.body.style.overflow="hidden";
 }
 function poll(){
  const notices=notificationsForMember();
@@ -383,7 +448,7 @@ document.addEventListener("click",e=>{
  const pageButton=e.target.closest("[data-page]");
  if(pageButton){e.preventDefault();navigate(pageButton.dataset.page);return;}
  const actionButton=e.target.closest("[data-action]");
- if(actionButton){act(actionButton.dataset.action,actionButton.dataset.id,actionButton.dataset.value,actionButton.dataset.path);return;}
+ if(actionButton){if(["mark-notification","notification-go"].includes(actionButton.dataset.action)){markNotificationRead(actionButton.dataset.noticeId||actionButton.dataset.id);if(actionButton.dataset.serverId){window.HabitopiaCloud?.acknowledge?.(actionButton.dataset.serverId).catch(err=>toast("Bildirim güncellenemedi: "+err.message));}}act(actionButton.dataset.action,actionButton.dataset.id,actionButton.dataset.value,actionButton.dataset.path);return;}
 });
 document.addEventListener("submit",e=>{
  const form=e.target.closest("form[data-form]");if(!form)return;e.preventDefault();processForm(form);

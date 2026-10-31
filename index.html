@@ -9,9 +9,10 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <title>Habitopia Aile — Birlikte daha kolay</title>
   <link rel="manifest" href="./manifest.webmanifest">
-  <link rel="icon" href="./family-icon.svg" type="image/svg+xml">
+  <link rel="icon" href="./assets/habitopia-logo-transparent.png" type="image/png">
   <link rel="stylesheet" href="./assets/family.css">
   <link rel="stylesheet" href="./assets/family-flow.css">
+  <link rel="stylesheet" href="./assets/family-mobile-polish.css">
   <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.3/dist/umd/supabase.js"></script>
   <script defer src="./assets/family-cloud.js"></script>
   <script defer src="./assets/family.js"></script>
@@ -20,7 +21,7 @@
   <div class="app-layout" id="app-layout" hidden inert>
     <aside class="sidebar" id="sidebar" aria-label="Ana gezinme">
       <a class="brand" href="#home" data-page="home" aria-label="Habitopia Aile ana sayfa">
-        <span class="brand-symbol" aria-hidden="true"><svg viewBox="0 0 40 40" fill="none"><path d="M10 19 20 10l10 9v12H10V19Z" stroke="currentColor" stroke-width="2.7" stroke-linejoin="round"/><path d="M17 31V22h6v9" stroke="currentColor" stroke-width="2.7" stroke-linejoin="round"/></svg></span>
+        <span class="brand-symbol habitopia-emblem" aria-hidden="true"><img src="./assets/habitopia-logo-transparent.png" alt="" width="45" height="43"></span>
         <span><strong>habitopia</strong><small>AİLE</small></span>
       </a>
       <div class="family-chip"><span class="family-chip-mark">⌂</span><div><span>YAŞAM ALANI</span><strong id="sidebar-family">Ailem</strong></div></div>
@@ -34,16 +35,16 @@
         <button type="button" data-page="assets" class="nav-link"><span class="nav-icon">▣</span> Evim ve Belgeler <span class="nav-chevron">›</span></button>
         <button type="button" data-page="family" class="nav-link"><span class="nav-icon">♧</span> Ailem <span class="nav-chevron">›</span></button>
       </nav>
-      <div class="sidebar-bottom"><div class="side-tip"><span class="side-tip-icon">✦</span><strong>Birlikte daha kolay.</strong><p>Planlar aynı yerde, aile hep haberdar.</p></div><button type="button" class="nav-settings" data-page="settings">⚙ &nbsp; Ayarlar ve veriler</button></div>
+      <div class="sidebar-bottom"><div class="side-tip"><span class="side-tip-icon"><img src="./assets/habitopia-logo-transparent.png" alt="" width="35" height="33"></span><strong>Birlikte daha kolay.</strong><p>Planlar aynı yerde, aile hep haberdar.</p></div><button type="button" class="nav-settings" data-page="settings">⚙ &nbsp; Ayarlar ve veriler</button></div>
     </aside>
     <div class="mobile-shade" id="mobile-shade" hidden></div>
     <div class="app-content">
       <header class="topbar">
         <button type="button" class="icon-button menu-button" id="menu-toggle" aria-label="Menüyü aç" aria-expanded="false">☰</button>
-        <div class="topbar-title"><span class="eyebrow" id="topbar-eyebrow">AİLENİN DİJİTAL ALANI</span><strong id="topbar-heading">Bugünün Akışı</strong></div>
+        <div class="topbar-identity"><span class="topbar-logo" aria-hidden="true"><img src="./assets/habitopia-logo-transparent.png" alt="" width="38" height="36"></span><div class="topbar-title"><span class="eyebrow" id="topbar-eyebrow">AİLENİN DİJİTAL ALANI</span><strong id="topbar-heading">Bugünün Akışı</strong></div></div>
         <div class="topbar-actions"><button type="button" class="btn btn-light cloud-top-button" id="cloud-account">Ailem <span aria-hidden="true">⌄</span></button>
           <span class="today-small" id="today-small"></span>
-          <button type="button" id="notification-open" class="icon-button bell-button" aria-label="Bildirimleri göster">♧<span class="notification-dot" id="notification-dot" hidden></span></button>
+          <button type="button" id="notification-open" class="icon-button bell-button" aria-label="Bildirimleri aç" title="Bildirimler"><svg aria-hidden="true" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9Z"/><path d="M10 21h4"/></svg><span class="notification-count" id="notification-count" hidden>0</span><span class="notification-dot" id="notification-dot" hidden></span></button>
           <button type="button" class="user-bubble" id="user-switch" title="Aktif aile üyesini değiştir" aria-label="Aktif aile üyesini değiştir"><span id="current-initial">•</span></button>
         </div>
       </header>
@@ -54,7 +55,7 @@
     </div>
   </div>
   <nav class="mobile-bottom-nav" aria-label="Hızlı gezinme"><button data-page="home">⌂<small>Ana</small></button><button data-page="tasks">☑<small>Görevler</small></button><button data-page="shopping">▤<small>Alışveriş</small></button><button data-page="radar">◉<small>Radar</small></button><button data-page="calendar">▦<small>Takvim</small></button></nav>
-  <div id="cloud-overlay" class="cloud-overlay cloud-onboarding"><div class="auth-boot"><div class="brand-symbol">⌂</div><strong>habitopia <span>AİLE</span></strong><p>Güvenli aile alanı hazırlanıyor…</p></div></div>
+  <div id="cloud-overlay" class="cloud-overlay cloud-onboarding"><div class="auth-boot"><div class="brand-symbol"><img src="./assets/habitopia-logo-transparent.png" alt="" width="44" height="42"></div><strong>habitopia <span>AİLE</span></strong><p>Güvenli aile alanı hazırlanıyor…</p></div></div>
   <div class="overlay" id="overlay" hidden><div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title"></div></div>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 </body>
