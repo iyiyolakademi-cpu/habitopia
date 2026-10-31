@@ -327,6 +327,7 @@ function act(action,id,value,path){
  if(action==="reset"){if(!noConfirm("Bu cihazdaki Habitopia Aile verilerini silmek istiyor musun? Önce yedek almanı öneririz."))return;state=sample();save();navigate("home");toast("Örnek aileye dönüldü.");return}
  if(action==="request-permission"){if(!("Notification" in window)){toast("Bu tarayıcı bildirimleri desteklemiyor.");return}if(!window.isSecureContext){toast("Bildirimler için güvenli HTTPS gerekir.");return}Notification.requestPermission().then(p=>toast(p==="granted"?"Uygulama açıkken bildirim izni verildi.":"Bildirim izni verilmedi.")).catch(()=>toast("Bildirim izni alınamadı."));return}
  if(action==="show-notifications"){showNotifications();return}
+ if(action==="mark-notification"){window.HabitopiaCloud?.acknowledge?.(id).then(()=>showNotifications()).catch(e=>toast("Bildirim güncellenemedi: "+e.message));return;}
  if(action==="notification-go"){closeModal();navigate(value==="tasks"?"tasks":value==="shopping"?"shopping":"radar");if(value==="tasks"&&id){setTimeout(()=>document.getElementById("list-"+id)?.scrollIntoView({block:"center",behavior:"smooth"}),40);}return}
 }
 function notificationsForMember(){
@@ -338,12 +339,20 @@ function notificationsForMember(){
  out.push(...byList.values());
  state.radar.filter(x=>!x.doneAt&&x.assignee===current()&&shareable(x)&&x.reminderAt&&new Date(x.reminderAt).getTime()<=ts).forEach(x=>out.push({id:"radar:"+x.id,type:"radar",title:"Radar: "+x.title,message:"Son tarih: "+stampTime(x.dueAt),at:x.reminderAt}));
  if(state.shoppingMeta.assignee===current()&&state.shoppingMeta.reminderAt&&state.shopping.some(x=>!x.bought)&&new Date(state.shoppingMeta.reminderAt).getTime()<=ts)out.push({id:"shop:"+state.shoppingMeta.reminderAt,type:"shopping",title:"Aile alışveriş listesi",message:state.shopping.filter(x=>!x.bought).length+" ürün alınmayı bekliyor.",at:state.shoppingMeta.reminderAt});
+ const existing=new Set(out.map(x=>x.type+":"+(x.group||x.id.replace(/^(?:task|radar):/,""))));
+ (window.HabitopiaCloud?.active?window.HabitopiaCloud.notifications:[]).forEach(n=>{
+  const task=state.tasks.find(x=>x.id===n.item_id),radar=state.radar.find(x=>x.id===n.item_id);
+  if(!task&&!radar)return;
+  const type=task?"tasks":"radar",group=task?.listId||radar?.id;
+  if(existing.has(type+":"+group))return;
+  out.push({id:"server:"+n.id,serverId:n.id,group,type,title:n.title,message:"Sunucu hatırlatması",at:n.due_at});
+ });
  return out.sort((a,b)=>b.at.localeCompare(a.at));
 }
 function showNotifications(){
  const notices=notificationsForMember();
- const content='<div class="notice">Bildirimler yalnızca bu cihazdaki seçili kişiye aittir. Uygulama kapalıyken otomatik gönderim henüz etkin değildir.</div>'+
- (notices.length?notices.map(n=>'<div class="notification-card"><strong>'+esc(n.title)+'</strong><p>'+esc(n.message)+' · '+stampTime(n.at)+'</p><button type="button" data-action="notification-go" data-id="'+esc(n.group||"")+'" data-value="'+esc(n.type)+'">İlgili listeyi aç ↗</button></div>').join(""):empty("✓","Yeni bildirim yok","Zamanı gelmiş bekleyen hatırlatma görünmüyor."));
+ const content='<div class="notice">'+(window.HabitopiaCloud?.active?"Zamanı gelen görevler sunucuda da kaydedilir. Telefon tamamen kapalıyken push bildirim henüz etkin değildir.":"Bildirimler yalnızca bu cihazdaki seçili kişiye aittir. Uygulama kapalıyken otomatik gönderim henüz etkin değildir.")+'</div>'+
+ (notices.length?notices.map(n=>'<div class="notification-card"><strong>'+esc(n.title)+'</strong><p>'+esc(n.message)+' · '+stampTime(n.at)+'</p><button type="button" data-action="notification-go" data-id="'+esc(n.group||"")+'" data-value="'+esc(n.type)+'">İlgili listeyi aç ↗</button>'+(n.serverId?'<button type="button" data-action="mark-notification" data-id="'+esc(n.serverId)+'">Okundu</button>':"")+'</div>').join(""):empty("✓","Yeni bildirim yok","Zamanı gelmiş bekleyen hatırlatma görünmüyor."));
  $("#modal").innerHTML='<button type="button" class="modal-close" data-action="close-modal" aria-label="Kapat">×</button><h2 id="modal-title">Bildirimler</h2><p class="modal-intro">Sana ait hatırlatmalar</p>'+content;
  $("#overlay").hidden=false;document.body.style.overflow="hidden";
 }
@@ -360,7 +369,10 @@ function poll(){
    state.notified.push(n.id);changed=true;
   }catch(e){console.warn("Bildirim gösterilemedi",e);}
  });
- if(changed){state.notified=state.notified.slice(-1200);save();}
+ if(changed){state.notified=state.notified.slice(-1200);
+   if(window.HabitopiaCloud?.active){try{localStorage.setItem("habitopia-family-notified-"+current(),JSON.stringify(state.notified))}catch{}}
+   else save();
+  }
 }
 document.addEventListener("click",e=>{
  const pageButton=e.target.closest("[data-page]");
@@ -415,7 +427,11 @@ if(!storageHealthy)setTimeout(()=>toast("Tarayıcıdaki eski veri okunamadı; ü
 render();
  window.HabitopiaCloud?.init({
   getState:()=>state,
-  setState:s=>{state=s;render();},
+  setState:s=>{
+   try{s.notified=JSON.parse(localStorage.getItem("habitopia-family-notified-"+s.currentMember)||"[]");}
+   catch{s.notified=[];}
+   state=s;render();
+  },
   reset:()=>{state=sample();render();}
  });
  window.addEventListener("habitopia-cloud-error",e=>toast("Bulut kaydı başarısız: "+e.detail));
