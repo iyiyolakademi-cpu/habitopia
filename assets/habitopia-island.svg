@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 430 700" role="img" aria-label="Gece gökyüzünde, ağacı ve ışıklı evleri olan Habitopia adası">
+<defs>
+  <linearGradient id="sky" x2="0" y2="1"><stop stop-color="#0B1830"/><stop offset=".58" stop-color="#19283D"/><stop offset="1" stop-color="#07232E"/></linearGradient>
+  <linearGradient id="water" x2="0" y2="1"><stop stop-color="#0E485D"/><stop offset=".6" stop-color="#092E45"/><stop offset="1" stop-color="#071723"/></linearGradient>
+  <radialGradient id="dusk"><stop stop-color="#ffc88f" stop-opacity=".75"/><stop offset=".38" stop-color="#ffae84" stop-opacity=".16"/><stop offset="1" stop-color="#ffb78b" stop-opacity="0"/></radialGradient>
+  <linearGradient id="land" x2="0" y2="1"><stop stop-color="#597448"/><stop offset="1" stop-color="#1E463B"/></linearGradient>
+  <linearGradient id="cliff" x2=".25" y2="1"><stop stop-color="#476072"/><stop offset=".42" stop-color="#263F4D"/><stop offset=".83" stop-color="#132D3A"/><stop offset="1" stop-color="#0C202D"/></linearGradient>
+  <linearGradient id="falls" x2="1" y2="0"><stop stop-color="#8BD5CB" stop-opacity=".3"/><stop offset=".25" stop-color="#BAEAE5"/><stop offset=".75" stop-color="#4BA8C3"/><stop offset="1" stop-color="#277D91" stop-opacity=".25"/></linearGradient>
+  <linearGradient id="trunk" x2="1" y2=".2"><stop stop-color="#3C3026"/><stop offset=".5" stop-color="#89633E"/><stop offset="1" stop-color="#38271F"/></linearGradient>
+  <radialGradient id="leaf"><stop stop-color="#63885A"/><stop offset=".7" stop-color="#2F604B"/><stop offset="1" stop-color="#194439"/></radialGradient>
+  <radialGradient id="lantern"><stop stop-color="#FFD995" stop-opacity=".85"/><stop offset="1" stop-color="#FFD995" stop-opacity="0"/></radialGradient>
+  <filter id="soft"><feGaussianBlur stdDeviation="12"/></filter>
+  <filter id="glow"><feGaussianBlur stdDeviation="3"/></filter>
+</defs>
+<rect width="430" height="700" fill="url(#sky)"/>
+<circle cx="324" cy="200" r="160" fill="url(#dusk)"/>
+<circle cx="325" cy="210" r="37" fill="#FFDCA3"/>
+<g fill="#F1F3D8">
+<circle cx="30" cy="57" r="1"/><circle cx="71" cy="107" r="1.3"/><circle cx="121" cy="31" r="1.5"/><circle cx="211" cy="82" r="1.2"/><circle cx="244" cy="29" r="1.2"/><circle cx="375" cy="68" r="1.4"/><circle cx="401" cy="133" r="1"/><circle cx="23" cy="209" r="1.3"/><circle cx="163" cy="149" r="1.3"/><circle cx="297" cy="57" r="1"/><circle cx="400" cy="258" r="1"/>
+</g>
+<path d="M0 260l45-58 29 32 53-76 68 78 47-55 53 51 40-45 95 65v210H0Z" fill="#17243A"/>
+<path d="M0 317l83-62 62 38 52-56 69 72 54-51 110 56v112H0Z" fill="#102F42" opacity=".95"/>
+<path d="M0 350q75-30 139 0t145-12 146 11v351H0Z" fill="url(#water)"/>
+<path d="M-10 393q75-30 151-4t143 0 155-8M0 470q94-26 154-2t137-8 145-5M-10 547q78-30 154-2t143-5 155 0" fill="none" stroke="#6FC4C0" stroke-opacity=".16" stroke-width="3"/>
+<g opacity=".75" fill="#18394B"><path d="M4 358l22-35 22 3 18 32-21 10Z"/><path d="M348 388l17-39 36-11 34 49Z"/><path d="M15 482l17-30 31 9 19 34Z"/></g>
+<!-- Floating island cliff and moss lip -->
+<path d="M70 340Q116 301 211 308Q306 297 360 330L340 408Q328 470 280 509L230 564Q206 588 185 558L138 500Q91 450 82 404Z" fill="#071D29" opacity=".6" transform="translate(3 15)"/>
+<path d="M59 324Q116 277 208 290Q306 275 372 320L348 399Q340 449 290 490L238 559Q215 580 195 547L140 480Q100 451 81 400Z" fill="url(#cliff)" stroke="#325363" stroke-width="3"/>
+<path d="M81 352l46 104 25-43 22 70 39 64 19-58 42-31 22-111M329 356l-19 83-36 27-12 46" fill="none" stroke="#0E2633" stroke-width="7" opacity=".7"/>
+<path d="M93 379l18 59 35-37 13 45M238 400l-23 97 20-23 22-42" fill="none" stroke="#6A8990" stroke-width="4" opacity=".22"/>
+<path d="M59 318Q108 273 211 285Q298 275 369 314Q363 334 341 344Q255 365 196 351Q105 356 59 334Z" fill="url(#land)" stroke="#739567" stroke-width="3"/>
+<path d="M75 324Q143 295 222 307Q296 294 352 319" fill="none" stroke="#A6A778" stroke-opacity=".7" stroke-width="7" stroke-linecap="round"/>
+<!-- Two streams -->
+<path d="M275 351l26-1-5 58-9 49-12 46-13 35-17 16-9-6 14-28 7-57 4-56Z" fill="url(#falls)" opacity=".91"/>
+<path d="M284 359l-5 78-14 78" fill="none" stroke="#D5FFFF" stroke-opacity=".6" stroke-width="2"/>
+<ellipse cx="246" cy="551" rx="58" ry="11" fill="#73CDD2" opacity=".25" filter="url(#soft)"/>
+<!-- tiny footpath -->
+<path d="M86 319Q137 324 182 332T343 327" fill="none" stroke="#B9AA7A" stroke-width="12" stroke-opacity=".6"/>
+<!-- trees left -->
+<g fill="#123A31"><path d="M84 319l19-71 24 71ZM104 326l24-88 27 88ZM308 322l20-88 23 88ZM328 330l20-67 23 67Z"/></g>
+<g fill="#275A43"><path d="M87 309l15-55 19 55ZM107 311l23-71 22 71ZM311 311l18-69 20 69Z"/></g>
+<!-- main tree trunk -->
+<path d="M179 319q13-67 3-134l-28-39m27 56q16-52 54-80m-53 102q-32-35-67-40m75 55q26-41 72-37" fill="none" stroke="url(#trunk)" stroke-width="25" stroke-linecap="round"/>
+<path d="M179 319q13-67 3-134l-28-39m27 56q16-52 54-80" fill="none" stroke="#AD814C" stroke-opacity=".38" stroke-width="6" stroke-linecap="round"/>
+<!-- grand tree lush canopy -->
+<g fill="url(#leaf)" stroke="#1A4839" stroke-width="3">
+<circle cx="116" cy="149" r="49"/><circle cx="144" cy="106" r="54"/><circle cx="200" cy="89" r="66"/><circle cx="257" cy="126" r="58"/><circle cx="292" cy="167" r="52"/><circle cx="213" cy="164" r="71"/><circle cx="167" cy="181" r="54"/>
+</g>
+<g fill="#5E8B5B" opacity=".4">
+<ellipse cx="145" cy="91" rx="32" ry="14"/><ellipse cx="206" cy="65" rx="29" ry="15"/><ellipse cx="247" cy="108" rx="31" ry="17"/><ellipse cx="286" cy="156" rx="25" ry="12"/><ellipse cx="181" cy="150" rx="30" ry="14"/>
+</g>
+<!-- house on roots -->
+<g stroke="#513D30" stroke-width="3">
+<path d="M192 251l45-36 45 36v61h-90Z" fill="#815C3D"/>
+<path d="M183 254l54-48 55 48-8 9-47-39-46 40Z" fill="#3B312C"/>
+<rect x="234" y="273" width="25" height="38" rx="3" fill="#3F3028"/>
+<rect x="201" y="263" width="23" height="23" rx="3" fill="#F9C77C"/>
+<path d="M212 263v23M201 274h23" stroke="#9F6F44" stroke-width="2"/>
+<rect x="251" y="259" width="19" height="22" rx="2" fill="#FAD58F"/>
+</g>
+<ellipse cx="211" cy="274" rx="33" ry="31" fill="url(#lantern)" opacity=".38" filter="url(#soft)"/>
+<ellipse cx="260" cy="270" rx="29" ry="30" fill="url(#lantern)" opacity=".26" filter="url(#soft)"/>
+<!-- tree house window -->
+<path d="M160 170l25-18 24 18v23h-49Z" fill="#795A3C" stroke="#3B2D25" stroke-width="3"/>
+<path d="M154 171l31-27 30 27" fill="none" stroke="#3A2D24" stroke-width="9" stroke-linejoin="round"/>
+<rect x="177" y="166" width="13" height="16" rx="2" fill="#FFD183"/>
+<path d="M149 195l76 4" stroke="#88663F" stroke-width="6"/>
+<!-- lanterns and lamps -->
+<g>
+<path d="M99 315v-31m0 0h-3m0 0v9m0-9h6" stroke="#392F27" stroke-width="4" fill="none"/>
+<rect x="90" y="292" width="18" height="21" rx="4" fill="#E8B66D" stroke="#523F29" stroke-width="4"/>
+<circle cx="99" cy="304" r="28" fill="url(#lantern)" opacity=".47"/>
+<path d="M322 318v-37" stroke="#392F27" stroke-width="4"/>
+<rect x="313" y="287" width="18" height="22" rx="3" fill="#F2CA80" stroke="#503A26" stroke-width="3"/>
+<circle cx="322" cy="300" r="26" fill="url(#lantern)" opacity=".5"/>
+</g>
+<!-- fireflies -->
+<g fill="#FFDA8B" opacity=".83"><circle cx="82" cy="243" r="3"/><circle cx="350" cy="241" r="2.5"/><circle cx="113" cy="208" r="2"/><circle cx="310" cy="181" r="2.4"/><circle cx="156" cy="268" r="2"/></g>
+<g fill="#C6DDA0" opacity=".33"><circle cx="84" cy="236" r="7" filter="url(#glow)"/><circle cx="350" cy="241" r="8" filter="url(#glow)"/></g>
+<!-- bottom depth vignette -->
+<rect width="430" height="700" fill="#071620" opacity=".09"/>
+</svg>

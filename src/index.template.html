@@ -23,7 +23,31 @@
   <main class="main" id="main">
     
 <section class="view active" id="view-today">
-  <div class="journey-home">
+  <div class="island-home">
+    <header class="island-header">
+      <div class="island-persona"><span class="island-icon" aria-hidden="true"><img src="assets/habitopia-logo.jpg" alt=""></span><div class="island-hello"><span data-island-tr="HOŞ GELDİN" data-island-en="WELCOME">HOŞ GELDİN</span><strong id="islandName">Habitopia</strong></div></div>
+      <div class="island-header-actions"><button type="button" data-action="island-account" class="island-avatar" aria-label="Profilimi aç"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></button><button type="button" class="island-coin" data-action="rewards" aria-label="Ödüllere git"><span aria-hidden="true">✦</span><strong id="islandCoins">0</strong><small>XP</small></button></div>
+    </header>
+    <div class="island-scene-wrap">
+      <div class="island-stage" role="group" aria-label="Habitopia Dünyası">
+        <img class="island-visual" src="assets/habitopia-island.svg" alt="Yüzen yeşil adada ağaç, ışıklı ev ve şelale">
+        <div class="island-stage-top"><h1 id="islandWelcome" data-island-tr="Daha iyi bir sen'e yolculuk başlasın." data-island-en="Your journey starts here.">Daha iyi bir sen'e<br>yolculuk başlasın.</h1><p id="islandDailyLine">Küçük adımlar, büyük bir yolculuk.</p></div>
+        <div class="island-gates" aria-label="Uygulama bölümleri">
+          <button type="button" class="island-gate gate-habits" data-action="island-habits"><span class="island-gate-mark">❧</span><strong data-island-tr="Alışkanlıklarım" data-island-en="My Habits">Alışkanlıklarım</strong><span class="island-gate-arrow" aria-hidden="true">›</span></button>
+          <button type="button" class="island-gate gate-world" data-action="island-world"><span class="island-gate-mark">♧</span><strong data-island-tr="Dünyam" data-island-en="My World">Dünyam</strong><span class="island-gate-arrow" aria-hidden="true">›</span></button>
+          <button type="button" class="island-gate gate-growth" data-action="island-growth"><span class="island-gate-mark">▥</span><strong data-island-tr="İlerlemem" data-island-en="My Progress">İlerlemem</strong><span class="island-gate-arrow" aria-hidden="true">›</span></button>
+          <button type="button" class="island-gate gate-account" data-action="island-account"><span class="island-gate-mark">♙</span><strong data-island-tr="Profilim" data-island-en="Profile">Profilim</strong><span class="island-gate-arrow" aria-hidden="true">›</span></button>
+        </div>
+      </div>
+    </div>
+    <div class="island-home-bottom"><span class="island-tiny-pulse" aria-hidden="true">✦</span><span id="islandMotivation">Her küçük adım dünyanı büyütür.</span><button type="button" data-action="island-tasks" id="islandTaskButton">Görevler <span aria-hidden="true">›</span></button></div>
+    <div class="island-home-footer"><button type="button" data-action="island-plan" data-island-tr="Takvim" data-island-en="Calendar">Takvim</button><span>·</span><a href="index.html" data-island-tr="Dünya seçimine dön" data-island-en="Choose another world">Dünya seçimine dön</a></div>
+  </div>
+</section>
+<section class="view" id="view-tasks">
+  <div class="island-backbar"><button type="button" data-action="island-home" aria-label="Ana dünyaya dön"><span aria-hidden="true">‹</span> <span data-island-tr="Dünyama dön" data-island-en="Back to my world">Dünyama dön</span></button></div>
+<div class="island-page-lead"><p data-island-tr="GÜNLÜK KAYIT" data-island-en="DAILY LOG">GÜNLÜK KAYIT</p><h1 data-island-tr="Görevlerim" data-island-en="My Tasks">Görevlerim</h1></div>
+<div class="journey-home">
     <div class="journey-intro">
       <div class="journey-overline"><span class="journey-spark" aria-hidden="true">✳</span><span id="journeyChapter">HABITOPIA / YENİ BİR GÜN</span><span class="journey-day" id="journeyDate"></span></div>
       <h1 id="journeyHeadline">Kendi yolunu<br><em>çiz.</em></h1>
@@ -87,7 +111,7 @@
       <div class="journey-map-footer" aria-live="polite"><span class="journey-heart" aria-hidden="true">✦</span><span id="journeyWorldMessage">Attığın her adım bu dünyayı büyütür.</span></div>
     </section>
     <div class="journey-postscene"><span class="journey-postscene-rule"></span><p id="journeyFootnote">Dört ayrı durak. Tek bir yolculuk.</p><span class="journey-postscene-rule"></span></div>
-    <details class="journey-workbench" id="journeyWorkbench">
+    <details class="journey-workbench" id="journeyWorkbench" open>
       <summary><span class="journey-summary-label"><span id="journeyWorkbenchTitle">Günlük defterim</span><small id="journeyWorkbenchSubtitle">Görevler, su, odak ve günlük araçlar</small></span><span class="journey-summary-plus" aria-hidden="true">+</span></summary>
       <div class="journey-workbench-body">
         <div class="journey-legacy" hidden aria-hidden="true">
@@ -113,12 +137,31 @@
   </div>
 </section>
     <section class="view" id="view-habits">
+      <div class="island-backbar"><button type="button" data-action="island-home"><span aria-hidden="true">‹</span><span data-island-tr="Dünyama dön" data-island-en="Back to my world">Dünyama dön</span></button></div>
       <div class="page-head"><div><h1 data-i18n="habits"></h1><p data-i18n="habitsSubtitle"></p></div><button class="icon-btn" data-action="add-habit" id="addHabitIcon"></button></div>
+      <div class="island-habit-dayline"><span id="islandHabitDate"></span><span id="islandHabitSummary"></span></div>
+      <div class="island-habit-rows" id="islandHabitRows"></div>
+      <details class="island-habit-weekly"><summary data-island-tr="Haftalık ayrıntılar" data-island-en="Weekly details">Haftalık ayrıntılar</summary>
       <div class="habit-toolbar"><div class="week-nav"><button data-action="week-prev">‹</button><strong id="weekLabel"></strong><button data-action="week-next">›</button></div><button class="secondary" style="min-height:38px" data-action="add-habit" data-i18n="newHabit"></button></div>
       <div class="habit-table" id="habitTable"></div>
       <div class="section-head"><h2 data-i18n="weeklySummary"></h2><span id="habitWeekScore"></span></div><div class="stat-grid" id="habitStats"></div>
+      </details>
     </section>
+    <section class="view" id="view-world">
+  <div class="island-backbar"><button type="button" data-action="island-home"><span aria-hidden="true">‹</span> <span data-island-tr="Dünyama dön" data-island-en="Back to my world">Dünyama dön</span></button></div>
+  <div class="island-page-lead"><p data-island-tr="KEŞFET VE GELİŞTİR" data-island-en="EXPLORE AND GROW">KEŞFET VE GELİŞTİR</p><h1 data-island-tr="Habitopia Dünyam" data-island-en="My Habitopia World">Habitopia Dünyam</h1><span data-island-tr="İlerledikçe dünyan da gelişir." data-island-en="Your world grows with your progress.">İlerledikçe dünyan da gelişir.</span></div>
+  <div class="island-world-art"><img src="assets/habitopia-island.svg" alt="Habitopia adası ve gelişen dünya"><div class="island-world-caption"><span data-island-tr="BENİM ADAM" data-island-en="MY ISLAND">BENİM ADAM</span><strong id="islandWorldStage">Başlangıç adası</strong></div></div>
+  <div class="island-level"><div class="island-level-top"><span id="islandLevel">Seviye 1</span><span id="islandXp">0 / 50 XP</span></div><div class="island-level-track"><div id="islandXpFill"></div></div></div>
+  <div class="island-page-heading"><h2 data-island-tr="Keşif alanların" data-island-en="Your exploration areas">Keşif alanların</h2><p data-island-tr="Gerçek ilerlemenle açılır." data-island-en="Unlock with real progress.">Gerçek ilerlemenle açılır.</p></div>
+  <div class="island-unlocks" id="islandUnlocks" aria-label="Açılabilir dünya bölgeleri"></div>
+  <div class="island-world-tools">
+    <button type="button" data-action="island-plan"><span>▦</span><span data-island-tr="Hedefler ve takvim" data-island-en="Goals and calendar">Hedefler ve takvim</span><span>›</span></button>
+    <button type="button" data-action="rewards"><span>✧</span><span data-island-tr="Ödüllerim" data-island-en="My rewards">Ödüllerim</span><span>›</span></button>
+    <button type="button" data-action="go-challenges"><span>⚑</span><span data-island-tr="21 günlük meydan okuma" data-island-en="21-day challenge">21 günlük meydan okuma</span><span>›</span></button>
+  </div>
+</section>
     <section class="view" id="view-plan">
+      <div class="island-backbar"><button type="button" data-action="island-home"><span aria-hidden="true">‹</span><span data-island-tr="Dünyama dön" data-island-en="Back to my world">Dünyama dön</span></button></div>
       <div class="page-head"><div><h1 id="hbtPlanTitle">Planım</h1><p id="hbtPlanSubtitle">Takvimin ve kişisel planın tek yerde.</p></div><button type="button" class="icon-btn" data-action="calendar" aria-label="Gelişim takvimini aç">▦</button></div>
       <section class="hbt-calendar-card" aria-label="Aylık takvim"><div class="hbt-calendar-head"><div><span class="hbt-eyebrow" id="hbtCalendarCaption">TAKVİM</span><h2 id="hbtCalendarMonth"></h2></div><div class="hbt-calendar-arrows"><button type="button" data-action="hbt-month-prev" aria-label="Önceki ay">‹</button><button type="button" data-action="hbt-month-next" aria-label="Sonraki ay">›</button></div></div><div class="hbt-calendar-weekdays" id="hbtCalendarWeekdays"></div><div class="hbt-calendar-days" id="hbtCalendarDays"></div></section>
       <section class="hbt-selected-day" id="hbtSelectedDay" aria-live="polite"></section>
@@ -131,12 +174,15 @@
       </div>
     </section>
     <section class="view" id="view-challenges">
+      <div class="island-backbar"><button type="button" data-action="island-home"><span aria-hidden="true">‹</span><span data-island-tr="Dünyama dön" data-island-en="Back to my world">Dünyama dön</span></button></div>
       <button type="button" class="hbt-back-link" data-action="go-plan" id="hbtBackToPlan">← Planıma dön</button>
       <div class="page-head"><div><h1 data-i18n="challenges"></h1><p data-i18n="challengeSubtitle"></p></div><button class="icon-btn" data-action="add-challenge" id="addChallengeIcon"></button></div>
       <div id="challengeContent"></div>
     </section>
     <section class="view" id="view-profile">
+      <div class="island-backbar"><button type="button" data-action="island-home"><span aria-hidden="true">‹</span><span data-island-tr="Dünyama dön" data-island-en="Back to my world">Dünyama dön</span></button></div>
       <div class="page-head"><div><h1 data-i18n="progress"></h1><p data-i18n="progressSubtitle"></p></div><button class="icon-btn" data-action="settings" id="settingsIcon"></button></div>
+      <div class="island-trend"><div class="island-trend-head"><h2 data-island-tr="Gelişim yolculuğun" data-island-en="Your growth journey">Gelişim yolculuğun</h2><span id="islandGrowthPeriodText"></span></div><div class="island-periods"><button type="button" class="island-period active" data-action="island-period" data-days="7">7 Gün</button><button type="button" class="island-period" data-action="island-period" data-days="30">30 Gün</button><button type="button" class="island-period" data-action="island-period" data-days="90">90 Gün</button></div><div class="island-trend-metrics" id="islandTrendMetrics"></div><div class="island-trend-chart" id="islandTrendChart" aria-label="Alışkanlık gelişim grafiği"></div></div>
       <div class="hbt-insight-summary" id="hbtInsightSummary" aria-label="Gelişim özeti"></div>
       <div class="tracker-grid"><button class="tracker water" data-action="water-stats"><div class="feature-icon" id="trackerWaterIcon"></div><strong data-i18n="water"></strong><b id="trackerWaterValue"></b><span id="trackerWaterCopy"></span></button><button class="tracker weight" data-action="weight"><div class="feature-icon" id="trackerWeightIcon"></div><strong data-i18n="weight"></strong><b id="trackerWeightValue"></b><span id="trackerWeightCopy"></span></button><button class="tracker focus" data-action="focus-stats"><div class="feature-icon" id="trackerFocusIcon"></div><strong data-i18n="focus"></strong><b id="trackerFocusValue"></b><span id="trackerFocusCopy"></span></button><button class="tracker notes" data-action="notes"><div class="feature-icon" id="trackerNotesIcon"></div><strong data-i18n="notebook"></strong><b id="trackerNotesValue"></b><span id="trackerNotesCopy"></span></button><button class="tracker mood" data-action="mood"><div class="feature-icon" id="trackerMoodIcon"><span class="ui-glyph" data-ui-icon="mood-neutral"></span></div><strong data-i18n="mood"></strong><b id="trackerMoodValue"></b><span id="trackerMoodCopy"></span></button><button class="tracker report" data-action="weekly-report"><div class="feature-icon" id="trackerReportIcon"></div><strong data-i18n="weeklyReport"></strong><b id="trackerReportValue"></b><span id="trackerReportCopy"></span></button></div>
       <div class="section-head hub-section"><h2 id="growthHubTitle">Gelişim Merkezi</h2><span id="growthHubSub">Planla · uygula · değerlendir</span></div><div class="growth-actions" id="growthHubActions"><button class="growth-action" data-action="calendar"><b>📅</b><strong>Takvim</strong><span>Günlük gelişimini gör</span></button><button class="growth-action" data-action="routines"><b>🌅</b><strong>Rutinler</strong><span>Sabah ve akşam</span></button><button class="growth-action" data-action="journal"><b>📖</b><strong>Günlük</strong><span>Gününü düşün ve yaz</span></button><button class="growth-action" data-action="weekly-goals"><b>🎯</b><strong>Haftalık Hedefler</strong><span>Haftanın odağını takip et</span></button><button class="growth-action" data-action="weekly-review"><b>🧠</b><strong>Haftayı Değerlendir</strong><span>Öğren ve yeni haftayı kur</span></button><button class="growth-action" data-action="growth-details"><b>📈</b><strong>Gelişim Skoru</strong><span>Skorunun detaylarını gör</span></button></div>
@@ -153,6 +199,7 @@
       </div>
     </section>
     <section class="view" id="view-account">
+      <div class="island-backbar"><button type="button" data-action="island-home"><span aria-hidden="true">‹</span><span data-island-tr="Dünyama dön" data-island-en="Back to my world">Dünyama dön</span></button></div>
       <div class="page-head"><div><h1 id="hbtAccountTitle">Profilim</h1><p id="hbtAccountSubtitle">Hedeflerin ve kişisel ayarların.</p></div><button type="button" class="icon-btn" data-action="settings" aria-label="Ayarları aç">⚙</button></div>
       <div class="hbt-account-head" id="hbtAccountHero"></div>
       <div class="section-head"><h2 id="hbtAccountToolsHeading">Kişisel alanım</h2></div>
@@ -203,6 +250,7 @@
 <!-- HBT:MIDNIGHT_CSS -->
 <!-- HBT:UNIVERSE_CSS -->
 <!-- HBT:JOURNEY_CSS -->
+<!-- HBT:ISLAND_CSS -->
 
 <div class="focus-alarm" id="focusAlarm" role="alert" aria-live="assertive">
   <div class="focus-alarm-icon">⏰</div>
@@ -213,6 +261,7 @@
 <!-- HBT:POLISH_JS -->
 <!-- HBT:REDESIGN_JS -->
 <!-- HBT:JOURNEY_JS -->
+<!-- HBT:ISLAND_JS -->
 
 </body>
 </html>

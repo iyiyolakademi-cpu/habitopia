@@ -21,4 +21,5 @@ jobs:
       - run: node --check src/scripts/polish.js
       - run: node --check src/scripts/redesign.js
       - run: node --check src/scripts/journey.js
+      - run: node --check src/scripts/island.js
       - run: node --test tests/*.test.cjs

@@ -53,3 +53,14 @@ Habitopia ve Hayat Borsan artık aynı depoda iki ayrı işlevsel uygulama olara
 
 ## Yeni Habitopia Yaşam Haritası
 Giriş sonrası `habitopia.html` ana ekranı artık metrik/kart paneli değil, dört etkileşimli durağı olan çizim tabanlı gece haritasıdır. Ritim Ormanı → alışkanlıklar; Görev Yolu → açılabilir günlük defter; Sessiz Vadi → odaklanma; Ufuk Noktası → plan/takvim. Haritadaki ağaç mevcut günlük görev ve alışkanlık tamamlanmasına göre 0-4 görünüm seviyesinde canlanır; ayrı puan veya veri tablosu yaratılmaz. Eski günlük araçlar aşağıdaki `<details>` defterine taşındı. Kaynaklar: `src/styles/journey.css` ve `src/scripts/journey.js`. Geri dönüş dalı: `backup/habitopia-before-journey-20261031`.
+
+## Habitopia 4.0 — Etkileşimli Ada (mobil)
+- Kullanıcıya gösterilen Habitopia ana sayfası artık **koyu, şelaleli ve ağaç evli yüzen ada**. Grafik, kart paneli ve eski yol haritası ana ekranda görünmez.
+- **Alışkanlıklarım / Dünyam / İlerlemem / Profilim** adanın içinde dört büyük butondur. Sabit alt menü yoktur. Her biri uygulamada ayrı bir ekran açar; ekranlarda geri dönme butonu vardır.
+- Görevler, su ve odak araçları **Görevlerim** ekranında eski veriler korunarak kullanılır.
+- Alışkanlıklar için yeni günlük dokunma listesi, ilerleme için 7/30/90 gün grafikleri, Dünyam için gerçek XP'ye dayalı keşif seviyeleri eklenmiştir. Eski haftalık takip ve diğer özellikler korunmuştur.
+- Görseller telifsiz olarak depoda yer alan **orijinal SVG** çizimle oluşturulmuştur: `assets/habitopia-island.svg`.
+- Kod: `src/styles/island.css` ve `src/scripts/island.js`. Kullanıcı veri şeması değiştirilmedi.
+- Geri dönüş: `backup/habitopia-before-island-ui-20261031`.
+
+Not: Keşif bölgeleri puana bağlı görsel seviyelerdir, henüz serbest dünya dekorasyonu/satın alma sistemi değildir. Mobil Safari, Android ve Flutter WebView testleri ayrıca yapılmalıdır.

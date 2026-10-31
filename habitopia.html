@@ -404,7 +404,31 @@ body{background:#e9eee8!important}
   <main class="main" id="main">
     
 <section class="view active" id="view-today">
-  <div class="journey-home">
+  <div class="island-home">
+    <header class="island-header">
+      <div class="island-persona"><span class="island-icon" aria-hidden="true"><img src="assets/habitopia-logo.jpg" alt=""></span><div class="island-hello"><span data-island-tr="HOŞ GELDİN" data-island-en="WELCOME">HOŞ GELDİN</span><strong id="islandName">Habitopia</strong></div></div>
+      <div class="island-header-actions"><button type="button" data-action="island-account" class="island-avatar" aria-label="Profilimi aç"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></button><button type="button" class="island-coin" data-action="rewards" aria-label="Ödüllere git"><span aria-hidden="true">✦</span><strong id="islandCoins">0</strong><small>XP</small></button></div>
+    </header>
+    <div class="island-scene-wrap">
+      <div class="island-stage" role="group" aria-label="Habitopia Dünyası">
+        <img class="island-visual" src="assets/habitopia-island.svg" alt="Yüzen yeşil adada ağaç, ışıklı ev ve şelale">
+        <div class="island-stage-top"><h1 id="islandWelcome" data-island-tr="Daha iyi bir sen'e yolculuk başlasın." data-island-en="Your journey starts here.">Daha iyi bir sen'e<br>yolculuk başlasın.</h1><p id="islandDailyLine">Küçük adımlar, büyük bir yolculuk.</p></div>
+        <div class="island-gates" aria-label="Uygulama bölümleri">
+          <button type="button" class="island-gate gate-habits" data-action="island-habits"><span class="island-gate-mark">❧</span><strong data-island-tr="Alışkanlıklarım" data-island-en="My Habits">Alışkanlıklarım</strong><span class="island-gate-arrow" aria-hidden="true">›</span></button>
+          <button type="button" class="island-gate gate-world" data-action="island-world"><span class="island-gate-mark">♧</span><strong data-island-tr="Dünyam" data-island-en="My World">Dünyam</strong><span class="island-gate-arrow" aria-hidden="true">›</span></button>
+          <button type="button" class="island-gate gate-growth" data-action="island-growth"><span class="island-gate-mark">▥</span><strong data-island-tr="İlerlemem" data-island-en="My Progress">İlerlemem</strong><span class="island-gate-arrow" aria-hidden="true">›</span></button>
+          <button type="button" class="island-gate gate-account" data-action="island-account"><span class="island-gate-mark">♙</span><strong data-island-tr="Profilim" data-island-en="Profile">Profilim</strong><span class="island-gate-arrow" aria-hidden="true">›</span></button>
+        </div>
+      </div>
+    </div>
+    <div class="island-home-bottom"><span class="island-tiny-pulse" aria-hidden="true">✦</span><span id="islandMotivation">Her küçük adım dünyanı büyütür.</span><button type="button" data-action="island-tasks" id="islandTaskButton">Görevler <span aria-hidden="true">›</span></button></div>
+    <div class="island-home-footer"><button type="button" data-action="island-plan" data-island-tr="Takvim" data-island-en="Calendar">Takvim</button><span>·</span><a href="index.html" data-island-tr="Dünya seçimine dön" data-island-en="Choose another world">Dünya seçimine dön</a></div>
+  </div>
+</section>
+<section class="view" id="view-tasks">
+  <div class="island-backbar"><button type="button" data-action="island-home" aria-label="Ana dünyaya dön"><span aria-hidden="true">‹</span> <span data-island-tr="Dünyama dön" data-island-en="Back to my world">Dünyama dön</span></button></div>
+<div class="island-page-lead"><p data-island-tr="GÜNLÜK KAYIT" data-island-en="DAILY LOG">GÜNLÜK KAYIT</p><h1 data-island-tr="Görevlerim" data-island-en="My Tasks">Görevlerim</h1></div>
+<div class="journey-home">
     <div class="journey-intro">
       <div class="journey-overline"><span class="journey-spark" aria-hidden="true">✳</span><span id="journeyChapter">HABITOPIA / YENİ BİR GÜN</span><span class="journey-day" id="journeyDate"></span></div>
       <h1 id="journeyHeadline">Kendi yolunu<br><em>çiz.</em></h1>
@@ -468,7 +492,7 @@ body{background:#e9eee8!important}
       <div class="journey-map-footer" aria-live="polite"><span class="journey-heart" aria-hidden="true">✦</span><span id="journeyWorldMessage">Attığın her adım bu dünyayı büyütür.</span></div>
     </section>
     <div class="journey-postscene"><span class="journey-postscene-rule"></span><p id="journeyFootnote">Dört ayrı durak. Tek bir yolculuk.</p><span class="journey-postscene-rule"></span></div>
-    <details class="journey-workbench" id="journeyWorkbench">
+    <details class="journey-workbench" id="journeyWorkbench" open>
       <summary><span class="journey-summary-label"><span id="journeyWorkbenchTitle">Günlük defterim</span><small id="journeyWorkbenchSubtitle">Görevler, su, odak ve günlük araçlar</small></span><span class="journey-summary-plus" aria-hidden="true">+</span></summary>
       <div class="journey-workbench-body">
         <div class="journey-legacy" hidden aria-hidden="true">
@@ -494,12 +518,31 @@ body{background:#e9eee8!important}
   </div>
 </section>
     <section class="view" id="view-habits">
+      <div class="island-backbar"><button type="button" data-action="island-home"><span aria-hidden="true">‹</span><span data-island-tr="Dünyama dön" data-island-en="Back to my world">Dünyama dön</span></button></div>
       <div class="page-head"><div><h1 data-i18n="habits"></h1><p data-i18n="habitsSubtitle"></p></div><button class="icon-btn" data-action="add-habit" id="addHabitIcon"></button></div>
+      <div class="island-habit-dayline"><span id="islandHabitDate"></span><span id="islandHabitSummary"></span></div>
+      <div class="island-habit-rows" id="islandHabitRows"></div>
+      <details class="island-habit-weekly"><summary data-island-tr="Haftalık ayrıntılar" data-island-en="Weekly details">Haftalık ayrıntılar</summary>
       <div class="habit-toolbar"><div class="week-nav"><button data-action="week-prev">‹</button><strong id="weekLabel"></strong><button data-action="week-next">›</button></div><button class="secondary" style="min-height:38px" data-action="add-habit" data-i18n="newHabit"></button></div>
       <div class="habit-table" id="habitTable"></div>
       <div class="section-head"><h2 data-i18n="weeklySummary"></h2><span id="habitWeekScore"></span></div><div class="stat-grid" id="habitStats"></div>
+      </details>
     </section>
+    <section class="view" id="view-world">
+  <div class="island-backbar"><button type="button" data-action="island-home"><span aria-hidden="true">‹</span> <span data-island-tr="Dünyama dön" data-island-en="Back to my world">Dünyama dön</span></button></div>
+  <div class="island-page-lead"><p data-island-tr="KEŞFET VE GELİŞTİR" data-island-en="EXPLORE AND GROW">KEŞFET VE GELİŞTİR</p><h1 data-island-tr="Habitopia Dünyam" data-island-en="My Habitopia World">Habitopia Dünyam</h1><span data-island-tr="İlerledikçe dünyan da gelişir." data-island-en="Your world grows with your progress.">İlerledikçe dünyan da gelişir.</span></div>
+  <div class="island-world-art"><img src="assets/habitopia-island.svg" alt="Habitopia adası ve gelişen dünya"><div class="island-world-caption"><span data-island-tr="BENİM ADAM" data-island-en="MY ISLAND">BENİM ADAM</span><strong id="islandWorldStage">Başlangıç adası</strong></div></div>
+  <div class="island-level"><div class="island-level-top"><span id="islandLevel">Seviye 1</span><span id="islandXp">0 / 50 XP</span></div><div class="island-level-track"><div id="islandXpFill"></div></div></div>
+  <div class="island-page-heading"><h2 data-island-tr="Keşif alanların" data-island-en="Your exploration areas">Keşif alanların</h2><p data-island-tr="Gerçek ilerlemenle açılır." data-island-en="Unlock with real progress.">Gerçek ilerlemenle açılır.</p></div>
+  <div class="island-unlocks" id="islandUnlocks" aria-label="Açılabilir dünya bölgeleri"></div>
+  <div class="island-world-tools">
+    <button type="button" data-action="island-plan"><span>▦</span><span data-island-tr="Hedefler ve takvim" data-island-en="Goals and calendar">Hedefler ve takvim</span><span>›</span></button>
+    <button type="button" data-action="rewards"><span>✧</span><span data-island-tr="Ödüllerim" data-island-en="My rewards">Ödüllerim</span><span>›</span></button>
+    <button type="button" data-action="go-challenges"><span>⚑</span><span data-island-tr="21 günlük meydan okuma" data-island-en="21-day challenge">21 günlük meydan okuma</span><span>›</span></button>
+  </div>
+</section>
     <section class="view" id="view-plan">
+      <div class="island-backbar"><button type="button" data-action="island-home"><span aria-hidden="true">‹</span><span data-island-tr="Dünyama dön" data-island-en="Back to my world">Dünyama dön</span></button></div>
       <div class="page-head"><div><h1 id="hbtPlanTitle">Planım</h1><p id="hbtPlanSubtitle">Takvimin ve kişisel planın tek yerde.</p></div><button type="button" class="icon-btn" data-action="calendar" aria-label="Gelişim takvimini aç">▦</button></div>
       <section class="hbt-calendar-card" aria-label="Aylık takvim"><div class="hbt-calendar-head"><div><span class="hbt-eyebrow" id="hbtCalendarCaption">TAKVİM</span><h2 id="hbtCalendarMonth"></h2></div><div class="hbt-calendar-arrows"><button type="button" data-action="hbt-month-prev" aria-label="Önceki ay">‹</button><button type="button" data-action="hbt-month-next" aria-label="Sonraki ay">›</button></div></div><div class="hbt-calendar-weekdays" id="hbtCalendarWeekdays"></div><div class="hbt-calendar-days" id="hbtCalendarDays"></div></section>
       <section class="hbt-selected-day" id="hbtSelectedDay" aria-live="polite"></section>
@@ -512,12 +555,15 @@ body{background:#e9eee8!important}
       </div>
     </section>
     <section class="view" id="view-challenges">
+      <div class="island-backbar"><button type="button" data-action="island-home"><span aria-hidden="true">‹</span><span data-island-tr="Dünyama dön" data-island-en="Back to my world">Dünyama dön</span></button></div>
       <button type="button" class="hbt-back-link" data-action="go-plan" id="hbtBackToPlan">← Planıma dön</button>
       <div class="page-head"><div><h1 data-i18n="challenges"></h1><p data-i18n="challengeSubtitle"></p></div><button class="icon-btn" data-action="add-challenge" id="addChallengeIcon"></button></div>
       <div id="challengeContent"></div>
     </section>
     <section class="view" id="view-profile">
+      <div class="island-backbar"><button type="button" data-action="island-home"><span aria-hidden="true">‹</span><span data-island-tr="Dünyama dön" data-island-en="Back to my world">Dünyama dön</span></button></div>
       <div class="page-head"><div><h1 data-i18n="progress"></h1><p data-i18n="progressSubtitle"></p></div><button class="icon-btn" data-action="settings" id="settingsIcon"></button></div>
+      <div class="island-trend"><div class="island-trend-head"><h2 data-island-tr="Gelişim yolculuğun" data-island-en="Your growth journey">Gelişim yolculuğun</h2><span id="islandGrowthPeriodText"></span></div><div class="island-periods"><button type="button" class="island-period active" data-action="island-period" data-days="7">7 Gün</button><button type="button" class="island-period" data-action="island-period" data-days="30">30 Gün</button><button type="button" class="island-period" data-action="island-period" data-days="90">90 Gün</button></div><div class="island-trend-metrics" id="islandTrendMetrics"></div><div class="island-trend-chart" id="islandTrendChart" aria-label="Alışkanlık gelişim grafiği"></div></div>
       <div class="hbt-insight-summary" id="hbtInsightSummary" aria-label="Gelişim özeti"></div>
       <div class="tracker-grid"><button class="tracker water" data-action="water-stats"><div class="feature-icon" id="trackerWaterIcon"></div><strong data-i18n="water"></strong><b id="trackerWaterValue"></b><span id="trackerWaterCopy"></span></button><button class="tracker weight" data-action="weight"><div class="feature-icon" id="trackerWeightIcon"></div><strong data-i18n="weight"></strong><b id="trackerWeightValue"></b><span id="trackerWeightCopy"></span></button><button class="tracker focus" data-action="focus-stats"><div class="feature-icon" id="trackerFocusIcon"></div><strong data-i18n="focus"></strong><b id="trackerFocusValue"></b><span id="trackerFocusCopy"></span></button><button class="tracker notes" data-action="notes"><div class="feature-icon" id="trackerNotesIcon"></div><strong data-i18n="notebook"></strong><b id="trackerNotesValue"></b><span id="trackerNotesCopy"></span></button><button class="tracker mood" data-action="mood"><div class="feature-icon" id="trackerMoodIcon"><span class="ui-glyph" data-ui-icon="mood-neutral"></span></div><strong data-i18n="mood"></strong><b id="trackerMoodValue"></b><span id="trackerMoodCopy"></span></button><button class="tracker report" data-action="weekly-report"><div class="feature-icon" id="trackerReportIcon"></div><strong data-i18n="weeklyReport"></strong><b id="trackerReportValue"></b><span id="trackerReportCopy"></span></button></div>
       <div class="section-head hub-section"><h2 id="growthHubTitle">Gelişim Merkezi</h2><span id="growthHubSub">Planla · uygula · değerlendir</span></div><div class="growth-actions" id="growthHubActions"><button class="growth-action" data-action="calendar"><b>📅</b><strong>Takvim</strong><span>Günlük gelişimini gör</span></button><button class="growth-action" data-action="routines"><b>🌅</b><strong>Rutinler</strong><span>Sabah ve akşam</span></button><button class="growth-action" data-action="journal"><b>📖</b><strong>Günlük</strong><span>Gününü düşün ve yaz</span></button><button class="growth-action" data-action="weekly-goals"><b>🎯</b><strong>Haftalık Hedefler</strong><span>Haftanın odağını takip et</span></button><button class="growth-action" data-action="weekly-review"><b>🧠</b><strong>Haftayı Değerlendir</strong><span>Öğren ve yeni haftayı kur</span></button><button class="growth-action" data-action="growth-details"><b>📈</b><strong>Gelişim Skoru</strong><span>Skorunun detaylarını gör</span></button></div>
@@ -534,6 +580,7 @@ body{background:#e9eee8!important}
       </div>
     </section>
     <section class="view" id="view-account">
+      <div class="island-backbar"><button type="button" data-action="island-home"><span aria-hidden="true">‹</span><span data-island-tr="Dünyama dön" data-island-en="Back to my world">Dünyama dön</span></button></div>
       <div class="page-head"><div><h1 id="hbtAccountTitle">Profilim</h1><p id="hbtAccountSubtitle">Hedeflerin ve kişisel ayarların.</p></div><button type="button" class="icon-btn" data-action="settings" aria-label="Ayarları aç">⚙</button></div>
       <div class="hbt-account-head" id="hbtAccountHero"></div>
       <div class="section-head"><h2 id="hbtAccountToolsHeading">Kişisel alanım</h2></div>
@@ -3092,6 +3139,213 @@ html.habitopia-midnight.journey-home-active body .main{padding-top:12px!importan
  html.habitopia-midnight .journey-spot .journey-node,html.habitopia-midnight .journey-workbench .journey-summary-plus{transition:none!important}
 }
 </style>
+<style id="habitopia-island">/* Habitopia 4.0 / Etkileşimli Ada: art-first mobile navigation, no bottom tabs */
+html.habitopia-midnight{color-scheme:dark;--is-bg:#080e14;--is-panel:#121d22;--is-border:#30483e;--is-cream:#f4eddf;--is-muted:#a6b8b7;--is-green:#b7e6a7}
+html.habitopia-midnight body,html.habitopia-midnight body .app,
+html.habitopia-midnight body .main{background:var(--is-bg)!important;color:var(--is-cream)!important}
+html.habitopia-midnight body .app{width:min(100%,1050px)!important;max-width:1050px!important;box-shadow:0 24px 70px #0009!important}
+html.habitopia-midnight body .topbar{display:none!important}
+html.habitopia-midnight body .nav{display:none!important;visibility:hidden!important;pointer-events:none!important}
+html.habitopia-midnight.journey-home-active .world-switchbar{display:none!important}
+html.habitopia-midnight body .main{padding:19px 15px calc(32px + env(safe-area-inset-bottom))!important}
+html.habitopia-midnight.journey-home-active body .main{padding:0!important}
+html.habitopia-midnight #view-today{max-width:none;margin:0}
+html.habitopia-midnight .island-home{max-width:600px;min-height:100%;margin:auto;display:flex;flex-direction:column;padding:max(14px,env(safe-area-inset-top)) 12px calc(14px + env(safe-area-inset-bottom))}
+html.habitopia-midnight .island-header{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:0 7px 12px;min-height:60px}
+html.habitopia-midnight .island-persona{display:flex;align-items:center;gap:9px;min-width:0}
+html.habitopia-midnight .island-icon{width:39px;height:39px;border-radius:15px;border:1px solid #43594b;background:#111a16;overflow:hidden;display:grid;place-items:center;flex-shrink:0}
+html.habitopia-midnight .island-icon img{width:100%;height:100%;object-fit:cover}
+html.habitopia-midnight .island-hello{display:flex;flex-direction:column;gap:1px;min-width:0}
+html.habitopia-midnight .island-hello>span{font-size:9px;letter-spacing:.14em;font-weight:850;color:#9fbaa8}
+html.habitopia-midnight .island-hello strong{font-size:18px;letter-spacing:-.035em;font-weight:820;color:#f1f6eb;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:170px}
+html.habitopia-midnight .island-header-actions{display:flex;align-items:center;gap:8px}
+html.habitopia-midnight .island-avatar{display:grid;place-items:center;width:37px;height:37px;border-radius:50%;background:#172a24!important;border:1px solid #406049!important;color:#d4e5d5!important}
+html.habitopia-midnight .island-avatar svg{width:19px;height:19px;stroke:currentColor;fill:none;stroke-width:1.7}
+html.habitopia-midnight .island-coin{display:flex;align-items:center;gap:5px;border-radius:22px;min-height:37px;padding:7px 12px;background:#32271c!important;border:1px solid #6c5635!important;color:#ffdc93!important}
+html.habitopia-midnight .island-coin>span{font-size:16px}
+html.habitopia-midnight .island-coin strong{font-size:13px;color:#ffe8b6!important;font-weight:840}
+html.habitopia-midnight .island-coin small{font-size:9px;color:#f2c77e!important}
+html.habitopia-midnight .island-scene-wrap{flex:1;display:flex;align-items:stretch;min-height:0}
+html.habitopia-midnight .island-stage{
+  height:max(500px,calc(100dvh - 199px));max-height:770px;width:100%;
+  background:#0c2330;position:relative;isolation:isolate;overflow:hidden;
+  border-radius:29px;border:1px solid #315164;box-shadow:0 22px 45px #000b;
+}
+html.habitopia-midnight .island-stage:after{
+  content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+  background:linear-gradient(180deg,rgba(4,12,22,.5),transparent 20%,transparent 46%,rgba(3,12,18,.46) 100%);
+}
+html.habitopia-midnight .island-visual{position:absolute;z-index:-2;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 39%}
+html.habitopia-midnight .island-stage-top{position:absolute;left:14px;right:14px;top:28px;text-align:center;text-shadow:0 3px 14px #071a2a,0 1px 3px #071a2a}
+html.habitopia-midnight .island-stage-top h1{font-size:clamp(21px,5.6vw,31px)!important;line-height:1.14!important;letter-spacing:-.05em!important;font-weight:850!important;color:#f8f7ed!important;max-width:370px;margin:0 auto 7px}
+html.habitopia-midnight .island-stage-top p{font-size:11px;color:#c2d9d3;margin:0}
+html.habitopia-midnight .island-gates{
+  position:absolute;left:15px;right:15px;bottom:19px;z-index:2;
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;
+}
+html.habitopia-midnight .island-gate{
+  display:flex;flex-direction:column;justify-content:center;align-items:center;
+  gap:5px;position:relative;min-height:88px;padding:13px 10px;
+  background:linear-gradient(145deg,#172522f0,#1e312bf2)!important;
+  border:2px solid #577363!important;border-radius:20px!important;
+  box-shadow:inset 0 1px 0 #c5d8c538,0 9px 18px #020c08b0!important;
+  color:#f1f2e9!important;text-align:center;transition:transform .17s,border-color .17s;
+  touch-action:manipulation;
+}
+html.habitopia-midnight .island-gate:after{content:"";position:absolute;inset:4px;border:1px solid #7d95722a;border-radius:14px;pointer-events:none}
+html.habitopia-midnight .island-gate:hover{transform:translateY(-3px);border-color:#b3ceb0!important}
+html.habitopia-midnight .island-gate:active{transform:scale(.975)}
+html.habitopia-midnight .island-gate:focus-visible{outline:3px solid #f5e8b7!important;outline-offset:3px}
+html.habitopia-midnight .island-gate strong{font-size:clamp(12px,3.4vw,16px)!important;letter-spacing:-.04em;font-weight:850;line-height:1.18;color:#f4f5ef!important;white-space:normal}
+html.habitopia-midnight .island-gate-mark{font-size:28px;line-height:1;color:#b1e1a5!important;font-weight:800}
+html.habitopia-midnight .island-gate-arrow{position:absolute;right:10px;top:8px;font-size:20px;color:#96b5a8}
+html.habitopia-midnight .gate-world{background:linear-gradient(145deg,#213329ed,#1d2c20f2)!important;border-color:#76936f!important}
+html.habitopia-midnight .gate-growth{background:linear-gradient(145deg,#262340ef,#1f1d35f1)!important;border-color:#7b6698!important}
+html.habitopia-midnight .gate-growth .island-gate-mark{color:#d6b4ee!important}
+html.habitopia-midnight .gate-account{background:linear-gradient(145deg,#1c3040ee,#17242ef4)!important;border-color:#6585a2!important}
+html.habitopia-midnight .gate-account .island-gate-mark{color:#b4d9ee!important}
+html.habitopia-midnight .island-home-bottom{
+  display:flex;align-items:center;gap:7px;padding:11px 5px 0;min-height:44px;
+  color:#b9c7b9;font-size:10px;line-height:1.4
+}
+html.habitopia-midnight .island-tiny-pulse{color:#d9c88b;font-size:17px}
+html.habitopia-midnight .island-home-bottom #islandMotivation{min-width:0;flex:1}
+html.habitopia-midnight #islandTaskButton{
+  padding:8px 10px;min-height:32px;border:1px solid #52654d!important;
+  border-radius:13px;background:#172b22!important;color:#e8eed9!important;
+  font-size:11px;font-weight:780;white-space:nowrap
+}
+html.habitopia-midnight #islandTaskButton span{margin-left:5px;font-size:16px}
+html.habitopia-midnight .island-home-footer{display:flex;justify-content:center;align-items:center;gap:15px;margin:8px 0 0;color:#748a7f;font-size:10px}
+html.habitopia-midnight .island-home-footer button,
+html.habitopia-midnight .island-home-footer a{
+  color:#a7b8a8!important;background:transparent!important;border:0!important;
+  font-size:11px;text-decoration:none;padding:6px
+}
+/* Subpages are real, individually navigable views, not tiles at the bottom */
+html.habitopia-midnight .island-backbar{margin:0 0 17px}
+html.habitopia-midnight .island-backbar button{
+  display:inline-flex;align-items:center;gap:7px;background:#172a23!important;color:#d8ead7!important;
+  border:1px solid #375044!important;border-radius:20px!important;
+  padding:8px 12px;min-height:39px;font-size:12px;font-weight:750
+}
+html.habitopia-midnight .island-backbar button>span:first-child{font-size:23px;line-height:.8}
+html.habitopia-midnight .island-page-lead{margin-bottom:19px}
+html.habitopia-midnight .island-page-lead>p{font-size:10px;letter-spacing:.15em;font-weight:800;color:#a5c5aa;margin:0 0 6px}
+html.habitopia-midnight .island-page-lead>h1{font-size:clamp(27px,7.2vw,37px)!important;letter-spacing:-.05em;color:#f9f7f0!important;margin:0 0 5px}
+html.habitopia-midnight .island-page-lead>span{font-size:12px;color:#abbfb2}
+html.habitopia-midnight #view-habits .page-head{margin-bottom:11px!important}
+html.habitopia-midnight .island-habit-dayline{
+ display:flex;justify-content:space-between;gap:12px;align-items:center;
+ padding:9px 2px 15px;color:#bdd4bd;font-size:11px
+}
+html.habitopia-midnight .island-habit-dayline #islandHabitSummary{color:#a6e0b2;font-weight:800}
+html.habitopia-midnight .island-habit-rows{display:flex;flex-direction:column;gap:10px;margin-bottom:16px}
+html.habitopia-midnight .island-habit-row{
+  display:flex;align-items:center;gap:12px;background:#17221d!important;
+  border:1px solid #31463b;border-radius:18px;padding:11px 12px;min-height:78px;
+  color:#f4f6ec;box-shadow:0 7px 15px #0003
+}
+html.habitopia-midnight .island-habit-row>span:first-child{
+ width:45px;height:45px;border-radius:15px;flex:0 0 45px;
+ background:#304d3a;display:grid;place-items:center;font-size:21px
+}
+html.habitopia-midnight .island-habit-row .island-habit-copy{min-width:0;flex:1}
+html.habitopia-midnight .island-habit-copy strong{display:block;color:#f2f4eb;font-size:13px;overflow:hidden;text-overflow:ellipsis}
+html.habitopia-midnight .island-habit-copy small{color:#a5b9ac;font-size:10px;display:block;margin-top:4px}
+html.habitopia-midnight .island-habit-row button{
+ width:40px;height:40px;border-radius:50%;flex:0 0 40px;display:grid;place-items:center;
+ border:2px solid #667c6c!important;background:transparent!important;color:#91aa99!important;
+ font-size:21px;min-height:40px
+}
+html.habitopia-midnight .island-habit-row button.is-done{background:#9cdaa6!important;border-color:#9cdaa6!important;color:#142b20!important}
+html.habitopia-midnight .island-empty{display:flex;flex-direction:column;gap:7px;align-items:center;text-align:center;
+ border:1px dashed #49644f;background:#14231c;border-radius:18px;padding:23px;color:#bdd8ba;font-size:13px}
+html.habitopia-midnight .island-habit-weekly{border:1px solid #35483c;border-radius:19px;padding:15px;background:#101c17;margin:13px 0 21px}
+html.habitopia-midnight .island-habit-weekly>summary{font-size:13px;color:#c0d8c0;font-weight:750;cursor:pointer;margin:0}
+html.habitopia-midnight .island-habit-weekly[open]>summary{margin-bottom:16px}
+html.habitopia-midnight #view-tasks .journey-intro,
+html.habitopia-midnight #view-tasks .journey-scene,
+html.habitopia-midnight #view-tasks .journey-postscene,
+html.habitopia-midnight #view-tasks .journey-workbench>summary{display:none!important}
+html.habitopia-midnight #view-tasks .journey-workbench{background:transparent;border:0;margin:0;overflow:visible}
+html.habitopia-midnight #view-tasks .journey-workbench-body{border:0;padding:0}
+html.habitopia-midnight #view-tasks .journey-home{padding:0;max-width:none}
+html.habitopia-midnight #view-tasks .journey-workbench[open] .journey-workbench-body{display:block}
+html.habitopia-midnight #view-world .island-world-art{
+ position:relative;height:320px;overflow:hidden;border-radius:26px;
+ border:1px solid #3d5e65;background:#0c2230;margin-bottom:16px;box-shadow:0 14px 34px #0006
+}
+html.habitopia-midnight #view-world .island-world-art>img{display:block;width:100%;height:100%;object-fit:cover;object-position:center 40%}
+html.habitopia-midnight #view-world .island-world-art:after{position:absolute;content:"";inset:0;background:linear-gradient(180deg,transparent 50%,#081b27 100%);pointer-events:none}
+html.habitopia-midnight #view-world .island-world-caption{position:absolute;left:19px;bottom:17px;z-index:1;display:flex;flex-direction:column;gap:5px}
+html.habitopia-midnight .island-world-caption span{font-size:10px;letter-spacing:.15em;color:#b6dfb9;font-weight:800}
+html.habitopia-midnight .island-world-caption strong{font-size:20px;letter-spacing:-.04em;color:white}
+html.habitopia-midnight .island-level{background:#15241c;padding:17px;border:1px solid #395543;border-radius:20px}
+html.habitopia-midnight .island-level-top{display:flex;justify-content:space-between;gap:10px;margin-bottom:11px;color:#d3e5d0;font-size:12px;font-weight:760}
+html.habitopia-midnight .island-level-track{height:9px;border-radius:15px;background:#344c3a;overflow:hidden}
+html.habitopia-midnight #islandXpFill{height:100%;width:0;background:linear-gradient(90deg,#8cd18c,#d3e8a0);border-radius:15px;transition:width .3s}
+html.habitopia-midnight .island-page-heading{display:flex;align-items:baseline;gap:10px;justify-content:space-between;margin:24px 0 11px}
+html.habitopia-midnight .island-page-heading h2{font-size:17px!important;letter-spacing:-.02em}
+html.habitopia-midnight .island-page-heading p{color:#9bac9f;font-size:11px}
+html.habitopia-midnight .island-unlocks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+html.habitopia-midnight .island-unlock{min-height:117px;border:1px solid #385344!important;border-radius:18px;background:#18251e!important;color:#ecf4e9!important;padding:14px;text-align:left;display:flex;flex-direction:column;gap:6px}
+html.habitopia-midnight .island-unlock>span{font-size:24px}
+html.habitopia-midnight .island-unlock strong{font-size:13px;color:#f2f5ee!important}
+html.habitopia-midnight .island-unlock small{font-size:10px;color:#a5b9a8!important}
+html.habitopia-midnight .island-unlock.is-locked{opacity:.65;filter:saturate(.5)}
+html.habitopia-midnight .island-world-tools{margin:20px 0;display:flex;flex-direction:column;gap:9px}
+html.habitopia-midnight .island-world-tools button{
+ display:flex;align-items:center;gap:11px;min-height:54px;background:#18241f!important;border:1px solid #344a3c!important;
+ color:#dbe8da!important;padding:12px 14px;border-radius:15px;text-align:left
+}
+html.habitopia-midnight .island-world-tools button>span:first-child{font-size:22px}
+html.habitopia-midnight .island-world-tools button>span:nth-child(2){flex:1;font-weight:730;font-size:13px}
+html.habitopia-midnight .island-world-tools button>span:last-child{font-size:22px}
+html.habitopia-midnight .island-trend{background:#13221c;border:1px solid #354c3d;border-radius:23px;padding:19px 16px;margin-bottom:17px}
+html.habitopia-midnight .island-trend-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
+html.habitopia-midnight .island-trend-head h2{font-size:17px!important}
+html.habitopia-midnight #islandGrowthPeriodText{font-size:11px;color:#aacdb0}
+html.habitopia-midnight .island-periods{display:grid;grid-template-columns:repeat(3,1fr);background:#24372b;border-radius:18px;padding:4px;gap:4px;margin:16px 0}
+html.habitopia-midnight .island-period{min-height:37px;border:0!important;background:transparent!important;color:#a7bea9!important;border-radius:14px;font-size:12px;font-weight:730}
+html.habitopia-midnight .island-period.active{background:#d4e1c9!important;color:#152b20!important}
+html.habitopia-midnight .island-trend-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:20px}
+html.habitopia-midnight .island-trend-metrics>div{background:#21382a;padding:12px 7px;border-radius:13px;text-align:center;min-width:0}
+html.habitopia-midnight .island-trend-metrics strong{display:block;font-size:21px;letter-spacing:-.04em;color:#d5f0cc}
+html.habitopia-midnight .island-trend-metrics span{font-size:9px;color:#b3c3b7;display:block;margin-top:5px;line-height:1.3}
+html.habitopia-midnight .island-trend-chart{display:flex;align-items:flex-end;gap:3px;min-height:148px;overflow:hidden;border-bottom:1px solid #3a5141;padding:3px 0 7px}
+html.habitopia-midnight .island-chart-bar{flex:1;min-width:1px;border-radius:6px 6px 1px 1px;background:linear-gradient(180deg,#b5dca4,#497e5d);opacity:.92}
+html.habitopia-midnight .island-chart-empty{align-self:center;text-align:center;width:100%;color:#9eafa1;font-size:13px}
+html.habitopia-midnight #view-account .hbt-account-head{background:#18251f!important;border-color:#45604e!important}
+html.habitopia-midnight #view-account .hbt-account-avatar{background:linear-gradient(145deg,#31533b,#728e61)!important}
+html.habitopia-midnight #view-account .hbt-account-actions{background:#18251f!important;border-color:#45604e!important}
+html.habitopia-midnight #view-profile .tracker,#view-profile .growth-action{background:#17271e!important;border:1px solid #36523d!important}
+html.habitopia-midnight #view-plan .hbt-calendar-card{background:#172820!important;border-color:#385a44!important}
+html.habitopia-midnight #view-plan .hbt-calendar-days button.is-selected{background:#476b4f!important}
+@media(max-width:370px){
+ html.habitopia-midnight .island-stage{height:max(480px,calc(100dvh - 194px));border-radius:22px}
+ html.habitopia-midnight .island-gates{gap:7px;left:9px;right:9px;bottom:11px}
+ html.habitopia-midnight .island-gate{min-height:76px;padding:10px 5px;border-radius:16px}
+ html.habitopia-midnight .island-gate-mark{font-size:23px}
+ html.habitopia-midnight .island-stage-top h1{font-size:21px!important}
+ html.habitopia-midnight .island-header{padding-left:2px;padding-right:2px}
+ html.habitopia-midnight .island-hello strong{max-width:113px;font-size:16px}
+ html.habitopia-midnight body .main{padding-left:10px!important;padding-right:10px!important}
+}
+@media(min-width:800px){
+ html.habitopia-midnight body .main{margin-left:0!important;padding:24px 30px 50px!important}
+ html.habitopia-midnight.journey-home-active body .main{margin-left:0!important;padding:0!important}
+ html.habitopia-midnight .island-home{max-width:660px}
+ html.habitopia-midnight .island-stage{height:780px}
+ html.habitopia-midnight .island-gate{min-height:105px}
+ html.habitopia-midnight .island-gate strong{font-size:16px!important}
+ html.habitopia-midnight #view-world .island-world-art{height:400px}
+ html.habitopia-midnight #view-world .island-world-art>img{object-position:center 30%}
+}
+@media(prefers-reduced-motion:reduce){
+ html.habitopia-midnight .island-gate,html.habitopia-midnight .island-chart-bar,
+ html.habitopia-midnight #islandXpFill{transition:none!important}
+}</style>
 
 <div class="focus-alarm" id="focusAlarm" role="alert" aria-live="assertive">
   <div class="focus-alarm-icon">⏰</div>
@@ -4277,6 +4531,207 @@ function renderHabitVisualChart(){
    return oldHandleAction(action,element);
  };
  setHomeClass();
+})();
+</script>
+<script id="habitopia-island-behavior">/* Habitopia / Interactive Island – real, safe read-only projections + existing actions. */
+(function(){
+"use strict";
+const tr={
+ name:"Habitopia",today:"Bugün",completed:"tamamlandı",
+ motiv:["Dünyan yeni adımlarını bekliyor.","Her tamamlanan adım adanı canlandırıyor.","Dünyan gelişmeye devam ediyor.","Harika! Bugün kendin için ilerledin."],
+ line:(d,n)=>n?d+" / "+n+" bugünkü adım tamamlandı":"Yeni bir başlangıç için hazırsın.",
+ level:n=>"Seviye "+n, levelStage:["Başlangıç Adası","Yeşeren Ada","Gelişen Orman","Işıklı Habitopia"],
+ habitEmpty:"Henüz alışkanlığın yok. Yeni bir tane oluşturabilirsin.",
+ habitCount:(d,n)=>d+" / "+n+" tamamlandı",
+ habitDate:"Bugünkü alışkanlıkların",
+ habitDone:"Tamamlandı",habitUndone:"Tamamlamak için dokun",
+ units:"Hedef",period:d=>"Son "+d+" gün",rate:"Başarı oranı",focus:"Odak (dk)",actions:"Tamamlanan",
+ unlock:"Keşfedildi",locked:x=>x+" XP'de açılır",zoneWelcome:"Keşif alanın açıldı!",
+ zoneNotYet:"Bu bölgeye erişmek için biraz daha ilerlemelisin.",
+ zoneDesc:"Kendi gelişim yolculuğunda yeni bir alana ulaştın."
+};
+const en={
+ name:"Habitopia",today:"Today",completed:"complete",
+ motiv:["Your world awaits your next step.","Every step brings your island to life.","Your world keeps growing.","Wonderful progress today!"],
+ line:(d,n)=>n?d+" of "+n+" steps completed today":"Ready for a fresh start?",
+ level:n=>"Level "+n,levelStage:["Starter Island","Growing Island","Living Forest","Glowing Habitopia"],
+ habitEmpty:"No habits yet. Create your first one.",
+ habitCount:(d,n)=>d+" of "+n+" completed",
+ habitDate:"Today's habits",habitDone:"Done",habitUndone:"Tap to finish",
+ units:"Goal",period:d=>"Last "+d+" days",rate:"Success rate",focus:"Focus (min)",actions:"Completed",
+ unlock:"Discovered",locked:x=>"Unlocks at "+x+" XP",zoneWelcome:"Area discovered!",
+ zoneNotYet:"Keep growing to discover this area.",zoneDesc:"You've reached a new part of your personal journey."
+};
+let rangeDays=7;
+const zones=[
+ {id:"house",name:["Ev","Home"],icon:"⌂",xp:0},
+ {id:"garden",name:["Bahçe","Garden"],icon:"✿",xp:75},
+ {id:"bridge",name:["Köprü","Bridge"],icon:"≈",xp:250},
+ {id:"island",name:["Yeni Ada","New Island"],icon:"♧",xp:600}
+];
+const lang=()=>state?.settings?.lang==="en"?"en":"tr";
+const w=()=>lang()==="en"?en:tr;
+function put(id,text){const x=document.getElementById(id);if(x)x.textContent=String(text)}
+function localeStatic(){
+ const loc=lang();document.querySelectorAll("[data-island-tr]").forEach(el=>{
+  const text=el.getAttribute("data-island-"+loc);if(text!=null)el.textContent=text;
+ });
+ document.querySelectorAll(".island-period").forEach(b=>{
+  const days=Number(b.dataset.days),locText=loc==="en"?" Days":" Gün";b.textContent=days+locText;
+ });
+}
+function metrics(){
+ const today=localDateKey();
+ const habits=state?.habits||[];
+ const due=habits.filter(h=>habitDue(h,today));
+ const done=due.filter(h=>habitCompletedOn(h,today));
+ const tasks=dueTasks(),finished=tasks.filter(t=>t.completedDates?.includes(today));
+ return {today,due,done,tasks,finished,doneCount:done.length+finished.length,total:due.length+tasks.length};
+}
+function home(){
+ if(!document.querySelector(".island-home")||!state?.profile)return;
+ localeStatic();
+ const m=metrics(),word=w(),name=state.profile.name?.trim()||word.name,xp=Math.max(0,Number(state.progress?.xp)||0);
+ put("islandName",name);
+ put("islandCoins",xp);
+ put("islandDailyLine",word.line(m.doneCount,m.total));
+ const factor=m.total?Math.min(3,Math.floor(3*m.doneCount/m.total)):0;
+ put("islandMotivation",word.motiv[factor]);
+ const art=document.querySelector("#view-today .island-stage");
+ if(art)art.dataset.bloom=String(factor);
+}
+function habits(){
+ const host=document.getElementById("islandHabitRows");if(!host||!state)return;
+ const m=metrics(),word=w();
+ put("islandHabitDate",word.habitDate);
+ put("islandHabitSummary",word.habitCount(m.done.length,m.due.length));
+ if(!m.due.length){
+  host.innerHTML='<div class="island-empty"><span aria-hidden="true" style="font-size:26px">❧</span><strong>'+word.habitEmpty+'</strong><button class="primary" type="button" data-action="add-habit">+ '+(lang()==="en"?"New Habit":"Yeni alışkanlık")+'</button></div>';
+  return;
+ }
+ const iconByCategory={health:"✦",mind:"▧",order:"◈",social:"✿"};
+ host.innerHTML=m.due.map(h=>{
+  const done=habitCompletedOn(h,m.today);
+  const sub=h.mode==="value"?
+    word.units+": "+(Number(h.target)||1)+" "+esc(String(h.unit||"")):
+    done?word.habitDone:word.habitUndone;
+  const title=esc(h.title||"Alışkanlık");
+  const id=esc(h.id),date=esc(m.today);
+  const category=iconByCategory[h.category]||"❧";
+  return '<article class="island-habit-row"><span aria-hidden="true">'+category+'</span>'+
+    '<div class="island-habit-copy"><strong>'+title+'</strong><small>'+sub+'</small></div>'+
+    '<button type="button" data-action="toggle-habit" data-id="'+id+'" data-date="'+date+
+    '" class="'+(done?"is-done":"")+'" aria-label="'+title+': '+(done?word.habitDone:word.habitUndone)+
+    '" aria-pressed="'+(done?"true":"false")+'">'+(done?"✓":"○")+'</button></article>';
+ }).join("");
+}
+function world(){
+ const container=document.getElementById("islandUnlocks");if(!container||!state)return;
+ const word=w(),xp=Math.max(0,Number(state.progress?.xp)||0),lvl=levelInfo();
+ put("islandLevel",word.level(lvl.level));
+ put("islandXp",Math.round(lvl.current)+" / "+Math.round(lvl.need)+" XP");
+ const fill=document.getElementById("islandXpFill");if(fill)fill.style.width=String(lvl.pct)+"%";
+ const stage=xp>=600?3:xp>=250?2:xp>=75?1:0;
+ put("islandWorldStage",word.levelStage[stage]);
+ container.innerHTML=zones.map(z=>{
+  const unlocked=xp>=z.xp,label=z.name[lang()==="en"?1:0];
+  return '<button type="button" class="island-unlock '+(unlocked?"":"is-locked")+
+   '" data-action="island-zone" data-id="'+z.id+'" aria-label="'+esc(label)+'">'+
+   '<span aria-hidden="true">'+z.icon+'</span><strong>'+esc(label)+'</strong><small>'+
+   (unlocked?word.unlock:word.locked(z.xp))+'</small></button>';
+ }).join("");
+}
+function progress(){
+ if(!state||!document.getElementById("islandTrendChart"))return;
+ const word=w(),today=localDateKey(),datas=[];let doneTotal=0,dueTotal=0,taskCount=0;
+ for(let offset=rangeDays-1;offset>=0;offset--){
+  const date=addDays(today,-offset);let due=0,done=0;
+  for(const h of state.habits||[]){if(habitDue(h,date)){due++;if(habitCompletedOn(h,date))done++;}}
+  doneTotal+=done;dueTotal+=due;
+  taskCount+=(state.tasks||[]).filter(t=>Array.isArray(t.completedDates)&&t.completedDates.includes(date)).length;
+  datas.push({done,due});
+ }
+ const earliest=addDays(today,-rangeDays+1);
+ const focus=(state.tracking?.focusSessions||[]).reduce((n,s)=>{
+  return s?.date>=earliest&&s?.date<=today?n+Math.max(0,Number(s.minutes)||0):n;
+ },0);
+ const success=dueTotal?Math.round(100*doneTotal/dueTotal):0;
+ put("islandGrowthPeriodText",word.period(rangeDays));
+ const el=document.getElementById("islandTrendMetrics");
+ if(el)el.innerHTML='<div><strong>'+success+'%</strong><span>'+word.rate+'</span></div>'+
+   '<div><strong>'+Math.round(focus)+'</strong><span>'+word.focus+'</span></div>'+
+   '<div><strong>'+taskCount+'</strong><span>'+word.actions+'</span></div>';
+ const chart=document.getElementById("islandTrendChart");
+ if(chart)chart.innerHTML=dueTotal?datas.map(a=>{
+    const h=a.due?Math.max(4,Math.round(a.done/a.due*140)):3;
+    return '<span class="island-chart-bar" style="height:'+h+'px" aria-hidden="true"></span>';
+ }).join(""):'<span class="island-chart-empty">'+(lang()==="en"?"Start your first habit to see your progress.":"Grafiğin oluşması için ilk alışkanlığını ekle.")+'</span>';
+ document.querySelectorAll(".island-period").forEach(b=>{
+  const active=Number(b.dataset.days)===rangeDays;b.classList.toggle("active",active);
+  b.setAttribute("aria-pressed",String(active));
+ });
+}
+function draw(){if(!state)return;home();habits();world();progress()}
+function navigate(name){
+ if(!document.getElementById("view-"+name))return;
+ if(document.querySelector(".view.active")?.id!=="view-"+name){
+   history.pushState({island:name},"","#"+name);
+ }
+ showView(name);
+}
+const oldRenderAll=renderAll;
+renderAll=function(...args){const res=oldRenderAll.apply(this,args);draw();return res};
+const oldRenderHabits=renderHabits;
+renderHabits=function(...args){const res=oldRenderHabits.apply(this,args);habits();return res};
+const oldRenderProfile=renderProfile;
+renderProfile=function(...args){const res=oldRenderProfile.apply(this,args);progress();return res};
+const oldRenderToday=renderToday;
+renderToday=function(...args){const res=oldRenderToday.apply(this,args);home();return res};
+const oldShowView=showView;
+showView=function(name){
+ const res=oldShowView(name);
+ if(name==="world")world();
+ if(name==="habits")habits();
+ if(name==="profile")progress();
+ if(name==="today")home();
+ document.documentElement.classList.toggle("journey-home-active",name==="today");
+ return res;
+};
+const oldHandleAction=handleAction;
+handleAction=function(action,el){
+ switch(action){
+  case "island-home":navigate("today");return;
+  case "island-habits":navigate("habits");return;
+  case "island-world":navigate("world");return;
+  case "island-growth":navigate("profile");return;
+  case "island-account":navigate("account");return;
+  case "island-tasks":navigate("tasks");return;
+  case "island-plan":navigate("plan");return;
+  case "island-period":{
+   const n=Number(el.dataset.days);if([7,30,90].includes(n)){rangeDays=n;progress();}return;
+  }
+  case "island-zone":{
+   const z=zones.find(x=>x.id===el.dataset.id);if(!z)return;
+   const label=z.name[lang()==="en"?1:0],xp=Number(state?.progress?.xp)||0,word=w();
+   if(xp<z.xp){showToast(word.zoneNotYet);return;}
+   showDialog('<h2>'+esc(label)+'</h2><p>'+word.zoneDesc+'</p>'+
+    '<button type="button" class="primary" data-action="island-home">'+
+    (lang()==="en"?"Return to world":"Dünyama dön")+'</button>');
+   return;
+  }
+  default:return oldHandleAction(action,el);
+ }
+};
+window.addEventListener("popstate",()=>{
+ const view=location.hash.replace(/^#/,"");
+ const safe=["today","habits","world","profile","account","tasks","plan","challenges"];
+ showView(safe.includes(view)?view:"today");
+});
+window.addEventListener("keydown",e=>{
+ if(e.key==="Escape"&&!document.querySelector(".sheet-backdrop.open,.dialog-backdrop.open") &&
+  document.querySelector(".view.active")?.id!=="view-today")showView("today");
+});
+draw();
 })();
 </script>
 
