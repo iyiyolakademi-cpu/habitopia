@@ -217,7 +217,7 @@ function closeMenu(){
  sidebar.classList.remove("open");
  shade.hidden=true;
  toggle.setAttribute("aria-expanded","false");
- document.documentElement.classList.remove("menu-visible");
+ document.documentElement?.classList?.remove("menu-visible");
 }
 function toggleMenu(){
  const sidebar=$("#sidebar"),shade=$("#mobile-shade"),toggle=$("#menu-toggle");
@@ -225,7 +225,7 @@ function toggleMenu(){
  sidebar.classList.toggle("open",open);
  shade.hidden=!open;
  toggle.setAttribute("aria-expanded",String(open));
- document.documentElement.classList.toggle("menu-visible",open);
+ document.documentElement?.classList?.toggle("menu-visible",open);
  if(open){sidebar.scrollTop=0;}
 }
 function openModal(title,description,body,kind){
