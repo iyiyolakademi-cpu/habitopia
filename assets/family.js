@@ -21,17 +21,6 @@ const memberName=id=>state.members.find(x=>x.id===id)?.name||"Aile üyesi";
 const currentName=()=>memberName(state.currentMember);
 const current=()=>state.currentMember;
 const shareable=x=>!x.privateTo||x.privateTo===current();
-const sample=()=>{
- const m=[{id:"me",name:"Sen"},{id:"mom",name:"Anne"},{id:"dad",name:"Baba"}];
- const list=uid();
- return {version:VERSION,demo:true,familyName:"Örnek Aile",members:m,currentMember:"me",shoppingBudget:1200,shoppingMeta:{assignee:"dad",reminderAt:futureInput(0,20)},tasks:[
- {id:uid(),listId:list,listTitle:"Akşam yapılacaklar",title:"Çamaşırları topla",assignee:"me",creator:"mom",dueAt:futureInput(1,20),reminderAt:futureInput(0,20),doneAt:null},
- {id:uid(),listId:list,listTitle:"Akşam yapılacaklar",title:"Odanı düzenle",assignee:"me",creator:"mom",dueAt:futureInput(1,20),reminderAt:futureInput(0,20),doneAt:null},
- {id:uid(),listId:uid(),listTitle:"Ev işleri",title:"Bulaşık makinesini boşalt",assignee:"dad",creator:"mom",dueAt:futureInput(1,19),reminderAt:null,doneAt:null}],
- shopping:[{id:uid(),title:"Süt",qty:2,unit:"adet",price:40,bought:false},{id:uid(),title:"Yumurta",qty:1,unit:"paket",price:95,bought:false},{id:uid(),title:"Ekmek",qty:2,unit:"adet",price:18,bought:true}],
- radar:[{id:uid(),title:"İnternet taahhüdü",cat:"subscription",dueAt:futureInput(11,12),reminderAt:futureInput(7,10),assignee:"dad",creator:"mom",doneAt:null,privateTo:null},{id:uid(),title:"Araç muayenesi",cat:"vehicle",dueAt:futureInput(7,15),reminderAt:futureInput(3,9),assignee:"dad",creator:"dad",doneAt:null,privateTo:null}],
- assets:[],workflows:[],events:[{id:uid(),title:"Aile kahvaltısı",date:offsetDay(3),time:"10:00",notes:"Birlikte güzel bir kahvaltı",creator:"mom",invitees:["me","mom","dad"],rsvp:{mom:"yes"},privateTo:null}],notified:[]};
-};
 const blank=(familyName,person)=>({version:VERSION,demo:false,familyName:safeText(familyName,50)||"Ailem",members:[{id:"me",name:safeText(person,40)||"Ben"}],currentMember:"me",shoppingBudget:0,shoppingMeta:{assignee:"me",reminderAt:null},tasks:[],shopping:[],radar:[],events:[],assets:[],workflows:[],notified:[]});
 function normalize(input){
  if(!input||typeof input!=="object"||input.version!==VERSION||!Array.isArray(input.members)||!Array.isArray(input.tasks)||!Array.isArray(input.shopping)||!Array.isArray(input.radar)||!Array.isArray(input.events))throw Error("Desteklenmeyen yedek biçimi.");
@@ -64,13 +53,11 @@ function normalize(input){
  return s;
 }
 let state,storageHealthy=true;
-try{const data=localStorage.getItem(KEY);state=data?normalize(JSON.parse(data)):sample();}
-catch(e){console.error("Habitopia veri okuma",e);state=sample();storageHealthy=false;}
+state=blank("","");
+ // Previous local demonstration data is deliberately not loaded into the account-based app.
 function save(){
- if(window.HabitopiaCloud?.active){window.HabitopiaCloud.save(state);return;}
- if(!storageHealthy)return;
- try{localStorage.setItem(KEY,JSON.stringify(state));}
- catch(e){storageHealthy=false;console.error(e);toast("Depolama kullanılamıyor; değişiklikler korunamayabilir.");}
+ if(!window.HabitopiaCloud?.active){toast("Devam etmek için aile hesabına giriş yap.");return;}
+ window.HabitopiaCloud.save(state);
 }
 const isDemo=()=>state.demo;
 const targetTask=t=>t.assignee===current();
@@ -81,7 +68,7 @@ const cost=x=>number(x.price)*number(x.qty);
 const estimated=()=>state.shopping.reduce((s,x)=>s+cost(x),0);
 const spent=()=>state.shopping.filter(x=>x.bought).reduce((s,x)=>s+cost(x),0);
 let page="home",taskFilter="mine",radarFilter="all",calendarMonth=new Date(now().getFullYear(),now().getMonth(),1),selectedDate=localDay(),notificationWindow=null;
-const pageTitle={home:"Genel Bakış",tasks:"Aile Görevleri",shopping:"Alışveriş",radar:"Aile Radarı",calendar:"Aile Takvimi",assets:"Evim ve Belgeler",family:"Ailem",settings:"Ayarlar"};
+const pageTitle={home:"Bugünün Akışı",tasks:"Aile Görevleri",shopping:"Alışveriş",radar:"Aile Radarı",calendar:"Aile Takvimi",assets:"Evim ve Belgeler",family:"Ailem",settings:"Ayarlar"};
 let toastTimer;
 function toast(message){const el=$("#toast");el.textContent=message;el.classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove("show"),3000);}
 const header=(label,title,description,actions="")=>'<div class="page-heading"><div><p class="eyebrow">'+esc(label)+'</p><h1>'+esc(title)+'</h1><p class="subcopy">'+esc(description)+'</p></div><div class="page-actions">'+actions+'</div></div>';
@@ -95,15 +82,30 @@ const taskRow=t=>'<div class="list-row '+(t.doneAt?"done":"")+'">'+checkButton("
 const shoppingRow=x=>'<div class="list-row '+(x.bought?"done":"")+'">'+checkButton("toggle-shop",x)+'<div class="item-info"><span class="item-title">'+esc(x.title)+'</span><span class="item-sub">'+esc(x.qty+" "+x.unit)+'</span></div><span class="item-amount">'+money(cost(x))+'</span>'+deleteButton("delete-shop",x.id)+'</div>';
 const radarItem=x=>'<div class="radar-card '+(x.doneAt?"done":"")+'"><div class="radar-glyph">'+esc(cats[x.cat]?.[1]||"✦")+'</div><div class="item-info"><span class="item-title">'+esc(x.title)+'</span><span class="item-sub">'+esc(cats[x.cat]?.[0])+' · Sorumlu: '+esc(memberName(x.assignee))+'</span><small>Son tarih: '+stampTime(x.dueAt)+(x.reminderAt?" · 🔔 "+stampTime(x.reminderAt):"")+'</small></div><div class="radar-end">'+pill(x.doneAt?"Tamamlandı":new Date(x.dueAt)<now()?"Gecikti":"Takipte",x.doneAt?"":new Date(x.dueAt)<now()?"danger":"warning")+ (x.assignee===current()?checkButton("toggle-radar",x):"")+deleteButton("delete-radar",x.id)+'</div></div>';
 function renderHome(){
- const tasks=state.tasks.filter(t=>!t.doneAt&&targetTask(t)).sort((a,b)=>(a.dueAt||"z").localeCompare(b.dueAt||"z")).slice(0,3);
- const rs=state.radar.filter(x=>!x.doneAt&&shareable(x)).sort((a,b)=>a.dueAt.localeCompare(b.dueAt)).slice(0,3);
- const greeting=now().getHours()<11?"Günaydın":now().getHours()<18?"İyi günler":"İyi akşamlar";
- const upcoming=dueCount(),pending=activeTaskCount();
- return '<div class="hero"><div class="hero-copy"><span class="eyebrow">HEP BİRLİKTE, TEK YERDE</span><h1>'+greeting+',<br>'+esc(currentName())+'.</h1><p>'+esc(state.familyName)+' için planlar, görevler ve önemli tarihler artık bir arada.</p><div class="hero-footer"><span>✦ '+pending+' bekleyen görev</span><span>◉ '+upcoming+' yaklaşan Radar kaydı</span></div></div><div class="hero-art" aria-hidden="true"><svg viewBox="0 0 140 140" fill="none"><path d="M28 63 70 28l42 35v51H28V63Z" stroke="currentColor" stroke-width="8" stroke-linejoin="round"/><path d="M56 115V79h28v36" stroke="currentColor" stroke-width="8" stroke-linejoin="round"/><path d="m19 69 51-44 51 44" stroke="currentColor" stroke-width="7" stroke-linecap="round"/></svg></div></div>'+
- '<div class="stats-row"><div class="stat-card"><div class="stat-icon">☑</div><div><strong>'+pending+'</strong><span>Bekleyen görev</span></div></div><div class="stat-card"><div class="stat-icon warm">▤</div><div><strong>'+state.shopping.filter(x=>!x.bought).length+'</strong><span>Alışveriş ürünü</span></div></div><div class="stat-card"><div class="stat-icon cool">◉</div><div><strong>'+upcoming+'</strong><span>Yaklaşan iş</span></div></div></div>'+
- '<div class="section-title"><h2>Ailenin yaşam alanı</h2><span class="subtle">İhtiyacın olan her şey burada</span></div>'+
- '<div class="feature-grid"><button class="feature-tile" data-page="tasks"><span class="feature-arrow">↗</span><span class="feature-glyph">☑</span><strong>Aile Görevleri</strong><small>Görev gönder, takip et</small></button><button class="feature-tile" data-page="shopping"><span class="feature-arrow">↗</span><span class="feature-glyph">▤</span><strong>Alışveriş</strong><small>Ortak liste ve bütçe</small></button><button class="feature-tile" data-page="radar"><span class="feature-arrow">↗</span><span class="feature-glyph">◉</span><strong>Aile Radarı</strong><small>Önemli tarihleri unutma</small></button><button class="feature-tile" data-page="calendar"><span class="feature-arrow">↗</span><span class="feature-glyph">▦</span><strong>Aile Takvimi</strong><small>Birlikte planlayın</small></button></div>'+
- '<section class="section-gap"><div class="section-title"><h2>Evin dijital hafızası</h2>'+button("Eşyalarımı gör ↗","goto-assets","btn-muted btn-small")+'</div><div class="notice">⌂ '+(state.assets||[]).length+' eşya kayıtlı · Garanti bitişlerini ve servis geçmişini Evim ve Belgeler bölümünden yönetebilirsin.</div></section><div class="panel-grid"><section class="panel"><div class="panel-heading"><div><p class="eyebrow">SANA ATANANLAR</p><h3>Bekleyen görevler</h3></div>'+button("Tümünü gör ↗","goto-tasks","btn-muted btn-small")+'</div><div class="list">'+(tasks.length?tasks.map(taskRow).join(""):empty("✓","Şimdilik görev yok","Yeni liste hazırlayabilir veya aileden görev alabilirsin."))+'</div></section><section class="panel"><div class="panel-heading"><div><p class="eyebrow">HABITOPIA RADAR</p><h3>Yaklaşan tarihler</h3></div>'+button("Radara git ↗","goto-radar","btn-muted btn-small")+'</div><div class="list">'+(rs.length?rs.map(x=>'<div class="list-row"><span class="stat-icon" style="width:33px;height:33px;border-radius:10px;font-size:17px">'+esc(cats[x.cat][1])+'</span><div class="item-info"><strong class="item-title">'+esc(x.title)+'</strong><span class="item-sub">'+stampTime(x.dueAt)+' · '+esc(memberName(x.assignee))+'</span></div></div>').join(""):empty("◉","Radar sakin","Yaklaşan önemli bir kayıt bulunmuyor."))+'</div></section></div>';
+ const d=now(),greeting=d.getHours()<11?"Günaydın":d.getHours()<18?"İyi günler":"İyi akşamlar";
+ const todayLabel=d.toLocaleDateString("tr-TR",{weekday:"long",day:"numeric",month:"long"});
+ const pending=state.tasks.filter(t=>t.assignee===current()&&!t.doneAt).sort((a,b)=>(a.dueAt||"z").localeCompare(b.dueAt||"z"));
+ const nextRadars=state.radar.filter(r=>!r.doneAt&&shareable(r)).sort((a,b)=>(a.dueAt||"z").localeCompare(b.dueAt||"z"));
+ const upcomingEvents=eventsVisible().filter(e=>e.date>=localDay()).sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time));
+ const nextEvent=upcomingEvents[0],upcoming=nextRadars.slice(0,3);
+ let week="";
+ for(let i=0;i<7;i++){
+  const day=new Date(d.getFullYear(),d.getMonth(),d.getDate()+i);
+  const date=localDay(day),events=eventsVisible().filter(e=>e.date===date).length;
+  week+='<button type="button" class="flow-day '+(i===0?"is-current":"")+'" data-action="go-calendar-date" data-value="'+date+'" aria-label="'+stamp(date)+', '+events+' etkinlik"><span>'+day.toLocaleDateString("tr-TR",{weekday:"short"})+'</span><strong>'+day.getDate()+'</strong><small>'+(events?"●":"·")+'</small></button>';
+ }
+ const tasksView=pending.length?pending.slice(0,4).map(t=>taskRow(t)).join(""):empty("☑","Bugün elinde bekleyen görev yok","Ailene ilk görev listesini gönderebilirsin.");
+ const radarView=upcoming.length?upcoming.map(r=>'<div class="flow-date-item"><span class="flow-date-symbol">'+esc(cats[r.cat]?.[1]||"◉")+'</span><div><strong>'+esc(r.title)+'</strong><small>'+stampTime(r.dueAt)+' · '+esc(memberName(r.assignee))+'</small></div></div>').join(""):empty("◉","Yaklaşan hatırlatma yok","Fatura, garanti veya önemli bir tarih ekle.");
+ const nextEventView=nextEvent?'<div class="flow-event-row"><span class="flow-event-date"><strong>'+new Date(nextEvent.date+"T12:00:00").getDate()+'</strong><small>'+new Date(nextEvent.date+"T12:00:00").toLocaleDateString("tr-TR",{month:"short"})+'</small></span><div><strong>'+esc(nextEvent.title)+'</strong><small>'+esc(nextEvent.time)+' · '+esc((nextEvent.invitees||[]).length)+' davetli</small></div></div>':empty("▦","Takvim henüz boş","İlk aile etkinliğini planlayabilirsin.");
+ const remainingShopping=state.shopping.filter(x=>!x.bought).length;
+ return '<div class="flow-page"><div class="flow-welcome"><div><span class="flow-overline">✳ &nbsp; '+esc(todayLabel.toLocaleUpperCase("tr-TR"))+'</span><h1>'+greeting+', <em>'+esc(currentName())+'.</em></h1><p>'+esc(state.familyName)+' için bugün her şeyi bir arada tutalım.</p></div><div class="flow-family-stamp"><span>⌂</span><strong>'+esc(state.familyName)+'</strong><small>'+state.members.length+' kişi birlikte</small></div></div>'+
+ '<div class="flow-layout"><div class="flow-primary"><section class="flow-focus"><div class="flow-focus-top"><span>BUGÜNÜN ÖNCELİĞİ</span><span class="flow-focus-decor">◌</span></div><div class="flow-focus-inner"><div><h2>'+(pending.length?'Birlikte halledeceğiz.':'Günün planı hazır.')+'</h2><p>'+(pending.length?'Seni bekleyen '+pending.length+' görev var. İşleri tamamladıkça herkes durumunu görebilir.':'Henüz sana atanmış bir görev yok. Ailen için yeni bir plan oluşturabilirsin.')+'</p>'+button(pending.length?"Görevlerimi gör ↗":"İlk görevi oluştur ↗",pending.length?"goto-tasks":"new-task","btn flow-focus-button")+'</div><div class="flow-focus-number" aria-hidden="true"><strong>'+pending.length+'</strong><span>GÖREV</span></div></div></section>'+
+ '<section class="flow-sheet"><div class="flow-sheet-head"><div><span class="flow-overline">BİRLİKTE YAPILACAKLAR</span><h2>Görevlerim <span class="flow-count">'+pending.length+'</span></h2></div>'+button("Yeni görev ＋","new-task","btn-muted btn-small")+'</div><div class="list flow-task-list">'+tasksView+'</div></section>'+
+ '<section class="flow-sheet"><div class="flow-sheet-head"><div><span class="flow-overline">AİLE RADARI</span><h2>Unutulmasın</h2></div>'+button("Tümünü gör ↗","goto-radar","btn-muted btn-small")+'</div><div class="flow-reminders">'+radarView+'</div></section></div>'+
+ '<aside class="flow-secondary"><section class="flow-sheet flow-calendar"><div class="flow-sheet-head"><div><span class="flow-overline">AİLE TAKVİMİ</span><h2>Bu hafta</h2></div>'+button("Aç ↗","go-calendar","btn-muted btn-small")+'</div><div class="flow-week">'+week+'</div><div class="flow-mini-heading">Sıradaki buluşma</div>'+nextEventView+'</section>'+
+ '<section class="flow-quick"><span class="flow-overline">HIZLI İŞLEMLER</span><h2>Bir şey mi yapacağız?</h2><div class="flow-quick-grid"><button data-action="new-task"><span>☑</span>Görev gönder <b>↗</b></button><button data-action="new-shop"><span>▤</span>Listeye ekle <b>↗</b></button><button data-action="new-radar"><span>◉</span>Hatırlatma kur <b>↗</b></button><button data-action="new-event"><span>▦</span>Etkinlik planla <b>↗</b></button></div></section>'+
+ '<section class="flow-mini-shop"><div><span class="flow-overline">ORTAK ALIŞVERİŞ</span><strong>'+remainingShopping+' ürün alınmayı bekliyor</strong><small>Planlanan tutar '+money(estimated())+'</small></div>'+button("Listeyi aç ↗","go-shopping","btn-muted btn-small")+'</section>'+
+ '<button type="button" data-page="assets" class="flow-asset-link"><span>⌂</span><div><strong>Evin dijital hafızası</strong><small>Garantiler, servisler ve belgeler</small></div><b>↗</b></button></aside></div></div>';
 }
 function renderTasks(){
  const all=state.tasks.filter(t=>taskFilter==="all"||taskFilter==="mine"&&t.assignee===current()||taskFilter==="completed"&&!!t.doneAt);
@@ -190,7 +192,7 @@ function updateHeader(){
  $("#sidebar-family").textContent=state.familyName;$("#current-initial").textContent=currentName().slice(0,1).toLocaleUpperCase("tr-TR");
  $("#today-small").textContent=now().toLocaleDateString("tr-TR",{day:"numeric",month:"long"});
  $$(".nav-link").forEach(b=>b.classList.toggle("active",b.dataset.page===page));
- $("#demo-banner").hidden=!state.demo||!!window.HabitopiaCloud?.active;
+ 
  $$(".mobile-bottom-nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===page));
  $("#notification-dot").hidden=notificationsForMember().length===0;
 }
@@ -296,6 +298,9 @@ const noConfirm=(msg)=>confirm(msg);
 function act(action,id,value,path){
  if(action==="close-modal"){closeModal();return}
  if(action==="show-invite"){window.HabitopiaCloud?.showInvite?.();return;}
+ if(action==="go-calendar-date"){selectedDate=value;calendarMonth=new Date(Number(value.slice(0,4)),Number(value.slice(5,7))-1,1);navigate("calendar");return;}
+ if(action==="go-calendar"){navigate("calendar");return;}
+ if(action==="go-shopping"){navigate("shopping");return;}
  if(action==="goto-assets"){navigate("assets");return;}
  if(action==="goto-tasks"||action==="goto-radar"){navigate(action==="goto-tasks"?"tasks":"radar");return}
  if(action==="new-member"&&window.HabitopiaCloud?.active){window.HabitopiaCloud.showInvite();return;}
@@ -416,14 +421,10 @@ $("#user-switch").addEventListener("click",()=>{
  $("#overlay").hidden=false;document.body.style.overflow="hidden";
 });
 $("#modal").addEventListener("click",e=>{const el=e.target.closest('[data-action="switch-member-and-close"]');if(el){act("switch-member",el.dataset.id);closeModal();}});
-$("#start-family").addEventListener("click",()=>{
-  if(window.HabitopiaCloud){window.HabitopiaCloud.user?window.HabitopiaCloud.showFamilies():window.HabitopiaCloud.showAuth();return;}
-  openForm("create-family");
- });
 window.addEventListener("hashchange",()=>{const p=location.hash.slice(1);if(pageTitle[p])navigate(p)});
 document.addEventListener("visibilitychange",()=>{if(!document.hidden){poll();render()}});
 const initial=location.hash.slice(1);if(pageTitle[initial])page=initial;
-if(!storageHealthy)setTimeout(()=>toast("Tarayıcıdaki eski veri okunamadı; üzerine yazılmadı."),100);
+
 render();
  window.HabitopiaCloud?.init({
   getState:()=>state,
@@ -432,7 +433,7 @@ render();
    catch{s.notified=[];}
    state=s;render();
   },
-  reset:()=>{state=sample();render();}
+  reset:()=>{state=blank("","");render();}
  });
  window.addEventListener("habitopia-cloud-error",e=>toast("Bulut kaydı başarısız: "+e.detail));
  setInterval(poll,30000);poll();
