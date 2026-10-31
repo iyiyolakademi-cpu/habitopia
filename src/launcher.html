@@ -2,130 +2,183 @@
 <html lang="tr">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#0a0d12">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#000000">
   <meta name="color-scheme" content="dark">
-  <link rel="icon" href="worlds-icon.svg" type="image/svg+xml">
+  <meta name="description" content="Habitopia: Hayat Borsası veya Habitopia Dünyası. Dünyanı seç.">
+  <title>Habitopia — Dünyanı Seç</title>
+  <link rel="icon" href="assets/habitopia-logo.jpg" type="image/jpeg">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <link rel="manifest" href="manifest.webmanifest">
-  <meta name="description" content="İki Dünya: Hayat Borsan ve Habitopia Dünyan. Kendi gelişim yolculuğunu seç.">
-  <title>İki Dünya — Hayat Borsan & Habitopia</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@500;600;700;800&display=swap');
-    :root{color-scheme:dark;--bg:#0a0d12;--ink:#f6f5f2;--muted:#a3aab3;--line:#303844;--panel:#161b23;--blue:#8ac7fa;--peach:#f6bc99}
-    *{box-sizing:border-box}
-    html{min-height:100%;background:var(--bg)}
-    body{min-height:100dvh;margin:0;background:radial-gradient(ellipse 54% 35% at 14% 4%,#192c36 0,transparent 84%),radial-gradient(ellipse 46% 42% at 88% 90%,#28252a 0,transparent 83%),var(--bg);color:var(--ink);font:15px/1.55 'DM Sans',system-ui,-apple-system,sans-serif;display:flex;flex-direction:column}
-    a{color:inherit;text-decoration:none}
-    button,a{ -webkit-tap-highlight-color:transparent }
-    button:focus-visible,a:focus-visible{outline:3px solid #d8e7ff;outline-offset:5px}
-    .mast{width:min(1220px,calc(100% - 48px));margin:0 auto;padding:27px 0;display:flex;align-items:center;justify-content:space-between;gap:18px}
-    .mark{display:flex;align-items:center;gap:11px;font-size:12px;font-weight:800;letter-spacing:.16em}
-    .mark-logo{display:grid;grid-template-columns:repeat(2,11px);gap:5px;transform:rotate(-12deg)}
-    .mark-logo i{width:11px;height:11px;border:2px solid #f6f5f2;border-radius:4px}
-    .mark-logo i:nth-child(2){background:var(--peach);border-color:var(--peach)}
-    .mark-logo i:nth-child(3){background:var(--blue);border-color:var(--blue)}
-    .mast-right{display:flex;align-items:center;gap:10px;color:#bcc2c9;font-size:11px;font-weight:700;letter-spacing:.12em}
-    .mast-right i{height:6px;width:6px;border-radius:50%;background:#b8e8c1}
-    main{width:min(1170px,calc(100% - 48px));margin:auto;flex:1;display:flex;flex-direction:column;justify-content:center;padding:35px 0 65px}
-    .eyebrow{display:flex;align-items:center;justify-content:center;gap:9px;font-size:11px;letter-spacing:.23em;font-weight:800;color:#bac3cc;margin-bottom:19px}
-    .eyebrow:before,.eyebrow:after{content:"";width:20px;height:1px;background:#68717b}
-    h1{font-family:Manrope,'DM Sans',sans-serif;text-align:center;font-size:clamp(32px,5vw,64px);line-height:1.11;letter-spacing:-.055em;margin:0 auto 16px;max-width:840px;font-weight:800}
-    .lead{text-align:center;color:#afb7c2;margin:0 auto;max-width:570px;font-size:clamp(13px,1.45vw,16px);line-height:1.75}
-    .pick-label{text-align:center;margin:36px 0 16px;color:#c1c8d1;font-weight:650;font-size:12px;letter-spacing:.04em}
-    .world-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
-    .world{min-height:395px;display:flex;flex-direction:column;position:relative;overflow:hidden;border:1px solid #39414e;border-radius:29px;padding:26px;isolation:isolate;transition:transform .22s,border-color .22s,box-shadow .22s;box-shadow:0 12px 38px #0003}
-    .world:hover{transform:translateY(-5px);box-shadow:0 24px 70px #0007}
-    .world:focus-visible{outline-offset:6px}
-    .market{background:linear-gradient(147deg,#211d1e 0%,#191b20 53%,#1d1d24 100%)}
-    .habit{background:linear-gradient(147deg,#18242a 0%,#182027 55%,#1a2027 100%)}
-    .market:hover{border-color:var(--peach)}
-    .habit:hover{border-color:var(--blue)}
-    .world:before{content:"";position:absolute;width:290px;height:290px;border-radius:50%;filter:blur(1px);top:-170px;right:-105px;z-index:-1;opacity:.55}
-    .market:before{background:radial-gradient(circle,#7e4840,transparent 69%)}
-    .habit:before{background:radial-gradient(circle,#345d70,transparent 70%)}
-    .world-top{display:flex;align-items:center;justify-content:space-between;gap:12px}
-    .world-badge{border:1px solid #fff3;color:#dedce0;border-radius:100px;padding:7px 11px;font-size:10px;font-weight:750;letter-spacing:.09em}
-    .world-icon{height:46px;width:46px;display:grid;place-items:center;border:1px solid #ffffff32;border-radius:16px;background:#ffffff0b}
-    .world-icon svg{width:24px;height:24px}
-    .world-copy{margin:29px 0 0;max-width:410px}
-    .world h2{font:800 clamp(25px,3vw,36px)/1.12 Manrope,'DM Sans',sans-serif;letter-spacing:-.045em;margin:0 0 11px}
-    .world p{color:#bec3cb;line-height:1.7;font-size:13px;max-width:365px;margin:0}
-    .world-preview{margin-top:auto;min-height:122px;padding-top:23px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;align-items:end}
-    .mini{height:102px;border:1px solid #ffffff23;background:#ffffff08;border-radius:16px;padding:13px;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden}
-    .mini small{font-size:10px;color:#bcc6cf;font-weight:750;white-space:nowrap}
-    .mini strong{font-size:19px;font-weight:800;letter-spacing:-.04em}
-    .mini .bar{height:6px;border-radius:6px;background:#ffffff1d;overflow:hidden}
-    .mini .bar i{display:block;width:70%;height:100%;border-radius:6px;background:#f6bc99}
-    .habit .mini .bar i{background:#8ac7fa}
-    .sparkline{width:100%;height:32px;overflow:visible}
-    .world-cta{display:flex;align-items:center;justify-content:space-between;padding-top:25px;margin-top:14px;border-top:1px solid #ffffff2a;font-size:13px;font-weight:800}
-    .world-cta span:first-child{color:#f5f4f2}
-    .round{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:var(--peach);color:#171a21;font-size:21px;transition:transform .2s}
-    .habit .round{background:var(--blue)}
-    .world:hover .round{transform:translateX(4px)}
-    .footer{width:min(1220px,calc(100% - 48px));margin:auto;padding:17px 0 27px;border-top:1px solid #ffffff1b;display:flex;align-items:center;justify-content:space-between;gap:20px;color:#828d9a;font-size:11px}
-    .footer span:last-child{color:#abb7c1}
-    @media(max-width:760px){
-      .mast{width:calc(100% - 32px);padding:20px 0}
-      .mast-right{font-size:9px}
-      main{width:calc(100% - 30px);padding:30px 0 40px;justify-content:flex-start}
-      h1{font-size:clamp(31px,8.2vw,47px)}
-      .lead{font-size:13px;max-width:390px}
-      .pick-label{margin:26px 0 14px}
-      .world-grid{grid-template-columns:1fr;gap:14px}
-      .world{min-height:350px;padding:21px;border-radius:23px}
-      .world-copy{margin-top:22px}
-      .world h2{font-size:26px}
-      .world-preview{padding-top:18px;min-height:99px}
-      .mini{height:84px;padding:10px;border-radius:13px}
-      .mini strong{font-size:17px}
-      .world-cta{padding-top:18px;margin-top:12px}
-      .footer{width:calc(100% - 32px);padding:18px 0 22px}
+    :root {
+      color-scheme: dark;
+      --black: #000000;
+      --white: #f9f9f7;
+      --muted: #a7abaa;
+      --cream: #f2dfbc;
+      --cream-text: #19261f;
+      --green: #214d42;
+      --green-border: #477264;
+      --green-text: #f0f7f3;
     }
-    @media(max-width:340px){.mini small{font-size:8px}.mini strong{font-size:14px}.world{padding:16px}}
-    @media(prefers-reduced-motion:reduce){.world,.round{transition:none!important}}
+    *, *::before, *::after { box-sizing: border-box; }
+    html { min-height: 100%; background: var(--black); }
+    body {
+      margin: 0;
+      min-height: 100dvh;
+      background: var(--black);
+      color: var(--white);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    .portal {
+      width: min(100%, 540px);
+      min-height: 100dvh;
+      margin: 0 auto;
+      padding: max(28px, env(safe-area-inset-top)) 23px max(30px, env(safe-area-inset-bottom));
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .brand {
+      display: block;
+      width: clamp(218px, 68vw, 298px);
+      height: clamp(218px, 68vw, 298px);
+      flex-shrink: 0;
+      margin: 0 auto 2px;
+      overflow: hidden;
+      background: #000;
+    }
+    .brand img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+      object-position: center center;
+    }
+    .intro { text-align: center; max-width: 440px; margin: 0 0 31px; }
+    .intro h1 {
+      font-size: clamp(29px, 7.9vw, 45px);
+      font-weight: 830;
+      line-height: 1.12;
+      letter-spacing: -0.055em;
+      margin: 0 0 10px;
+    }
+    .intro p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.65;
+      letter-spacing: -.012em;
+    }
+    .world-grid {
+      display: grid;
+      width: 100%;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+    .world {
+      width: 100%;
+      min-height: 88px;
+      border-radius: 22px;
+      padding: 15px 21px;
+      border: 1.5px solid transparent;
+      display: grid;
+      grid-template-columns: 54px minmax(0, 1fr) 22px;
+      align-items: center;
+      gap: 13px;
+      color: inherit;
+      text-decoration: none;
+      -webkit-tap-highlight-color: transparent;
+      transition: transform .16s ease, filter .16s ease, border-color .16s ease;
+    }
+    .world:hover { transform: translateY(-2px); filter: brightness(1.04); }
+    .world:active { transform: scale(.987); }
+    .world:focus-visible { outline: 3px solid #f4f5f1; outline-offset: 4px; }
+    .world.market {
+      background: var(--cream);
+      color: var(--cream-text);
+      box-shadow: 0 8px 22px rgba(242, 223, 188, .09);
+    }
+    .world.habit {
+      background: var(--green);
+      border-color: var(--green-border);
+      color: var(--green-text);
+      box-shadow: 0 8px 22px rgba(33, 77, 66, .17);
+    }
+    .world-icon {
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+    }
+    .market .world-icon { background: #204b3e; color: #fbf5e7; }
+    .habit .world-icon { background: #397261; color: #f4faf5; }
+    .world-icon svg {
+      width: 25px;
+      height: 25px;
+      stroke: currentColor;
+      stroke-width: 2;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .world strong {
+      display: block;
+      font-size: clamp(16px, 4.8vw, 19px);
+      font-weight: 800;
+      line-height: 1.22;
+      letter-spacing: -.04em;
+      text-align: center;
+    }
+    .world-arrow { font-size: 29px; line-height: 1; text-align: right; font-weight: 350; }
+    @media (max-height: 720px) {
+      .portal { justify-content: flex-start; padding-top: max(12px, env(safe-area-inset-top)); }
+      .brand { width: clamp(174px, 51vw, 228px); height: clamp(174px, 51vw, 228px); }
+      .intro { margin-bottom: 19px; }
+      .world { min-height: 76px; }
+    }
+    @media (max-width: 360px) {
+      .portal { padding-left: 13px; padding-right: 13px; }
+      .world { grid-template-columns: 46px minmax(0, 1fr) 19px; padding: 12px 13px; gap: 7px; border-radius: 18px; }
+      .world-icon { width: 46px; height: 46px; }
+      .world-icon svg { width: 22px; height: 22px; }
+      .world strong { font-size: 16px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .world { transition: none; }
+    }
   </style>
 </head>
 <body>
-<header class="mast">
-  <a href="index.html" class="mark" aria-label="İki Dünya giriş sayfası"><span class="mark-logo" aria-hidden="true"><i></i><i></i><i></i><i></i></span> İKİ DÜNYA</a>
-  <div class="mast-right"><i aria-hidden="true"></i> KENDİ YOLUNU SEÇ</div>
-</header>
-<main id="main">
-  <div class="eyebrow">DİJİTAL DÜNYALARIN</div>
-  <h1>Bugün hangi dünyana<br>geçmek istersin?</h1>
-  <p class="lead">İki farklı deneyim, tek başlangıç noktası. İlerlemeni kendi tarzında yönetmek için aşağıdaki dünyalardan birini seç.</p>
-  <p class="pick-label">DEVAM ETMEK İÇİN BİR KART SEÇ</p>
-  <div class="world-grid" aria-label="Dünya seçimi">
-    <a class="world market" href="hayat-borsan.html" aria-label="Hayat Borsan uygulamasına geç">
-      <div class="world-top">
-        <span class="world-badge">01 / KİŞİSEL PİYASA</span>
-        <span class="world-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#f6bc99" stroke-width="1.7" stroke-linecap="round"><path d="M3 20h18M5 16l5-5 4 2 5-8"/><path d="M15 5h4v4"/></svg></span>
-      </div>
-      <div class="world-copy"><h2>Hayat Borsan</h2><p>Hayatındaki girişimleri, hedefleri ve kararları kendi kişisel piyasanın hisseleri gibi yönet.</p></div>
-      <div class="world-preview" aria-hidden="true">
-        <div class="mini"><small>PORTFÖY</small><strong>31 hisse</strong><div class="bar"><i style="width:69%"></i></div></div>
-        <div class="mini"><small>GÜNLÜK RİTİM</small><svg class="sparkline" viewBox="0 0 115 32" fill="none"><path d="m0 26 19-5 17 4 18-13 19 7 23-15 19 1" stroke="#f6bc99" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-        <div class="mini"><small>KARARLARIN</small><strong>↑ Gelişim</strong><div class="bar"><i style="width:48%"></i></div></div>
-      </div>
-      <div class="world-cta"><span>Hayat Borsan'a gir</span><span class="round" aria-hidden="true">↗</span></div>
-    </a>
-    <a class="world habit" href="habitopia.html" aria-label="Habitopia Dünyan uygulamasına geç">
-      <div class="world-top">
-        <span class="world-badge">02 / KENDİ GELİŞİMİN</span>
-        <span class="world-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#8ac7fa" stroke-width="1.7" stroke-linecap="round"><path d="M12 21v-9M12 16c-6 0-8-4-8-9 5 0 8 2 8 7m0-1c0-5 3-7 8-7 0 5-2 9-8 9"/></svg></span>
-      </div>
-      <div class="world-copy"><h2>Habitopia Dünyan</h2><p>Alışkanlıklarını inşa et, görevlerini tamamla, odağını koru ve her gün kendi gelişimini takip et.</p></div>
-      <div class="world-preview" aria-hidden="true">
-        <div class="mini"><small>ALIŞKANLIKLAR</small><strong>Gün gün</strong><div class="bar"><i style="width:82%"></i></div></div>
-        <div class="mini"><small>ODAK ZAMANI</small><strong>25:00</strong><div class="bar"><i style="width:55%"></i></div></div>
-        <div class="mini"><small>GELİŞİMİN</small><svg class="sparkline" viewBox="0 0 115 32" fill="none"><path d="m1 28 15-7 20 4 17-12 17 6 18-10 26-6" stroke="#8ac7fa" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-      </div>
-      <div class="world-cta"><span>Habitopia dünyana gir</span><span class="round" aria-hidden="true">↗</span></div>
-    </a>
-  </div>
-</main>
-<footer class="footer"><span>İKİ DÜNYA • KENDİ RİTMİNDE İLERLE</span><span>Seçimin her zaman değişebilir.</span></footer>
+  <main class="portal">
+    <div class="brand">
+      <img src="assets/habitopia-logo.jpg" alt="Habitopia" width="298" height="298" decoding="async">
+    </div>
+    <div class="intro">
+      <h1>Dünyanı Seç</h1>
+      <p>Devam etmek istediğin dünyaya dokun.</p>
+    </div>
+    <nav class="world-grid" aria-label="Habitopia dünya seçimi">
+      <a class="world market" href="hayat-borsan.html" aria-label="Hayat Borsası'na geç">
+        <span class="world-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M3 20h18M5 17l5-5 4 2 5-8"/><path d="M15 6h4v4"/></svg>
+        </span>
+        <strong>Hayat Borsası</strong>
+        <span class="world-arrow" aria-hidden="true">›</span>
+      </a>
+      <a class="world habit" href="habitopia.html" aria-label="Habitopia Dünyası'na geç">
+        <span class="world-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M12 21v-9M12 16C6 16 4 12 4 7c5 0 8 2 8 7M12 13c0-5 3-7 8-7 0 5-2 9-8 9"/></svg>
+        </span>
+        <strong>Habitopia Dünyası</strong>
+        <span class="world-arrow" aria-hidden="true">›</span>
+      </a>
+    </nav>
+  </main>
 </body>
 </html>

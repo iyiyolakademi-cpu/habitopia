@@ -1,13 +1,13 @@
 {
-  "name": "İki Dünya — Hayat Borsan ve Habitopia",
-  "short_name": "İki Dünya",
-  "description": "Kişisel piyasanı ve alışkanlık dünyanı tek yerden yönet.",
+  "name": "Habitopia — Hayat Borsası ve Habitopia Dünyası",
+  "short_name": "Habitopia",
+  "description": "Habitopia giriş ekranından Hayat Borsası veya Habitopia Dünyası'na geç.",
   "lang": "tr",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#0a0d12",
-  "theme_color": "#0a0d12",
+  "background_color": "#000000",
+  "theme_color": "#000000",
   "icons": [
     {
       "src": "apple-touch-icon.png",
