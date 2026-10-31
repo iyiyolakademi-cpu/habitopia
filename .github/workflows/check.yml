@@ -20,4 +20,5 @@ jobs:
       - run: node --check src/scripts/core.js
       - run: node --check src/scripts/polish.js
       - run: node --check src/scripts/redesign.js
+      - run: node --check src/scripts/journey.js
       - run: node --test tests/*.test.cjs
