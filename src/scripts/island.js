@@ -165,7 +165,7 @@ showView=function(name){
 const oldHandleAction=handleAction;
 handleAction=function(action,el){
  switch(action){
-  case "island-home":navigate("today");return;
+  case "island-home":if(document.getElementById("dialogBackdrop")?.classList.contains("open"))closeDialog(true);navigate("today");return;
   case "island-habits":navigate("habits");return;
   case "island-world":navigate("world");return;
   case "island-growth":navigate("profile");return;
