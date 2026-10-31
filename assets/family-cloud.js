@@ -317,11 +317,15 @@ async function doForm(form){
  message("İşleniyor…");
  try{
   if(kind==="signin"){const r=await client.auth.signInWithPassword({email:val("email"),password:val("password")});if(r.error)throw r.error;await start();return;}
-  if(kind==="signup"){
-   const r=await client.auth.signUp({email:val("email"),password:val("password"),options:{emailRedirectTo:location.origin+location.pathname}});
-   if(r.error)throw r.error;
-   if(r.data.session){await start();return;}
-   message("E-postana gelen doğrulama bağlantısını aç. Ardından giriş yapabilirsin.","good");return;
+  if(kind==="signup"||kind==="signup-invite"){
+   const pending={name:val("name"),family:val("family"),code:kind==="signup-invite"?val("code"):""};
+   if(pending.code&&!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(pending.code))throw Error("Geçerli bir davet kodu gir.");
+   sessionStorage.setItem(ONBOARD_KEY,JSON.stringify(pending));
+   const result=await client.auth.signUp({email:val("email"),password:val("password"),options:{emailRedirectTo:location.origin+location.pathname}});
+   if(result.error){sessionStorage.removeItem(ONBOARD_KEY);throw result.error;}
+   if(result.data.session){await start();return;}
+   overlay('<div class="auth-mini-mark"><span>✉</span> SON BİR ADIM</div><h2 id="cloud-dialog-title">E-postanı kontrol et.</h2><p class="cloud-intro">Hesap doğrulaması açıksa e-postana bir bağlantı gönderdik. Bağlantıyı açıp hesabını doğruladığında aile alanın oluşturulacak veya davetine katılacaksın.</p><div class="notice">Doğrulama e-postası gelmediyse gereksiz posta klasörünü kontrol et.</div><button type="button" class="btn btn-primary" data-cloud="signin">Doğruladım, giriş yap</button>');
+   return;
   }
   if(kind==="create"){
    const r=await client.rpc("family_create",{p_name:val("family"),p_display_name:val("name")});
@@ -336,7 +340,8 @@ async function doForm(form){
 }
 async function onAction(name,id){
  if(name==="close"){close();return}
- if(name==="signin"||name==="signup"){authView(name);return}
+ if(name==="retry"){if(!client){location.reload();return;}start().catch(e=>connectionError(e.message));return;}
+ if(name==="signin"||name==="signup"||name==="signup-invite"){authView(name);return}
  if(!client){message("Bağlantı bileşeni yüklenmedi.","bad");return}
  if(name==="create"){familyCreate();return}
  if(name==="join"){familyJoin();return}
@@ -362,25 +367,25 @@ function accountView(){
 function bootstrap(callback){
  callbacks=callback;
  const s=window.supabase;
- if(!s?.createClient){status("Supabase kütüphanesi yüklenemedi");return;}
+ if(!s?.createClient){status("Supabase kütüphanesi yüklenemedi");connectionError("Giriş hizmeti yüklenemedi. İnternet bağlantını kontrol edip sayfayı yeniden aç.");return;}
  client=s.createClient(URL,KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true},realtime:{params:{eventsPerSecond:3}}});
  document.getElementById("cloud-account")?.addEventListener("click",accountView);
  element()?.addEventListener("click",e=>{
-  if(e.target===element())close();
+  if(e.target===element()&&activeHousehold)close();
   const b=e.target.closest("[data-cloud]");
   if(b){e.preventDefault();onAction(b.dataset.cloud,b.dataset.id);}
  });
  element()?.addEventListener("submit",e=>{const f=e.target.closest("form[data-cloud-form]");if(f){e.preventDefault();doForm(f);}});
- document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!element().hidden)close();});
+ document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!element().hidden&&activeHousehold)close();});
  client.auth.onAuthStateChange((event,session)=>{
-  if(event==="SIGNED_OUT"&&auth){auth=null;activeHousehold=null;lastSnapshot=null;callbacks?.reset();status("");}
+  if(event==="SIGNED_OUT"&&auth){auth=null;activeHousehold=null;lastSnapshot=null;callbacks?.reset();gate(false);status("");authView("signup");}
  });
- start().catch(e=>{console.error(e);status("Bulut bağlantısı kurulamadı");});
+ start().catch(e=>{console.error(e);status("Bulut bağlantısı kurulamadı");connectionError(e.message);});
 }
 window.HabitopiaCloud={
  init:bootstrap,save,get active(){return !!activeHousehold&&!!auth;},get user(){return auth;},
  get household(){return activeHousehold;},get notifications(){return notifications;},
- showAuth:accountView,showFamilies:()=>auth?chooseFamily():authView(),showInvite:accountView,
+ showAuth:accountView,showFamilies:()=>auth?chooseFamily():authView("signup"),showInvite:accountView,
  uploadDocument,listDocuments,openDocument,acknowledge,refresh:()=>queueReload(50),get client(){return client;},
  get error(){return lastError;}
 };
