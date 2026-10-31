@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f5f5ef">
+  <meta name="color-scheme" content="light">
+  <meta name="description" content="Habitopia — küçük adımlar, gerçek gelişim.">
+  <title>Habitopia — Yeni Bir Başlangıç</title>
+  <link rel="stylesheet" href="./styles.css">
+  <script src="./app.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <button class="brand button-plain" id="brand-home" type="button" aria-label="Ana sayfa">
+        <span class="brand-mark" aria-hidden="true">h<span class="brand-dot">.</span></span>
+        <span class="brand-wordmark">habitopia<span class="brand-caption">KENDİ RİTMİNİ KUR</span></span>
+      </button>
+      <div class="topbar-actions">
+        <span class="today-stamp" id="today-stamp"></span>
+        <button class="avatar-btn" type="button" data-go="profile" aria-label="Profilim"><span id="avatar-initial">H</span></button>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="screen screen-home is-active" data-screen="home" aria-label="Ana sayfa">
+        <div class="greeting">
+          <div><p class="eyebrow">BUGÜN KENDİN İÇİN BİR ŞEY YAP</p><h1>Merhaba, <span id="greeting-name">dostum</span><span class="punctuation">.</span></h1>
+          <p class="lead">Her şeyi bugün bitirmek zorunda değilsin. Bir adımla başla.</p></div>
+          <div class="greeting-date" id="greeting-date" aria-hidden="true"></div>
+        </div>
+
+        <div class="hero">
+          <div class="hero-content">
+            <span class="hero-label"><span class="live-dot"></span> BUGÜNÜN RİTMİ</span>
+            <h2>İlerleme, küçük<br>adımlarla başlar.</h2>
+            <p id="hero-subtitle">Kendine ait ilk adımı oluştur.</p>
+            <div class="hero-progress"><div class="hero-progress-track"><span id="hero-progress-fill"></span></div><strong id="hero-progress-percent">0%</strong></div>
+            <span class="hero-footnote" id="hero-footnote">Henüz bugüne ait hedefin yok.</span>
+          </div>
+          <div class="hero-art" aria-hidden="true">
+            <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><div class="orbit orbit-three"></div>
+            <div class="hero-orb"><span>✳</span></div>
+            <span class="hero-spark spark-one">✦</span><span class="hero-spark spark-two">✧</span>
+          </div>
+        </div>
+
+        <div class="mini-stats" aria-label="İlerleme özeti">
+          <div class="mini-stat"><span class="mini-stat-symbol" aria-hidden="true">↗</span><strong id="stat-level">1</strong><span>Mevcut seviye</span></div>
+          <div class="mini-stat"><span class="mini-stat-symbol" aria-hidden="true">◎</span><strong id="stat-habit">0</strong><span>Bugünkü alışkanlık</span></div>
+          <div class="mini-stat"><span class="mini-stat-symbol" aria-hidden="true">◷</span><strong id="stat-focus">0 dk</strong><span>Bugünkü odak</span></div>
+        </div>
+
+        <div class="section-head"><div><p class="eyebrow">SENİN ALANIN</p><h2>Nereye odaklanmak istersin?</h2></div></div>
+        <div class="portal-grid">
+          <button type="button" class="portal-card portal-habits" data-go="habits">
+            <span class="portal-icon" aria-hidden="true">◈</span><span class="portal-copy"><strong>Alışkanlıklarım</strong><small>Küçük rutinler, güçlü değişimler</small></span><span class="portal-arrow" aria-hidden="true">↗</span>
+          </button>
+          <button type="button" class="portal-card portal-tasks" data-go="tasks">
+            <span class="portal-icon" aria-hidden="true">⌁</span><span class="portal-copy"><strong>Planım</strong><small>Yapılacaklar ve günlük öncelikler</small></span><span class="portal-arrow" aria-hidden="true">↗</span>
+          </button>
+          <button type="button" class="portal-card portal-focus" data-go="focus">
+            <span class="portal-icon" aria-hidden="true">◉</span><span class="portal-copy"><strong>Odak Alanım</strong><small>Kesintisiz zaman, berrak zihin</small></span><span class="portal-arrow" aria-hidden="true">↗</span>
+          </button>
+          <button type="button" class="portal-card portal-progress" data-go="progress">
+            <span class="portal-icon" aria-hidden="true">▥</span><span class="portal-copy"><strong>Gelişimim</strong><small>Yolculuğunu rakamlarla gör</small></span><span class="portal-arrow" aria-hidden="true">↗</span>
+          </button>
+        </div>
+
+        <div class="home-bottom-grid">
+          <section class="surface" aria-labelledby="quick-title">
+            <div class="surface-head"><div><p class="eyebrow">BİR ADIM DAHA</p><h3 id="quick-title">Bugünkü planın</h3></div><button class="text-link" type="button" data-go="tasks">Tümünü aç ↗</button></div>
+            <div id="quick-tasks" class="task-list compact"></div>
+            <form id="quick-task-form" class="inline-form"><label class="sr-only" for="quick-task-title">Yeni görev</label><input id="quick-task-title" maxlength="100" autocomplete="off" placeholder="Yeni bir küçük adım yaz..." required><button type="submit" aria-label="Görev ekle">＋</button></form>
+          </section>
+          <section class="surface mood-surface" aria-labelledby="mood-title">
+            <div class="surface-head"><div><p class="eyebrow">KENDİNE KULAK VER</p><h3 id="mood-title">Bugün nasıl hissediyorsun?</h3></div></div>
+            <p class="surface-desc">Bir emoji seç; yalnızca kendin için kaydedilir.</p>
+            <div class="mood-options" role="group" aria-label="Günlük ruh hâli">
+              <button type="button" data-mood="great" aria-label="Çok iyi hissediyorum" title="Çok iyi">😄</button>
+              <button type="button" data-mood="good" aria-label="İyi hissediyorum" title="İyi">🙂</button>
+              <button type="button" data-mood="okay" aria-label="Normal hissediyorum" title="Normal">😐</button>
+              <button type="button" data-mood="low" aria-label="Düşük hissediyorum" title="Düşük">😔</button>
+            </div>
+            <p class="mood-message" id="mood-message" aria-live="polite">Her gün aynı hissetmek zorunda değilsin.</p>
+          </section>
+        </div>
+      </section>
+
+      <section class="screen" data-screen="habits" aria-label="Alışkanlıklarım" hidden>
+        <div class="page-head"><button type="button" class="back-btn" data-go="home">← <span>Ana sayfa</span></button><p class="eyebrow">RUTİNLERİN</p><h1>Alışkanlıklarım<span class="punctuation">.</span></h1><p class="lead">Her gün tekrarladığın küçük davranışlar, geleceğini şekillendirir.</p></div>
+        <div class="page-intro summary-card"><span>BUGÜN TAMAMLANAN</span><strong id="habit-summary">0 / 0</strong><small>İstikrarlı olman, kusursuz olmandan daha önemli.</small></div>
+        <div class="section-head"><h2>Günlük alışkanlıklar</h2></div>
+        <div id="habit-list" class="habit-list"></div>
+        <form id="habit-form" class="add-form"><label for="habit-title">Yeni alışkanlık ekle</label><div class="add-form-row"><input id="habit-title" maxlength="80" placeholder="Örn. Her gün 15 dakika kitap oku" required autocomplete="off"><button class="primary-btn" type="submit">Alışkanlık ekle</button></div></form>
+      </section>
+
+      <section class="screen" data-screen="tasks" aria-label="Planım" hidden>
+        <div class="page-head"><button type="button" class="back-btn" data-go="home">← <span>Ana sayfa</span></button><p class="eyebrow">ÖNÜNDEKİ ADIM</p><h1>Planım<span class="punctuation">.</span></h1><p class="lead">Aklındakileri boşalt. Yapılacakları sadeleştir.</p></div>
+        <div class="page-intro summary-card"><span>BUGÜN BİTEN</span><strong id="task-summary">0 görev</strong><small>Birini tamamla, bir sonrakine geç.</small></div>
+        <form id="task-form" class="add-form"><label for="task-title">Yapılacak bir şey ekle</label><div class="add-form-row"><input id="task-title" maxlength="100" placeholder="Örn. Proje taslağını tamamla" required autocomplete="off"><button class="primary-btn" type="submit">Görev ekle</button></div></form>
+        <div class="section-head"><h2>Yapılacaklar</h2></div>
+        <div id="task-list" class="task-list"></div>
+      </section>
+
+      <section class="screen" data-screen="focus" aria-label="Odak Alanım" hidden>
+        <div class="page-head"><button type="button" class="back-btn" data-go="home">← <span>Ana sayfa</span></button><p class="eyebrow">DİKKATİNİ TOPLA</p><h1>Odak Alanım<span class="punctuation">.</span></h1><p class="lead">Şimdi yalnızca bir şeye zaman ayır.</p></div>
+        <div class="focus-panel">
+          <p class="eyebrow">KENDİNE AYIRDIĞIN ZAMAN</p>
+          <div class="timer-visual"><div class="timer-ring"><strong id="timer-time" role="timer" aria-live="off">25:00</strong><span id="timer-status">Başlamaya hazır</span></div></div>
+          <div class="timer-options" role="group" aria-label="Odak süresi">
+            <button type="button" data-duration="10">10 dk</button>
+            <button type="button" data-duration="25" class="selected">25 dk</button>
+            <button type="button" data-duration="45">45 dk</button>
+          </div>
+          <div class="timer-actions"><button type="button" id="timer-toggle" class="primary-btn">Odaklanmaya başla</button><button type="button" id="timer-reset" class="secondary-btn">Sıfırla</button></div>
+          <p class="muted-note">Süre dolunca seans kaydedilir. Ekran kapalıyken de geçen süre hesaba katılır.</p>
+        </div>
+        <div class="focus-note"><strong>Bugünkü toplam odak süren</strong><span id="focus-total">0 dakika</span></div>
+      </section>
+
+      <section class="screen" data-screen="progress" aria-label="Gelişimim" hidden>
+        <div class="page-head"><button type="button" class="back-btn" data-go="home">← <span>Ana sayfa</span></button><p class="eyebrow">KENDİ YOLCULUĞUN</p><h1>Gelişimim<span class="punctuation">.</span></h1><p class="lead">Kimseyle değil, dünkü kendinle yarış.</p></div>
+        <div class="progress-stat-grid">
+          <div class="progress-stat"><span>SEVİYEN</span><strong id="progress-level">1</strong><small id="progress-xp">0 deneyim puanı</small></div>
+          <div class="progress-stat"><span>TAMAMLANAN GÖREV</span><strong id="progress-tasks">0</strong><small>Tüm zamanlar</small></div>
+          <div class="progress-stat"><span>ALIŞKANLIK İŞARETİ</span><strong id="progress-habits">0</strong><small>Tüm zamanlar</small></div>
+          <div class="progress-stat"><span>ODAKLANMA</span><strong id="progress-focus">0 dk</strong><small>Tüm zamanlar</small></div>
+        </div>
+        <section class="surface chart-surface"><div class="surface-head"><div><p class="eyebrow">SON 7 GÜN</p><h3>Günlük etkinlik</h3></div></div><div id="weekly-chart" class="weekly-chart" aria-label="Son yedi gün etkinlik grafiği"></div><p class="muted-note">Tamamlanan alışkanlıklar, görevler ve odak seansları sayılır.</p></section>
+      </section>
+
+      <section class="screen" data-screen="profile" aria-label="Profilim" hidden>
+        <div class="page-head"><button type="button" class="back-btn" data-go="home">← <span>Ana sayfa</span></button><p class="eyebrow">KENDİ ALANIN</p><h1>Profilim<span class="punctuation">.</span></h1><p class="lead">Düzenini kendin belirle. Verilerinin kontrolü sende olsun.</p></div>
+        <section class="surface profile-surface"><h2>Kişisel bilgiler</h2><form id="profile-form" class="add-form"><label for="profile-name">Sana nasıl seslenelim?</label><div class="add-form-row"><input id="profile-name" maxlength="32" autocomplete="given-name" placeholder="Adın"><button type="submit" class="primary-btn">Kaydet</button></div></form></section>
+        <section class="surface profile-surface"><h2>Verilerim</h2><p class="surface-desc">Bu önizleme sürümünde bilgiler yalnızca kullandığın tarayıcıda tutulur. Başka cihazla otomatik eşitlenmez.</p><div class="profile-actions"><button type="button" id="export-data" class="secondary-btn">Verilerimi dışa aktar</button><label class="secondary-btn import-label" for="import-data">Yedekten içe aktar</label><input type="file" id="import-data" accept="application/json,.json" hidden></div><p class="muted-note">İçe aktarmadan önce mevcut verilerinin bir kopyasını indirmeni öneririz.</p></section>
+      </section>
+    </main>
+
+    <footer class="app-footer"><span>habitopia <span aria-hidden="true">✳</span> kendi ritmin, kendi yolun</span><span>Yeni deneyim • önizleme</span></footer>
+  </div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <div class="onboarding" id="onboarding" hidden>
+    <div class="onboarding-card" role="dialog" aria-modal="true" aria-labelledby="onboarding-title">
+      <span class="onboarding-badge">HABITOPIA'YA HOŞ GELDİN</span>
+      <div class="onboarding-symbol" aria-hidden="true">✳</div>
+      <h2 id="onboarding-title">Yeni bir başlangıç,<br>seninle başlıyor.</h2>
+      <p>İstersen kendine bir isim ve ilk rutinlerini belirle. Her şeyi daha sonra değiştirebilirsin.</p>
+      <form id="onboarding-form"><label for="onboarding-name">Sana nasıl seslenelim?</label><input id="onboarding-name" maxlength="32" placeholder="Adın (isteğe bağlı)" autocomplete="given-name">
+        <fieldset><legend>İlk alışkanlıkların (isteğe bağlı)</legend>
+          <label class="onboarding-choice"><input type="checkbox" name="starter" value="Her gün su iç"> <span>💧 Her gün su iç</span></label>
+          <label class="onboarding-choice"><input type="checkbox" name="starter" value="15 dakika kitap oku"> <span>📖 15 dakika kitap oku</span></label>
+          <label class="onboarding-choice"><input type="checkbox" name="starter" value="Kısa bir yürüyüş yap"> <span>🌿 Kısa bir yürüyüş yap</span></label>
+        </fieldset><button type="submit" class="primary-btn onboarding-submit">Yolculuğuma başla ↗</button></form>
+    </div>
+  </div>
+</body>
+</html>
