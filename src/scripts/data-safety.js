@@ -6,7 +6,12 @@
     return value!==null && typeof value==="object" && !Array.isArray(value);
   }
   function isPlausibleState(value){
-    return isRecord(value) && KNOWN_KEYS.some(key=>Object.prototype.hasOwnProperty.call(value,key));
+    if(!isRecord(value))return false;
+    return KNOWN_KEYS.some(key=>{
+      if(!Object.prototype.hasOwnProperty.call(value,key))return false;
+      if(["tasks","quests","habits","challenges","achievements"].includes(key))return Array.isArray(value[key]);
+      return isRecord(value[key]);
+    });
   }
   function safeParseState(raw){
     if(typeof raw!=="string" || !raw.trim() || raw.length>8*1024*1024)return null;

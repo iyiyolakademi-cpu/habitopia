@@ -32,3 +32,8 @@ test("missing timestamps have consistent fallback",()=>{
 test("schema with legacy quests is recognized",()=>{
   assert.equal(guard.safeParseState(JSON.stringify({quests:[{title:"Read"}]})).quests.length,1);
 });
+test("invalid data shapes cannot erase good state",()=>{
+  assert.equal(guard.safeParseState(JSON.stringify({tasks:"broken"})),null);
+  assert.equal(guard.safeParseState(JSON.stringify({profile:[]})),null);
+  assert.equal(guard.safeParseState(JSON.stringify({habits:[]})).habits.length,0);
+});

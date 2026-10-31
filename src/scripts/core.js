@@ -839,13 +839,15 @@ async function startFromNative(config={}){
       if(local && guard.safeParseState(local)){
         const saved=await preserveForRecovery(local,"local-before-cloud");
         if(!saved){console.warn("Habitopia: cloud overwrite skipped because local backup failed")}
-        else await storageAdapter.set(STORAGE_KEY,config.initialState);
+        else try{await storageAdapter.set(STORAGE_KEY,config.initialState)}
+        catch(error){console.warn("Habitopia cloud restore could not be saved; retaining local state",error)}
       }else if(!local){
         try{await storageAdapter.set(STORAGE_KEY,config.initialState)}catch(error){console.warn("Habitopia cloud bootstrap failed",error)}
       }else{
         // Invalid local state is retained in recovery before replacing it.
         const saved=await preserveForRecovery(local,"corrupt-before-cloud");
-        if(saved)await storageAdapter.set(STORAGE_KEY,config.initialState);
+        if(saved)try{await storageAdapter.set(STORAGE_KEY,config.initialState)}
+        catch(error){console.warn("Habitopia cloud restore failed; corrupt local snapshot retained",error)}
       }
     }else if(choice.source==="local" && choice.reason==="local-newer"){
       await preserveForRecovery(config.initialState,"cloud-before-local");
