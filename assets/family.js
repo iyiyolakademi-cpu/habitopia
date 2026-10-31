@@ -201,11 +201,12 @@ function processForm(form){
  if(name==="new-radar"){
   if(!datetime("dueAt")){toast("Geçerli bir son tarih seç.");return;}
   const rem=datetime("reminderAt"),due=datetime("dueAt");if(rem&&new Date(rem)>new Date(due)){toast("Bildirim son tarihten sonra olamaz.");return;}
+  if(fd.has("private")&&v("assignee")!==current()){toast("Özel Radar kaydını yalnızca kendine atayabilirsin.");return;}
   state.radar.push({id:uid(),title:v("title"),cat:cats[v("cat")]?v("cat"):"custom",assignee:v("assignee"),creator:current(),dueAt:due,reminderAt:rem,doneAt:null,privateTo:fd.has("private")?current():null});
  }
  if(name==="new-event"){
   if(!validDate(v("date"))){toast("Geçerli tarih seç.");return;}
-  const invitations=fd.getAll("invitees").filter(x=>state.members.some(m=>m.id===x));
+  const invitations=fd.has("private")?[current()]:fd.getAll("invitees").filter(x=>state.members.some(m=>m.id===x));
   if(!invitations.includes(current()))invitations.push(current());
   const answers={[current()]:"yes"};
   state.events.push({id:uid(),title:v("title"),date:v("date"),time:v("time")||"18:00",notes:v("notes"),creator:current(),invitees:invitations,rsvp:answers,privateTo:fd.has("private")?current():null});
