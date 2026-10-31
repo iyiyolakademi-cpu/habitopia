@@ -103,7 +103,7 @@ function renderHome(){
  '<div class="stats-row"><div class="stat-card"><div class="stat-icon">☑</div><div><strong>'+pending+'</strong><span>Bekleyen görev</span></div></div><div class="stat-card"><div class="stat-icon warm">▤</div><div><strong>'+state.shopping.filter(x=>!x.bought).length+'</strong><span>Alışveriş ürünü</span></div></div><div class="stat-card"><div class="stat-icon cool">◉</div><div><strong>'+upcoming+'</strong><span>Yaklaşan iş</span></div></div></div>'+
  '<div class="section-title"><h2>Ailenin yaşam alanı</h2><span class="subtle">İhtiyacın olan her şey burada</span></div>'+
  '<div class="feature-grid"><button class="feature-tile" data-page="tasks"><span class="feature-arrow">↗</span><span class="feature-glyph">☑</span><strong>Aile Görevleri</strong><small>Görev gönder, takip et</small></button><button class="feature-tile" data-page="shopping"><span class="feature-arrow">↗</span><span class="feature-glyph">▤</span><strong>Alışveriş</strong><small>Ortak liste ve bütçe</small></button><button class="feature-tile" data-page="radar"><span class="feature-arrow">↗</span><span class="feature-glyph">◉</span><strong>Aile Radarı</strong><small>Önemli tarihleri unutma</small></button><button class="feature-tile" data-page="calendar"><span class="feature-arrow">↗</span><span class="feature-glyph">▦</span><strong>Aile Takvimi</strong><small>Birlikte planlayın</small></button></div>'+
- '<div class="panel-grid"><section class="panel"><div class="panel-heading"><div><p class="eyebrow">SANA ATANANLAR</p><h3>Bekleyen görevler</h3></div>'+button("Tümünü gör ↗","goto-tasks","btn-muted btn-small")+'</div><div class="list">'+(tasks.length?tasks.map(taskRow).join(""):empty("✓","Şimdilik görev yok","Yeni liste hazırlayabilir veya aileden görev alabilirsin."))+'</div></section><section class="panel"><div class="panel-heading"><div><p class="eyebrow">HABITOPIA RADAR</p><h3>Yaklaşan tarihler</h3></div>'+button("Radara git ↗","goto-radar","btn-muted btn-small")+'</div><div class="list">'+(rs.length?rs.map(x=>'<div class="list-row"><span class="stat-icon" style="width:33px;height:33px;border-radius:10px;font-size:17px">'+esc(cats[x.cat][1])+'</span><div class="item-info"><strong class="item-title">'+esc(x.title)+'</strong><span class="item-sub">'+stampTime(x.dueAt)+' · '+esc(memberName(x.assignee))+'</span></div></div>').join(""):empty("◉","Radar sakin","Yaklaşan önemli bir kayıt bulunmuyor."))+'</div></section></div>';
+ '<section class="section-gap"><div class="section-title"><h2>Evin dijital hafızası</h2>'+button("Eşyalarımı gör ↗","goto-assets","btn-muted btn-small")+'</div><div class="notice">⌂ '+(state.assets||[]).length+' eşya kayıtlı · Garanti bitişlerini ve servis geçmişini Evim ve Belgeler bölümünden yönetebilirsin.</div></section><div class="panel-grid"><section class="panel"><div class="panel-heading"><div><p class="eyebrow">SANA ATANANLAR</p><h3>Bekleyen görevler</h3></div>'+button("Tümünü gör ↗","goto-tasks","btn-muted btn-small")+'</div><div class="list">'+(tasks.length?tasks.map(taskRow).join(""):empty("✓","Şimdilik görev yok","Yeni liste hazırlayabilir veya aileden görev alabilirsin."))+'</div></section><section class="panel"><div class="panel-heading"><div><p class="eyebrow">HABITOPIA RADAR</p><h3>Yaklaşan tarihler</h3></div>'+button("Radara git ↗","goto-radar","btn-muted btn-small")+'</div><div class="list">'+(rs.length?rs.map(x=>'<div class="list-row"><span class="stat-icon" style="width:33px;height:33px;border-radius:10px;font-size:17px">'+esc(cats[x.cat][1])+'</span><div class="item-info"><strong class="item-title">'+esc(x.title)+'</strong><span class="item-sub">'+stampTime(x.dueAt)+' · '+esc(memberName(x.assignee))+'</span></div></div>').join(""):empty("◉","Radar sakin","Yaklaşan önemli bir kayıt bulunmuyor."))+'</div></section></div>';
 }
 function renderTasks(){
  const all=state.tasks.filter(t=>taskFilter==="all"||taskFilter==="mine"&&t.assignee===current()||taskFilter==="completed"&&!!t.doneAt);
@@ -128,7 +128,9 @@ function renderRadar(){
 const eventsVisible=()=>state.events.filter(shareable).filter(x=>x.invitees.includes(current())||x.creator===current()||(!x.privateTo));
 const eventView=e=>{
  const status=e.rsvp[current()]||"pending",myInvite=e.invitees.includes(current());
- return '<article class="event-card"><div class="event-top"><span class="eyebrow">'+esc(stamp(e.date))+' · '+esc(e.time)+'</span>'+pill(e.privateTo?"Özel":"Aile etkinliği",e.privateTo?"purple":"")+'</div><h3>'+esc(e.title)+'</h3><p>'+esc(e.notes||"")+ (e.notes?" · ":"")+'Oluşturan: '+esc(memberName(e.creator))+'</p><p style="margin-top:8px">Davetliler: '+esc(e.invitees.map(memberName).join(", ")||"Yok")+'</p>'+(myInvite?'<div class="rsvp-actions"><button data-action="rsvp" data-id="'+esc(e.id)+'" data-value="yes" class="'+(status==="yes"?"active":"")+'">✓ Katılacağım</button><button data-action="rsvp" data-id="'+esc(e.id)+'" data-value="maybe" class="'+(status==="maybe"?"active":"")+'">? Belki</button><button data-action="rsvp" data-id="'+esc(e.id)+'" data-value="no" class="'+(status==="no"?"active":"")+'">× Katılamam</button></div>':"")+'<div class="compact-detail"><small class="muted">Yanıtlar: '+esc(e.invitees.map(id=>memberName(id)+": "+({yes:"Katılıyor",no:"Katılamıyor",maybe:"Belki",pending:"Bekliyor"}[e.rsvp[id]||"pending"])).join(" · "))+'</small>'+deleteButton("delete-event",e.id)+'</div></article>';
+ const linked=[...state.tasks,...state.shopping,...state.radar].filter(x=>x.linkedEventId===e.id);
+ const linkedHtml=linked.length?'<div class="workflow-timeline">'+linked.slice(0,7).map(x=>'<div class="workflow-row"><span>↳</span><div class="item-info"><strong class="item-title">'+esc(x.title)+'</strong><span class="item-sub">'+(x.doneAt||x.bought?"Tamamlandı":"Bekliyor")+'</span></div></div>').join("")+'</div>':"";
+ return '<article class="event-card"><div class="event-top"><span class="eyebrow">'+esc(stamp(e.date))+' · '+esc(e.time)+'</span>'+pill(e.privateTo?"Özel":"Aile etkinliği",e.privateTo?"purple":"")+'</div><h3>'+esc(e.title)+'</h3><p>'+esc(e.notes||"")+ (e.notes?" · ":"")+'Oluşturan: '+esc(memberName(e.creator))+'</p><p style="margin-top:8px">Davetliler: '+esc(e.invitees.map(memberName).join(", ")||"Yok")+'</p>'+linkedHtml+(myInvite?'<div class="rsvp-actions"><button data-action="rsvp" data-id="'+esc(e.id)+'" data-value="yes" class="'+(status==="yes"?"active":"")+'">✓ Katılacağım</button><button data-action="rsvp" data-id="'+esc(e.id)+'" data-value="maybe" class="'+(status==="maybe"?"active":"")+'">? Belki</button><button data-action="rsvp" data-id="'+esc(e.id)+'" data-value="no" class="'+(status==="no"?"active":"")+'">× Katılamam</button></div>':"")+'<div class="compact-detail"><small class="muted">Yanıtlar: '+esc(e.invitees.map(id=>memberName(id)+": "+({yes:"Katılıyor",no:"Katılamıyor",maybe:"Belki",pending:"Bekliyor"}[e.rsvp[id]||"pending"])).join(" · "))+'</small>'+deleteButton("delete-event",e.id)+'</div></article>';
 };
 function renderCalendar(){
  const y=calendarMonth.getFullYear(),m=calendarMonth.getMonth(),start=(new Date(y,m,1).getDay()+6)%7,days=new Date(y,m+1,0).getDate();
@@ -291,15 +293,16 @@ function processForm(form){
  save();closeModal();render();toast("Kaydedildi.");
 }
 const noConfirm=(msg)=>confirm(msg);
-function act(action,id,value){
+function act(action,id,value,path){
  if(action==="close-modal"){closeModal();return}
  if(action==="show-invite"){window.HabitopiaCloud?.showInvite?.();return;}
+ if(action==="goto-assets"){navigate("assets");return;}
  if(action==="goto-tasks"||action==="goto-radar"){navigate(action==="goto-tasks"?"tasks":"radar");return}
  if(action==="new-member"&&window.HabitopiaCloud?.active){window.HabitopiaCloud.showInvite();return;}
  if(["new-task","new-shop","set-budget","assign-shop","new-radar","new-event","new-member","rename-family","create-family","new-asset"].includes(action)){openForm(action);return}
  if(action==="asset-detail"){showAsset(id);return;}
  if(action==="asset-service"){targetAssetId=id;openForm("asset-service");return;}
- if(action==="asset-doc-open"){window.HabitopiaCloud?.openDocument?.(document.querySelector('[data-path="'+CSS.escape(value||"")+'"]')?.dataset.path||"").catch(e=>toast("Belge açılamadı: "+e.message));return;}
+ if(action==="asset-doc-open"){window.HabitopiaCloud?.openDocument?.(path).catch(e=>toast("Belge açılamadı: "+e.message));return;}
  if(action==="delete-asset"){
   const asset=(state.assets||[]).find(x=>x.id===id);if(!asset)return;
   if(window.HabitopiaCloud?.active&&asset.creator!==current()){toast("Yalnızca eşya sahibi silebilir.");return;}
@@ -311,9 +314,8 @@ function act(action,id,value){
  if(action==="radar-filter"){radarFilter=value;render();return}
  if(action==="select-date"){selectedDate=value;render();return}
  if(action==="month-prev"||action==="month-next"){calendarMonth.setMonth(calendarMonth.getMonth()+(action==="month-next"?1:-1));calendarMonth=new Date(calendarMonth.getFullYear(),calendarMonth.getMonth(),1);render();return}
- if(action==="new-member"&&window.HabitopiaCloud?.active){window.HabitopiaCloud.showInvite();return;}
  if(action==="toggle-task"){const t=state.tasks.find(x=>x.id===id);if(t&&t.assignee===current()){t.doneAt=t.doneAt?null:now().toISOString();save();render();toast(t.doneAt?"Görev tamamlandı.":"Görev yeniden açıldı.");}else toast("Bu görevi tamamlamak için ilgili üyeyi seç.");return}
- if(action==="toggle-shop"){const x=state.shopping.find(t=>t.id===id);if(x){x.bought=!x.bought;save();render();}return}
+ if(action==="toggle-shop"){const x=state.shopping.find(t=>t.id===id);if(x){x.bought=!x.bought;x.doneAt=x.bought?now().toISOString():null;save();render();}return}
  if(action==="toggle-radar"){const t=state.radar.find(x=>x.id===id);if(t&&shareable(t)&&t.assignee===current()){t.doneAt=t.doneAt?null:now().toISOString();save();render();toast("Radar durumu güncellendi.");}return}
  const collection={"delete-task":"tasks","delete-shop":"shopping","delete-radar":"radar","delete-event":"events"}[action];
  if(collection){const row=state[collection].find(x=>x.id===id);if(row&&window.HabitopiaCloud?.active&&row.creator!==current()){toast("Kaydı yalnızca oluşturan kişi silebilir.");return;}if(!row||!noConfirm("Bu kaydı silmek istiyor musun?"))return;state[collection]=state[collection].filter(x=>x.id!==id);save();render();toast("Kayıt silindi.");return;}
@@ -364,7 +366,7 @@ document.addEventListener("click",e=>{
  const pageButton=e.target.closest("[data-page]");
  if(pageButton){e.preventDefault();navigate(pageButton.dataset.page);return;}
  const actionButton=e.target.closest("[data-action]");
- if(actionButton){act(actionButton.dataset.action,actionButton.dataset.id,actionButton.dataset.value);return;}
+ if(actionButton){act(actionButton.dataset.action,actionButton.dataset.id,actionButton.dataset.value,actionButton.dataset.path);return;}
 });
 document.addEventListener("submit",e=>{
  const form=e.target.closest("form[data-form]");if(!form)return;e.preventDefault();processForm(form);
