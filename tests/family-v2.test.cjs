@@ -67,3 +67,18 @@ test("Scheduled server notifications and private storage migration present",()=>
  assert.match(sql3,/cron.schedule/);
  assert.match(sql3,/enqueue_due_notifications/);
 });
+
+test("New installation opens signup before any family data",()=>{
+ const css=fs.readFileSync("assets/family-flow.css","utf8");
+ assert.match(html,/id="app-layout" hidden inert/);
+ assert.match(html,/id="cloud-overlay" class="cloud-overlay cloud-onboarding"/);
+ assert.doesNotMatch(html,/id="demo-banner"/);
+ assert.doesNotMatch(family,/const sample=/);
+ assert.match(cloud,/function authView\(mode="signup"\)/);
+ assert.match(cloud,/data-cloud-form/);
+ assert.match(cloud,/sessionStorage\.setItem\(ONBOARD_KEY/);
+ assert.match(cloud,/await resumeOnboarding\(\)/);
+ assert.match(cloud,/gate\(false\)/);
+ assert.match(css,/cloud-overlay\.auth-gated/);
+ assert.match(css,/@media\(max-width:780px\)/);
+});

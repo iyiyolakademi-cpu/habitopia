@@ -29,12 +29,14 @@ test("Shopping budget, quantities, user-specific reminders and RSVP flow exist",
  assert.match(js,/data-action="rsvp"/);
  assert.ok(js.includes("e.rsvp[current()]"));
 });
-test("Standalone local preview does not silently reuse old storage",()=>{
+test("Previous demonstration records never bootstrap the account app",()=>{
  assert.match(js,/habitopia-family-v1/);
  assert.doesNotMatch(js,/habitopia-state-v15-browser/);
  assert.match(js,/localStorage/);
  assert.ok(js.includes("JSON.stringify"));
- assert.match(html,/Örnek aileyi inceliyorsun/);
+ assert.doesNotMatch(html,/Örnek aileyi inceliyorsun/);
+ assert.doesNotMatch(js,/const sample=/);
+ assert.match(html,/id="app-layout" hidden inert/);
 });
 test("Mobile and accessibility styling",()=>{
  assert.ok(css.includes("@media(max-width:780px)"));
@@ -57,12 +59,12 @@ function harness(){
 }
 test("Initial app actually renders dashboard and separate screens",()=>{
  const h=harness();
- assert.match(h.node("#page-content").innerHTML,/Ailenin yaşam alanı/);
- assert.match(h.node("#page-content").innerHTML,/Aile Görevleri/);
+ assert.match(h.node("#page-content").innerHTML,/Bugünün Akışı|Birlikte halledeceğiz|Günün planı hazır/);
+ assert.match(h.node("#page-content").innerHTML,/Görev gönder/);
  h.handlers.click({target:{closest(selector){return selector==="[data-page]"?{dataset:{page:"shopping"}}:null}},preventDefault(){}});
  assert.match(h.node("#page-content").innerHTML,/ALIŞVERİŞ BÜTÇESİ/);
  h.handlers.click({target:{closest(selector){return selector==="[data-page]"?{dataset:{page:"radar"}}:null}},preventDefault(){}});
- assert.match(h.node("#page-content").innerHTML,/İnternet taahhüdü/);
+ assert.match(h.node("#page-content").innerHTML,/Radar kaydı bulunamadı/);
  h.handlers.click({target:{closest(selector){return selector==="[data-page]"?{dataset:{page:"calendar"}}:null}},preventDefault(){}});
  assert.match(h.node("#page-content").innerHTML,/Aile Takvimi/);
 });

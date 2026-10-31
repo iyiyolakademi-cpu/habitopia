@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#eef4ee">
+  <meta name="theme-color" content="#f5f3ee">
   <meta name="description" content="Habitopia Aile: görevler, ortak alışveriş, akıllı hatırlatmalar ve aile takvimi.">
   <meta name="color-scheme" content="light">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -11,12 +11,13 @@
   <link rel="manifest" href="./manifest.webmanifest">
   <link rel="icon" href="./family-icon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="./assets/family.css">
+  <link rel="stylesheet" href="./assets/family-flow.css">
   <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.3/dist/umd/supabase.js"></script>
   <script defer src="./assets/family-cloud.js"></script>
   <script defer src="./assets/family.js"></script>
 </head>
 <body>
-  <div class="app-layout" id="app-layout">
+  <div class="app-layout" id="app-layout" hidden inert>
     <aside class="sidebar" id="sidebar" aria-label="Ana gezinme">
       <a class="brand" href="#home" data-page="home" aria-label="Habitopia Aile ana sayfa">
         <span class="brand-symbol" aria-hidden="true"><svg viewBox="0 0 40 40" fill="none"><path d="M10 19 20 10l10 9v12H10V19Z" stroke="currentColor" stroke-width="2.7" stroke-linejoin="round"/><path d="M17 31V22h6v9" stroke="currentColor" stroke-width="2.7" stroke-linejoin="round"/></svg></span>
@@ -25,7 +26,7 @@
       <div class="family-chip"><span class="family-chip-mark">⌂</span><div><span>YAŞAM ALANI</span><strong id="sidebar-family">Ailem</strong></div></div>
       <span class="nav-label">MENÜ</span>
       <nav class="nav-list" id="primary-nav">
-        <button type="button" data-page="home" class="nav-link active"><span class="nav-icon">⌂</span> Genel Bakış <span class="nav-chevron">›</span></button>
+        <button type="button" data-page="home" class="nav-link active"><span class="nav-icon">⌂</span> Bugünün Akışı <span class="nav-chevron">›</span></button>
         <button type="button" data-page="tasks" class="nav-link"><span class="nav-icon">☑</span> Aile Görevleri <span class="nav-chevron">›</span></button>
         <button type="button" data-page="shopping" class="nav-link"><span class="nav-icon">▤</span> Alışveriş <span class="nav-chevron">›</span></button>
         <button type="button" data-page="radar" class="nav-link"><span class="nav-icon">◉</span> Aile Radarı <span class="nav-chevron">›</span></button>
@@ -39,26 +40,21 @@
     <div class="app-content">
       <header class="topbar">
         <button type="button" class="icon-button menu-button" id="menu-toggle" aria-label="Menüyü aç" aria-expanded="false">☰</button>
-        <div class="topbar-title"><span class="eyebrow" id="topbar-eyebrow">AİLENİN DİJİTAL ALANI</span><strong id="topbar-heading">Genel Bakış</strong></div>
-        <div class="topbar-actions"><button type="button" class="btn btn-light cloud-top-button" id="cloud-account">Giriş yap</button>
+        <div class="topbar-title"><span class="eyebrow" id="topbar-eyebrow">AİLENİN DİJİTAL ALANI</span><strong id="topbar-heading">Bugünün Akışı</strong></div>
+        <div class="topbar-actions"><button type="button" class="btn btn-light cloud-top-button" id="cloud-account">Ailem <span aria-hidden="true">⌄</span></button>
           <span class="today-small" id="today-small"></span>
           <button type="button" id="notification-open" class="icon-button bell-button" aria-label="Bildirimleri göster">♧<span class="notification-dot" id="notification-dot" hidden></span></button>
-          <button type="button" class="user-bubble" id="user-switch" title="Aktif aile üyesini değiştir" aria-label="Aktif aile üyesini değiştir"><span id="current-initial">S</span></button>
+          <button type="button" class="user-bubble" id="user-switch" title="Aktif aile üyesini değiştir" aria-label="Aktif aile üyesini değiştir"><span id="current-initial">•</span></button>
         </div>
       </header>
       <div class="content-wrap">
-        <div id="demo-banner" class="demo-banner" hidden>
-          <span class="demo-dot">i</span>
-          <p><strong>Örnek aileyi inceliyorsun.</strong> Veriler yalnızca bu tarayıcıda. Gerçek aile alanını oluşturarak başlayabilirsin.</p>
-          <button id="start-family" type="button">Ailemi oluştur <span aria-hidden="true">↗</span></button>
-        </div>
         <main id="page-content" tabindex="-1"></main>
       </div>
-      <footer class="footer"><span>Habitopia Aile · Birlikte daha kolay</span><span id="sync-indicator">Bu cihazda saklanır · Önizleme</span></footer>
+      <footer class="footer"><span>Habitopia Aile · Birlikte daha kolay</span><span id="sync-indicator">Güvenli aile alanı</span></footer>
     </div>
   </div>
   <nav class="mobile-bottom-nav" aria-label="Hızlı gezinme"><button data-page="home">⌂<small>Ana</small></button><button data-page="tasks">☑<small>Görevler</small></button><button data-page="shopping">▤<small>Alışveriş</small></button><button data-page="radar">◉<small>Radar</small></button><button data-page="calendar">▦<small>Takvim</small></button></nav>
-  <div id="cloud-overlay" class="cloud-overlay" hidden></div>
+  <div id="cloud-overlay" class="cloud-overlay cloud-onboarding"><div class="auth-boot"><div class="brand-symbol">⌂</div><strong>habitopia <span>AİLE</span></strong><p>Güvenli aile alanı hazırlanıyor…</p></div></div>
   <div class="overlay" id="overlay" hidden><div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title"></div></div>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 </body>
