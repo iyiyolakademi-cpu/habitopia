@@ -283,6 +283,7 @@ document.addEventListener("submit",e=>{
  const form=e.target.closest("form[data-form]");if(!form)return;e.preventDefault();processForm(form);
 });
 document.addEventListener("change",async e=>{
+ if(e.target.name==="cat"&&e.target.closest('form[data-form="new-radar"]')){const privacy=e.target.closest("form").querySelector('[name="private"]');if(privacy&&e.target.value==="health")privacy.checked=true;return;}
  if(e.target.id!=="import-file")return;const file=e.target.files?.[0];e.target.value="";if(!file)return;
  if(file.size>1024*1024){toast("Yedek boyutu 1 MB'ı geçemez.");return;}
  try{const raw=JSON.parse(await file.text());if(raw.format!=="habitopia-family"||raw.version!==VERSION)throw Error("Habitopia Aile yedeği değil.");
