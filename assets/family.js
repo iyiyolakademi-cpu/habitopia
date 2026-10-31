@@ -141,6 +141,40 @@ function renderCalendar(){
  return header("AİLENİN ORTAK TAKVİMİ","Aile Takvimi","Etkinlikleri paylaşın, aile üyelerini davet edin ve katılım durumlarını görün.",button("＋ Etkinlik oluştur","new-event"))+
  '<div class="calendar-layout"><section class="panel"><div class="month-head"><button data-action="month-prev" aria-label="Önceki ay">‹</button><h3>'+calendarMonth.toLocaleDateString("tr-TR",{month:"long",year:"numeric"})+'</h3><button data-action="month-next" aria-label="Sonraki ay">›</button></div><div class="month-grid">'+cells+'</div></section><section class="panel"><div class="panel-heading"><div><p class="eyebrow">SEÇİLEN GÜN</p><h3>'+stamp(selectedDate)+'</h3></div>'+pill(todays.length+" etkinlik")+'</div><div class="events-feed">'+(todays.length?todays.map(eventView).join(""):empty("▦","Bu gün boş","Yeni bir aile etkinliği oluşturabilirsin."))+'</div></section></div><section class="section-gap panel"><div class="panel-heading"><h3>Yaklaşan aile etkinlikleri</h3></div><div class="events-feed">'+(eventsVisible().filter(x=>x.date>=localDay()).sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time)).slice(0,6).map(eventView).join("")||empty("◷","Henüz etkinlik yok","Aile üyelerini davet ederek bir etkinlik oluştur."))+'</div></section>';
 }
+
+function renderAssets(){
+ const assets=state.assets||[];
+ const cards=assets.map(a=>{
+  const count=state.radar.filter(r=>r.linkedAssetId===a.id&&!r.doneAt).length;
+  return '<article class="asset-card"><div class="asset-icon">▣</div><span class="eyebrow">'+esc(a.category||"Ev eşyası")+'</span><h3>'+esc(a.title)+'</h3><p>'+esc(a.brand||"")+(a.model?" · "+esc(a.model):"")+'</p><p>'+ (a.warrantyUntil?"Garanti: "+stamp(a.warrantyUntil):"Garanti tarihi eklenmedi") +'</p><div class="people-row">'+pill((a.services||[]).length+" servis kaydı")+(count?pill(count+" Radar kaydı","warning"):"")+'</div>'+button("Ayrıntıları aç ↗","asset-detail","btn-light btn-small",'data-id="'+esc(a.id)+'"')+'</article>';
+ }).join("");
+ return header("EVİN DİJİTAL HAFIZASI","Evim ve Belgeler","Garanti, cihaz bilgisi, bakım geçmişi ve belgeler bir arada.",button("＋ Eşya ekle","new-asset"))+
+ '<div class="notice">🔒 Özel eşya kayıtları yalnızca sahibine görünür. Hesabınla giriş yapınca belge yükleyebilirsin.</div>'+
+ (cards?'<div class="asset-grid">'+cards+'</div>':empty("⌂","Henüz eşya eklenmedi","İlk ev eşyası, telefon, kombi veya araç kaydını oluştur."));
+}
+async function viewAssetDocuments(id){
+ const holder=document.getElementById("asset-doc-list");
+ if(!holder)return;
+ if(!window.HabitopiaCloud?.active){holder.innerHTML='<p class="muted">Gerçek belge yüklemek için bulut hesabınla giriş yap.</p>';return;}
+ try{
+  const documents=await window.HabitopiaCloud.listDocuments(id);
+  const target=document.getElementById("asset-doc-list");if(!target)return;
+  target.innerHTML=documents.length?documents.map(d=>'<div class="list-row"><span class="item-info">'+esc(d.display_name)+'</span>'+button("Belgeyi aç","asset-doc-open","btn-light btn-small",'data-path="'+esc(d.path)+'"')+'</div>').join(""):'<p class="muted">Henüz belge yüklenmedi.</p>';
+ }catch(e){holder.textContent="Belgeler yüklenemedi: "+e.message;}
+}
+function showAsset(id){
+ const a=(state.assets||[]).find(x=>x.id===id);if(!a)return;
+ const details=[["Kategori",a.category||"Ev eşyası"],["Marka",a.brand||"—"],["Model",a.model||"—"],["Seri / ürün kodu",a.serial||"—"],["Satın alma",a.purchasedAt?stamp(a.purchasedAt):"—"],["Garanti bitişi",a.warrantyUntil?stamp(a.warrantyUntil):"—"]]
+  .map(([l,v])=>'<div class="detail-line"><span>'+esc(l)+'</span><strong>'+esc(v)+'</strong></div>').join("");
+ const services=(a.services||[]).map(s=>'<div class="list-row"><span class="stat-icon">✧</span><div class="item-info"><span class="item-title">'+esc(s.title||"Servis")+'</span><span class="item-sub">'+stamp(s.date)+' · '+esc(s.notes||"")+'</span></div></div>').join("");
+ $("#modal").innerHTML='<button type="button" class="modal-close" data-action="close-modal" aria-label="Kapat">×</button><h2 id="modal-title">'+esc(a.title)+'</h2><p class="modal-intro">Evin dijital hafızası · '+esc(a.category||"")+'</p><div class="asset-detail">'+details+'</div>'+(a.notes?'<p class="notice">'+esc(a.notes)+'</p>':"")+
+ '<div class="section-title section-gap"><h2>Servis geçmişi</h2>'+button("＋ Servis ekle","asset-service","btn-light btn-small",'data-id="'+esc(a.id)+'"')+'</div>'+(services||empty("✧","Servis kaydı yok","Bakım ya da tamirat sonrası kayıt ekleyebilirsin."))+
+ '<div class="section-title section-gap"><h2>Belgeler ve faturalar</h2></div><div id="asset-doc-list" class="list"><p class="muted">Belgeler kontrol ediliyor…</p></div>'+
+ (window.HabitopiaCloud?.active?'<label class="field"><span>PDF veya fotoğraf yükle (en fazla 5 MB)</span><input class="doc-input" type="file" id="asset-doc-upload" data-id="'+esc(a.id)+'" accept="application/pdf,image/png,image/jpeg,image/webp"></label>':"")+
+ '<div class="form-actions">'+button("Eşyayı sil","delete-asset","btn-danger",'data-id="'+esc(a.id)+'"')+button("Kapat","close-modal","btn-muted")+'</div>';
+ $("#overlay").hidden=false;document.body.style.overflow="hidden";viewAssetDocuments(id);
+}
+
 function renderFamily(){
  return header("BİRLİKTE BİR AİLE","Aile Üyeleri",window.HabitopiaCloud?.active?"Her aile üyesi kendi hesabıyla katılır; davet kodunu paylaşabilirsin.":"Üyeleri yönet, bu cihazda farklı aile üyelerinin görünümünü dene.",button(window.HabitopiaCloud?.active?"Davet kodu":"＋ Üye ekle",window.HabitopiaCloud?.active?"show-invite":"new-member"))+
  '<div class="two-col"><section class="panel"><div class="panel-heading"><h3>'+esc(state.familyName)+'</h3>'+pill(state.members.length+" üye")+'</div>'+state.members.map(m=>'<div class="family-member"><div class="member-avatar">'+esc(m.name[0]?.toUpperCase()||"?")+'</div><div class="member-info"><strong>'+esc(m.name)+'</strong><small>'+(m.id===current()?"Bu cihazda seçili kişi":"Aile üyesi")+'</small></div>'+(!window.HabitopiaCloud?.active&&m.id!==current()?button("Bu üyeye geç","switch-member","btn-light btn-small",'data-id="'+esc(m.id)+'"'):pill("Aktif"))+'</div>').join("")+'</section><div class="info-rail"><div class="rail-card"><h3>Üyeler arası görev akışı</h3><p>Örneğin Anne rolündeyken oğluna liste hazırlayabilir, sonra bu cihazda oğul rolüne geçerek listeyi görebilirsin. Gerçek telefonlar arasında hesap bağlantısı henüz aktif değildir.</p></div><div class="rail-card"><h3>Gizlilik</h3><p>Sağlık bilgileri ve kişisel etkinlikler varsayılan olarak yalnızca oluşturan kişiye gösterilebilir. Bu sürüm tek cihazlı olduğu için şifreli çoklu hesap güvenliği sağlamaz.</p></div></div></div>';
