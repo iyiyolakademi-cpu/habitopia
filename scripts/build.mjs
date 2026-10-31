@@ -10,6 +10,7 @@ const parts=[
   ["CORE_JS","src/scripts/core.js",c=>`<script>${c}</script>`],
   ["POLISH_CSS","src/styles/polish.css",c=>`<style id="habitopia-v3-polish">${c}</style>`],
   ["REDESIGN_CSS","src/styles/redesign.css",c=>`<style id="habitopia-redesign">${c}</style>`],
+  ["MIDNIGHT_CSS","src/styles/midnight.css",c=>`<style id="habitopia-midnight">${c}</style>`],
   ["POLISH_JS","src/scripts/polish.js",c=>`<script id="habitopia-v3-behavior">${c}</script>`],
   ["REDESIGN_JS","src/scripts/redesign.js",c=>`<script id="habitopia-redesign-behavior">${c}</script>`]
 ];
