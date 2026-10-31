@@ -46,10 +46,11 @@ test("Both apps are accessible from each other without changing their data keys"
 });
 
 test("Habitopia Aile replaces the old dual-app launcher but preserves both legacy pages",()=>{
- assert.match(portal,/<meta name="theme-color" content="#eef4ee">/);
+ assert.match(portal,/<meta name="theme-color" content="#f5f3ee">/);
  assert.ok(portal.includes("family-icon.svg"));
  assert.match(portal,/id="page-content"/);
- assert.match(portal,/id="demo-banner"/);
+ assert.doesNotMatch(portal,/id="demo-banner"/);
+ assert.match(portal,/id="app-layout" hidden inert/);
  assert.doesNotMatch(portal,/class="world (market|habit)"/);
  assert.match(habit,/habitopia-state-v15-browser/);
  assert.match(market,/hayatborsasi_terminal_v2/);
