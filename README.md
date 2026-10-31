@@ -44,3 +44,6 @@ Ana sürümde sorun görülürse git ile eski yedek dalını karşılaştırın,
 - Eski ekranların eylemleri, kayıt anahtarları ve bütün kullanıcı verileri korunur.
 
 Bu aşama mobil / görsel tasarım katmanıdır. Bulut/Flutter bağlantısı, gerçek ekran boyutları ve uzun süreli kullanım hâlâ ayrıca manuel test edilmelidir.
+
+## Midnight: varsayılan ve tek görünüm
+Tüm ekranlar `src/styles/midnight.css` dosyasındaki koyu renk sistemiyle gösterilir. Açık tema seçimi kaldırıldı. Eski kullanıcıların dark:false ayarı güvenle dark:true olarak normalize edilir; görev, not ve takip kayıtları korunur. Otomatik testler: `tests/midnight.test.cjs`.

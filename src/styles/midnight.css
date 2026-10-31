@@ -1,0 +1,678 @@
+/* Habitopia Midnight — single, permanent dark color system (2026-10-31).
+   Loaded last: overrides earlier legacy/light styles without touching user content. */
+html.habitopia-midnight{
+  color-scheme:dark!important;
+  --night-bg:#080a0f;
+  --night-panel:#151923;
+  --night-panel-2:#1c2130;
+  --night-panel-3:#242b3a;
+  --night-border:#303748;
+  --night-text:#f5f6fd;
+  --night-subtext:#b0b7c9;
+  --night-accent:#a6adff;
+  --night-accent-strong:#c7cbff;
+  --night-accent-soft:#282e4b;
+  --night-positive:#80d5b0;
+  --night-danger:#ff9d9b;
+  --night-shadow:0 16px 36px rgba(0,0,0,.3);
+  --bg:var(--night-bg)!important;
+  --surface:var(--night-panel)!important;
+  --surface-2:var(--night-bg)!important;
+  --surface-3:var(--night-panel-2)!important;
+  --ink:var(--night-text)!important;
+  --muted:var(--night-subtext)!important;
+  --line:var(--night-border)!important;
+  --primary:var(--night-accent)!important;
+  --primary-2:var(--night-accent-strong)!important;
+  --primary-soft:var(--night-accent-soft)!important;
+  --mint:#1c3634!important;
+  --green:var(--night-positive)!important;
+  --green-soft:#1d3831!important;
+  --blue:var(--night-accent)!important;
+  --gold:#eac787!important;
+  --gold-soft:#3a3023!important;
+  --red:var(--night-danger)!important;
+  --red-soft:#3c252b!important;
+  --hbt-canvas:var(--night-bg)!important;
+  --hbt-panel:var(--night-panel)!important;
+  --hbt-subtle:var(--night-panel-2)!important;
+  --hbt-border:var(--night-border)!important;
+  --hbt-text:var(--night-text)!important;
+  --hbt-muted:var(--night-subtext)!important;
+  --hbt-forest:#171b2d!important;
+  --hbt-green:var(--night-accent)!important;
+  --hbt-mint:#5f6ab3!important;
+  --hbt-shadow:var(--night-shadow)!important;
+  --hbt-shadow-strong:0 18px 50px rgba(0,0,0,.45)!important;
+  --v21-ink:var(--night-text)!important;
+  --v21-sub:var(--night-subtext)!important;
+  --v21-green:var(--night-accent)!important;
+  --v21-line:var(--night-border)!important;
+}
+html.habitopia-midnight,
+html.habitopia-midnight body,
+html.habitopia-midnight body .app,
+html.habitopia-midnight body .main,
+html.habitopia-midnight body .onboarding{
+  background:var(--night-bg)!important;
+  color:var(--night-text)!important;
+}
+html.habitopia-midnight body{
+  background-image:radial-gradient(ellipse 64% 42% at 50% -8%,rgba(98,110,178,.13),transparent 79%)!important;
+}
+html.habitopia-midnight body .app{
+  background-image:none!important;
+  border-left:1px solid #242b38!important;
+  border-right:1px solid #242b38!important;
+  box-shadow:0 24px 80px rgba(0,0,0,.55)!important;
+}
+html.habitopia-midnight body .topbar{
+  background:linear-gradient(120deg,#111521 0%,#1a2030 58%,#242944 100%)!important;
+  color:var(--night-text)!important;
+  border-bottom:1px solid #30374b!important;
+  box-shadow:0 10px 28px rgba(0,0,0,.3)!important;
+}
+html.habitopia-midnight .topbar:before{
+  background:radial-gradient(circle,rgba(158,167,255,.15),transparent 74%)!important
+}
+html.habitopia-midnight .topbar:after{
+  border-color:rgba(196,201,255,.12)!important
+}
+html.habitopia-midnight .topbar .eyebrow,
+html.habitopia-midnight .topbar .date-dot{
+  color:#bac2da!important;
+}
+html.habitopia-midnight .topbar .greeting{
+  color:#fff!important;
+}
+html.habitopia-midnight .top-avatar{
+  color:#e4e6ff!important;background:#2a3044!important;
+  border-color:#4a516a!important;
+}
+html.habitopia-midnight .top-avatar:hover{background:#323951!important}
+html.habitopia-midnight .page-head h1,
+html.habitopia-midnight .section-head h2,
+html.habitopia-midnight .card-title,
+html.habitopia-midnight .growth-action strong,
+html.habitopia-midnight .tracker strong,
+html.habitopia-midnight .tracker b,
+html.habitopia-midnight .stat strong,
+html.habitopia-midnight .task-title,
+html.habitopia-midnight .habit-info strong,
+html.habitopia-midnight .sheet-head h2,
+html.habitopia-midnight .dialog h2,
+html.habitopia-midnight h1,
+html.habitopia-midnight h2,
+html.habitopia-midnight h3{
+  color:var(--night-text)!important;
+}
+html.habitopia-midnight .page-head p,
+html.habitopia-midnight .card-sub,
+html.habitopia-midnight .muted,
+html.habitopia-midnight .section-head span,
+html.habitopia-midnight .tracker span,
+html.habitopia-midnight .stat span,
+html.habitopia-midnight .task-meta,
+html.habitopia-midnight .habit-info span,
+html.habitopia-midnight .dialog p,
+html.habitopia-midnight .field label,
+html.habitopia-midnight .setting-copy span,
+html.habitopia-midnight .growth-action span,
+html.habitopia-midnight .challenge-copy span,
+html.habitopia-midnight .chart-head span,
+html.habitopia-midnight .empty,
+html.habitopia-midnight small{
+  color:var(--night-subtext)!important;
+}
+html.habitopia-midnight body .card,
+html.habitopia-midnight body .task,
+html.habitopia-midnight body .habit-table,
+html.habitopia-midnight body .habit-table-wrap,
+html.habitopia-midnight body .habit-row,
+html.habitopia-midnight body .habit-head,
+html.habitopia-midnight body .tracker,
+html.habitopia-midnight body .growth-action,
+html.habitopia-midnight body .growth-score-card,
+html.habitopia-midnight body .daily-plan,
+html.habitopia-midnight body .v21-score,
+html.habitopia-midnight body .v21-plan,
+html.habitopia-midnight body .v21-quick button,
+html.habitopia-midnight body .chart-card,
+html.habitopia-midnight body .stat,
+html.habitopia-midnight body .stat-card,
+html.habitopia-midnight body .setting,
+html.habitopia-midnight body .note,
+html.habitopia-midnight body .journal-card,
+html.habitopia-midnight body .weekly-goal,
+html.habitopia-midnight body .compare-card,
+html.habitopia-midnight body .insight,
+html.habitopia-midnight body .routine-item,
+html.habitopia-midnight body .day-detail,
+html.habitopia-midnight body .v13-card,
+html.habitopia-midnight body .mood-chart-card,
+html.habitopia-midnight body .reward-item,
+html.habitopia-midnight body .reward-balance,
+html.habitopia-midnight body .review-card,
+html.habitopia-midnight body .report-summary,
+html.habitopia-midnight body .challenge-summary,
+html.habitopia-midnight body .challenge-item,
+html.habitopia-midnight body .water-editor,
+html.habitopia-midnight body .period-summary,
+html.habitopia-midnight body .period-chart,
+html.habitopia-midnight body .period-chart-bars{
+  background:var(--night-panel)!important;
+  border-color:var(--night-border)!important;
+  color:var(--night-text)!important;
+  box-shadow:var(--night-shadow)!important;
+}
+html.habitopia-midnight body .habit-head{
+  background:var(--night-panel-2)!important;
+}
+html.habitopia-midnight .habit-row:last-child{border-color:transparent!important}
+html.habitopia-midnight .task.done{opacity:.8!important}
+html.habitopia-midnight .task.done .task-title{color:#b4bdd0!important}
+html.habitopia-midnight .task-check{
+  background:var(--night-panel-2)!important;
+  color:var(--night-text)!important;
+  border-color:#8f9aea!important;
+}
+html.habitopia-midnight .task.done .task-check{
+  background:var(--night-accent)!important;
+  color:#0b0d16!important;
+}
+html.habitopia-midnight .task .tiny,
+html.habitopia-midnight .pill{
+  background:var(--night-panel-2)!important;
+  color:#d7daea!important;border-color:#353c53!important;
+}
+html.habitopia-midnight body .hero,
+html.habitopia-midnight body #view-today .hero{
+  background:linear-gradient(145deg,#1b2030,#171c29)!important;
+  border:1px solid #333b54!important;
+  color:var(--night-text)!important;
+  box-shadow:var(--night-shadow)!important;
+}
+html.habitopia-midnight #view-today .hero .hero-kicker{
+  color:#b0b9ff!important;
+}
+html.habitopia-midnight #view-today .hero .hero-line{
+  color:#f3f4fc!important;
+}
+html.habitopia-midnight .hbt-today-summary,
+html.habitopia-midnight .hbt-insight-summary{
+  background:linear-gradient(135deg,#242947 0%,#1b2137 65%,#171c2a 100%)!important;
+  border:1px solid #424a73!important;
+  box-shadow:0 16px 38px rgba(6,8,20,.43)!important;
+  color:#f8f9ff!important;
+}
+html.habitopia-midnight .hbt-today-summary:after{
+  border-color:rgba(209,214,255,.12)!important
+}
+html.habitopia-midnight .hbt-summary-top,
+html.habitopia-midnight .hbt-summary-main p,
+html.habitopia-midnight .hbt-summary-bottom span,
+html.habitopia-midnight .hbt-insight-metrics span{
+  color:#c2c9e3!important;
+}
+html.habitopia-midnight .hbt-summary-title,
+html.habitopia-midnight .hbt-insight-top strong,
+html.habitopia-midnight .hbt-insight-metrics strong{
+  color:#fff!important;
+}
+html.habitopia-midnight .hbt-progress-circle{
+  background:conic-gradient(#b4bcff calc(var(--progress)*1%),rgba(162,169,203,.22) 0)!important;
+}
+html.habitopia-midnight .hbt-progress-circle>div{
+  background:#252b45!important;
+}
+html.habitopia-midnight .hbt-summary-bottom{
+  border-color:#404a68!important;
+}
+html.habitopia-midnight .hbt-summary-bottom button{
+  background:#d5d9ff!important;
+  color:#121626!important;
+}
+html.habitopia-midnight .hbt-insight-metrics>div{border-color:#465070!important}
+html.habitopia-midnight .hbt-eyebrow{color:#adb6fa!important}
+html.habitopia-midnight .v21-score-ring{
+  background:conic-gradient(var(--night-accent) var(--pct),#343b4e 0)!important
+}
+html.habitopia-midnight .v21-score-ring:after{
+  background:var(--night-panel)!important
+}
+html.habitopia-midnight .v21-score-ring strong,
+html.habitopia-midnight .v21-score-copy strong,
+html.habitopia-midnight .v21-plan-head strong,
+html.habitopia-midnight .v21-quick strong,
+html.habitopia-midnight .plan-item strong{
+  color:var(--night-text)!important
+}
+html.habitopia-midnight .v21-score-copy span,
+html.habitopia-midnight .v21-plan-head span,
+html.habitopia-midnight .v21-plan-copy span,
+html.habitopia-midnight .v21-quick span{
+  color:var(--night-subtext)!important
+}
+html.habitopia-midnight .v21-plan-progress,
+html.habitopia-midnight .plan-progress{
+  background:#343b4b!important
+}
+html.habitopia-midnight .v21-plan-progress i,
+html.habitopia-midnight .plan-progress i{
+  background:linear-gradient(90deg,#7d89ef,#b0baff)!important
+}
+html.habitopia-midnight .v21-plan-item,
+html.habitopia-midnight .plan-item{
+  border-color:var(--night-border)!important;
+  background:var(--night-panel)!important
+}
+html.habitopia-midnight .v21-plan-item.done,
+html.habitopia-midnight .plan-item.done,
+html.habitopia-midnight .weekly-goal.done{
+  background:#222b35!important
+}
+html.habitopia-midnight .v21-plan-dot,
+html.habitopia-midnight .plan-status,
+html.habitopia-midnight .v21-quick b,
+html.habitopia-midnight .feature-icon{
+  background:#2a3044!important;
+  color:#bfc7ff!important;
+}
+html.habitopia-midnight .v21-plan-item.done .v21-plan-dot{
+  color:#161a28!important;background:#b3bcff!important
+}
+html.habitopia-midnight .habit-day,
+html.habitopia-midnight .calendar-day,
+html.habitopia-midnight .mood-cal-day,
+html.habitopia-midnight .week-nav button,
+html.habitopia-midnight .calendar-toolbar button,
+html.habitopia-midnight .mood-month-toolbar button,
+html.habitopia-midnight .profile-controls button,
+html.habitopia-midnight .focus-preset,
+html.habitopia-midnight .choice,
+html.habitopia-midnight .small-btn,
+html.habitopia-midnight button.ghost,
+html.habitopia-midnight button.secondary{
+  background:var(--night-panel-2)!important;
+  color:#eef0ff!important;
+  border-color:#3d455b!important;
+}
+html.habitopia-midnight .habit-day.done,
+html.habitopia-midnight .calendar-day.done,
+html.habitopia-midnight .habit-status-btns .done{
+  background:#333959!important;
+  color:#d6daff!important
+}
+html.habitopia-midnight .habit-day.today,
+html.habitopia-midnight .calendar-day.today{
+  border-color:#818de0!important
+}
+html.habitopia-midnight .habit-day.v13-partial{
+  background:#3b3228!important;color:#f7d69e!important
+}
+html.habitopia-midnight .habit-status-btns .skip{
+  background:#262b38!important;color:#b1bad0!important
+}
+html.habitopia-midnight .habit-head div,
+html.habitopia-midnight .habit-row div{
+  border-color:var(--night-border)!important
+}
+html.habitopia-midnight .week-nav{
+  background:var(--night-panel)!important;
+  border-color:var(--night-border)!important
+}
+html.habitopia-midnight .week-nav strong{color:var(--night-text)!important}
+html.habitopia-midnight .habit-visual-chart,
+html.habitopia-midnight .habit-visual-chart .chart-card,
+html.habitopia-midnight .habit-visual-chart .habit-chart-card{
+  background:var(--night-panel)!important;
+  color:var(--night-text)!important;
+  border-color:var(--night-border)!important
+}
+html.habitopia-midnight .water-card,
+html.habitopia-midnight .focus-card,
+html.habitopia-midnight .water-history-grid,
+html.habitopia-midnight .mood-history-grid,
+html.habitopia-midnight .weight-hero,
+html.habitopia-midnight .note-compose,
+html.habitopia-midnight .note-detail-hero{
+  background:var(--night-panel)!important;
+  border-color:var(--night-border)!important;
+  color:var(--night-text)!important;
+}
+html.habitopia-midnight .water-ring,
+html.habitopia-midnight .water-ring:after{
+  border-color:#626eaa!important;
+}
+html.habitopia-midnight .water-day-btn,
+html.habitopia-midnight .mood-history-day,
+html.habitopia-midnight .water-editor,
+html.habitopia-midnight .water-editor button,
+html.habitopia-midnight .water-actions button{
+  background:var(--night-panel-2)!important;
+  border-color:var(--night-border)!important;
+  color:var(--night-text)!important;
+}
+html.habitopia-midnight .water-day-btn.has,
+html.habitopia-midnight .mood-history-day.selected{
+  background:#303754!important;
+}
+html.habitopia-midnight .water-day-btn.done{
+  background:#254239!important;
+}
+html.habitopia-midnight .mood-btn,.habitopia-midnight .mood-face{
+  background:var(--night-panel-2)!important;
+  border-color:var(--night-border)!important;
+  color:var(--night-text)!important;
+}
+html.habitopia-midnight .mood-btn.active,
+html.habitopia-midnight .mood-face.active{
+  background:#333955!important;
+  border-color:#919dff!important;
+}
+html.habitopia-midnight .hbt-calendar-card,
+html.habitopia-midnight .hbt-selected-day,
+html.habitopia-midnight .hbt-shortcuts button,
+html.habitopia-midnight .hbt-account-head,
+html.habitopia-midnight .hbt-account-actions,
+html.habitopia-midnight .hbt-account-actions button,
+html.habitopia-midnight .hbt-calendar-days button,
+html.habitopia-midnight .hbt-account-avatar{
+  color:var(--night-text)!important;
+}
+html.habitopia-midnight .hbt-calendar-card,
+html.habitopia-midnight .hbt-selected-day,
+html.habitopia-midnight .hbt-shortcuts button,
+html.habitopia-midnight .hbt-account-head,
+html.habitopia-midnight .hbt-account-actions{
+  background:var(--night-panel)!important;
+  border-color:var(--night-border)!important;
+  box-shadow:var(--night-shadow)!important;
+}
+html.habitopia-midnight .hbt-calendar-arrows button,
+html.habitopia-midnight .hbt-shortcut-icon,
+html.habitopia-midnight .hbt-selected-day-metrics>div,
+html.habitopia-midnight .hbt-account-actions button>span{
+  background:var(--night-panel-2)!important;
+  color:#b5bfff!important;
+  border-color:var(--night-border)!important;
+}
+html.habitopia-midnight .hbt-account-avatar{
+  background:linear-gradient(135deg,#373f68,#272c49)!important;
+}
+html.habitopia-midnight .hbt-calendar-days button.is-selected{
+  background:#454e87!important;
+  color:#fff!important;
+}
+html.habitopia-midnight .hbt-calendar-days button.is-today{
+  border-color:#9ca7ff!important;
+}
+html.habitopia-midnight .hbt-calendar-days i{
+  background:#a6adff!important;
+}
+html.habitopia-midnight .hbt-calendar-days button.is-selected i{
+  background:#fff!important;
+}
+html.habitopia-midnight .hbt-calendar-days button.is-future{
+  color:#929ab2!important;
+}
+html.habitopia-midnight .hbt-shortcuts strong,
+html.habitopia-midnight .hbt-account-actions strong,
+html.habitopia-midnight .hbt-account-stats strong,
+html.habitopia-midnight .hbt-selected-day-metrics strong{
+  color:var(--night-text)!important;
+}
+html.habitopia-midnight .hbt-calendar-head .hbt-eyebrow,
+html.habitopia-midnight .hbt-back-link{
+  color:#afb8ff!important;
+}
+html.habitopia-midnight body .nav{
+  background:rgba(17,20,29,.97)!important;
+  border-color:#353b50!important;
+  box-shadow:0 12px 38px rgba(0,0,0,.55)!important;
+}
+html.habitopia-midnight .nav .nav-btn{
+  background:transparent!important;
+  color:#aab1c3!important;
+}
+html.habitopia-midnight .nav .nav-btn.active{
+  background:#2e3454!important;
+  color:#d0d5ff!important;
+}
+html.habitopia-midnight .nav .nav-btn:hover{color:#e7eaff!important}
+html.habitopia-midnight .nav .nav-btn svg{stroke:currentColor}
+html.habitopia-midnight body .sheet,
+html.habitopia-midnight body .sheet-head,
+html.habitopia-midnight body .dialog,
+html.habitopia-midnight body .focus-dialog,
+html.habitopia-midnight body .note-detail-sheet,
+html.habitopia-midnight body .note-compose,
+html.habitopia-midnight body .fullscreen-stat .sheet,
+html.habitopia-midnight body .onboarding .ob-step{
+  background:var(--night-panel)!important;
+  border-color:var(--night-border)!important;
+  color:var(--night-text)!important;
+}
+html.habitopia-midnight .sheet-backdrop,
+html.habitopia-midnight .dialog-backdrop{
+  background:rgba(0,0,0,.79)!important;
+}
+html.habitopia-midnight .sheet .handle{
+  background:#596175!important;
+}
+html.habitopia-midnight .sheet .sheet-head{
+  box-shadow:none!important;
+}
+html.habitopia-midnight .close,
+html.habitopia-midnight .icon-btn{
+  background:var(--night-panel-2)!important;
+  border:1px solid #424960!important;
+  color:#e7eaff!important;
+}
+html.habitopia-midnight .dialog-actions .ghost{
+  background:var(--night-panel-2)!important;
+  color:var(--night-text)!important
+}
+html.habitopia-midnight button.primary,
+html.habitopia-midnight .primary,
+html.habitopia-midnight .quick-add .primary,
+html.habitopia-midnight .focus-alarm-stop{
+  background:#9ba7ff!important;
+  color:#101421!important;
+  border-color:#9ba7ff!important;
+  font-weight:800!important;
+}
+html.habitopia-midnight button.primary:hover,
+html.habitopia-midnight .primary:hover{
+  background:#c1c7ff!important;
+}
+html.habitopia-midnight .danger,
+html.habitopia-midnight button.danger{
+  background:#442830!important;
+  color:#ffc2bf!important;
+  border-color:#68404a!important;
+}
+html.habitopia-midnight .text-input,
+html.habitopia-midnight .select-input,
+html.habitopia-midnight textarea,
+html.habitopia-midnight input:not([type=checkbox]):not([type=radio]):not([type=range]),
+html.habitopia-midnight select{
+  background:#1d2230!important;
+  color:#f5f6fd!important;
+  border:1px solid #41495d!important;
+  caret-color:#b4bbff!important;
+}
+html.habitopia-midnight input::placeholder,
+html.habitopia-midnight textarea::placeholder{
+  color:#9da6bc!important;
+  opacity:1!important;
+}
+html.habitopia-midnight input:disabled,
+html.habitopia-midnight select:disabled{
+  background:#171b24!important;
+  color:#848da1!important;
+  opacity:.85!important;
+}
+html.habitopia-midnight input[type=checkbox],
+html.habitopia-midnight input[type=radio]{
+  accent-color:#9ba7ff!important;
+}
+html.habitopia-midnight .switch{
+  background:#343b4b!important;
+}
+html.habitopia-midnight .switch.on{
+  background:#777fd0!important;
+}
+html.habitopia-midnight .setting,
+html.habitopia-midnight .settings-list,
+html.habitopia-midnight .field{
+  border-color:var(--night-border)!important;
+}
+html.habitopia-midnight .setting-copy strong,
+html.habitopia-midnight label{
+  color:var(--night-text)!important;
+}
+html.habitopia-midnight .chart-card,
+html.habitopia-midnight .stats-period-tabs,
+html.habitopia-midnight .stats-period-tabs button,
+html.habitopia-midnight .period-chart,
+html.habitopia-midnight .period-chart-bars,
+html.habitopia-midnight .period-bar-track,
+html.habitopia-midnight .period-summary,
+html.habitopia-midnight .compare-card{
+  background:var(--night-panel)!important;
+  color:var(--night-text)!important;
+  border-color:var(--night-border)!important;
+}
+html.habitopia-midnight .stats-period-tabs{
+  background:var(--night-panel)!important;
+}
+html.habitopia-midnight .stats-period-tabs button{
+  background:var(--night-panel-2)!important;
+  color:var(--night-subtext)!important;
+}
+html.habitopia-midnight .stats-period-tabs button.active{
+  background:#3a426e!important;
+  color:#fff!important;
+}
+html.habitopia-midnight .period-bar-track{
+  background:#2b3041!important;
+}
+html.habitopia-midnight .period-bar-fill,
+html.habitopia-midnight .period-bar.focus .period-bar-fill,
+html.habitopia-midnight .period-bar.mood .period-bar-fill{
+  background:linear-gradient(180deg,#bac2ff,#747fda)!important;
+}
+html.habitopia-midnight .period-bar-label,
+html.habitopia-midnight .chart-label{
+  color:#b4bcd0!important;
+}
+html.habitopia-midnight .weight-period-line .grid{
+  stroke:#374056!important;
+}
+html.habitopia-midnight .weight-period-line .line{
+  stroke:#abb5ff!important;
+}
+html.habitopia-midnight .weight-period-line .dot{
+  fill:#151923!important;stroke:#b3bbff!important;
+}
+html.habitopia-midnight .onboarding{
+  --primary:#9ba7ff!important;
+  --primary-2:#c7cdff!important;
+  --ink:#f4f6fd!important;
+  --muted:#b2bad0!important;
+  --line:#3a4257!important;
+  background:var(--night-bg)!important;
+  color:var(--night-text)!important;
+}
+html.habitopia-midnight .onboarding .ob-brand-stage,
+html.habitopia-midnight .onboarding .ob-welcome,
+html.habitopia-midnight .onboarding .ob-welcome-copy,
+html.habitopia-midnight .onboarding .ob-question-top,
+html.habitopia-midnight .onboarding .ob-progress-wrap,
+html.habitopia-midnight .onboarding .ob-card,
+html.habitopia-midnight .onboarding .goal-card,
+html.habitopia-midnight .onboarding .language-card,
+html.habitopia-midnight .onboarding .ob-choice,
+html.habitopia-midnight .onboarding .ob-time-card,
+html.habitopia-midnight .onboarding .ob-habit-suggestion{
+  background:var(--night-panel)!important;
+  border-color:#394156!important;
+  color:var(--night-text)!important;
+}
+html.habitopia-midnight .onboarding .goal-card.active,
+html.habitopia-midnight .onboarding .language-card.active,
+html.habitopia-midnight .onboarding .ob-choice.active{
+  background:#30395f!important;
+  border-color:#9ba7ff!important;
+}
+html.habitopia-midnight .onboarding p,
+html.habitopia-midnight .onboarding .ob-subtitle,
+html.habitopia-midnight .onboarding .ob-label,
+html.habitopia-midnight .onboarding .ob-caption{
+  color:var(--night-subtext)!important;
+}
+html.habitopia-midnight .ob-progress{
+  background:#30384a!important;
+}
+html.habitopia-midnight .ob-progress i{
+  background:#a2acff!important;
+}
+html.habitopia-midnight .onboarding .ob-next,
+html.habitopia-midnight .onboarding .ob-primary{
+  background:#a2adff!important;
+  color:#121626!important;
+}
+html.habitopia-midnight .focus-alarm{
+  background:#252b3b!important;
+  color:#f6f7ff!important;
+  border:1px solid #596489!important;
+  box-shadow:0 15px 35px rgba(0,0,0,.4)!important;
+}
+html.habitopia-midnight .focus-alarm-copy span{
+  color:#c1c8d9!important;
+}
+html.habitopia-midnight .note,
+html.habitopia-midnight .note-detail-sheet,
+html.habitopia-midnight .note-compose,
+html.habitopia-midnight .note-detail-content{
+  color:var(--night-text)!important;
+}
+html.habitopia-midnight .note strong,
+html.habitopia-midnight .note-detail-title{
+  color:#f3f4fa!important;
+}
+html.habitopia-midnight .note span,
+html.habitopia-midnight .note p{
+  color:#b9c1d4!important;
+}
+html.habitopia-midnight .badge,
+html.habitopia-midnight .chip,
+html.habitopia-midnight .tag{
+  background:var(--night-panel-2)!important;
+  color:#c5cbff!important;
+  border-color:#3f475c!important;
+}
+html.habitopia-midnight button:focus-visible,
+html.habitopia-midnight a:focus-visible,
+html.habitopia-midnight input:focus-visible,
+html.habitopia-midnight select:focus-visible,
+html.habitopia-midnight textarea:focus-visible,
+html.habitopia-midnight [role=button]:focus-visible{
+  outline:3px solid #b3baff!important;outline-offset:3px!important;
+}
+html.habitopia-midnight *{scrollbar-color:#4b526a #141822}
+html.habitopia-midnight ::selection{
+  background:#4a5286!important;color:#fff!important;
+}
+@media(max-width:370px){
+  html.habitopia-midnight .hbt-today-summary{
+    border-radius:22px!important
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  html.habitopia-midnight *,html.habitopia-midnight *::before,html.habitopia-midnight *::after{
+    animation-duration:.01ms!important;transition-duration:.01ms!important;
+    scroll-behavior:auto!important
+  }
+}
