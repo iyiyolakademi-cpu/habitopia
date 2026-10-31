@@ -512,7 +512,7 @@ render();
   reset:()=>{state=blank("","");render();}
  });
  window.addEventListener("habitopia-cloud-error",e=>toast("Bulut kaydı başarısız: "+e.detail));
- let notificationsRequested=new URLSearchParams(location.search).get("open")==="notifications";
+ let notificationsRequested=typeof URLSearchParams==="function"&&new URLSearchParams(location.search||"").get("open")==="notifications";
  const openRequested=()=>{
   if(!window.HabitopiaCloud?.active)return;
   if(notificationsRequested){
