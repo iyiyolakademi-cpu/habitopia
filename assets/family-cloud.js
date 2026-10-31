@@ -8,6 +8,7 @@ const KEY="sb_publishable_4A471h4l5pSeHT8HyP_IVA_pmQxfnL6";
 const escapeHtml=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const clone=x=>JSON.parse(JSON.stringify(x));
 const uid=()=>crypto.randomUUID();
+const toIso=v=>{if(!v)return null;const d=new Date(v);return Number.isNaN(d.getTime())?null:d.toISOString();};
 let client=null,auth=null,activeHousehold=null,callbacks=null,householdList=[],unsub=null,tick=null;
 let lastSnapshot=null,queuedSnapshot=null,op=Promise.resolve(),reloadTimer=null,busy=0,loading=false,lastError="";
 let notifications=[];
@@ -51,8 +52,8 @@ function rowsFromState(s){
  const add=(kind,item,details)=>{
   if(!item.id||typeof item.id!=="string"||!item.id.includes("-"))return;
   const row={id:item.id,household_id:activeHousehold,kind,created_by:item.creator||auth.id,assignee:kind==="shopping"||kind==="event"||kind==="asset"||kind==="workflow"?null:item.assignee||null,
-    title:item.title||item.name||"Başlıksız",details,privacy:item.privateTo?"private":"family",due_at:item.dueAt||null,
-    reminder_at:item.reminderAt||null,done_at:item.doneAt||item.bought&&new Date().toISOString()||null,
+    title:item.title||item.name||"Başlıksız",details,privacy:item.privateTo?"private":"family",due_at:toIso(item.dueAt),
+    reminder_at:toIso(item.reminderAt),done_at:toIso(item.doneAt),
     linked_event_id:item.linkedEventId||null};
   if(kind==="asset"||kind==="workflow"||kind==="event"){row.due_at=null;row.reminder_at=null;row.done_at=null;}
   if(kind==="shopping")row.reminder_at=null;
@@ -130,7 +131,7 @@ async function persist(previous,next){
   const r=await client.from("family_items").delete().eq("id",id);if(r.error)throw r.error;
  }
  if(previous.shoppingBudget!==next.shoppingBudget||!compare(previous.shoppingMeta,next.shoppingMeta)){
-  const r=await client.rpc("family_set_shopping",{p_household:activeHousehold,p_budget:next.shoppingBudget||0,p_meta:next.shoppingMeta||{}});if(r.error)throw r.error;
+  const r=await client.rpc("family_set_shopping",{p_household:activeHousehold,p_budget:next.shoppingBudget||0,p_meta:{...next.shoppingMeta,reminderAt:toIso(next.shoppingMeta?.reminderAt)}});if(r.error)throw r.error;
  }
  if(previous.familyName!==next.familyName){
   const r=await client.from("family_households").update({name:next.familyName}).eq("id",activeHousehold);
@@ -213,6 +214,7 @@ async function signout(){
 function currentUser(){return auth}
 async function uploadDocument(itemId,file,privacy="private"){
  if(!auth||!activeHousehold)throw Error("Önce giriş yap.");
+ await op;
  if(!file||file.size>5242880)throw Error("En fazla 5 MB dosya yüklenebilir.");
  if(!["application/pdf","image/png","image/jpeg","image/webp"].includes(file.type))throw Error("Yalnızca PDF veya resim yüklenebilir.");
  const extension=({"application/pdf":".pdf","image/png":".png","image/jpeg":".jpg","image/webp":".webp"})[file.type];
