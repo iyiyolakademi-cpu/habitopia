@@ -30,9 +30,9 @@ const sample=()=>{
  {id:uid(),listId:uid(),listTitle:"Ev işleri",title:"Bulaşık makinesini boşalt",assignee:"dad",creator:"mom",dueAt:futureInput(1,19),reminderAt:null,doneAt:null}],
  shopping:[{id:uid(),title:"Süt",qty:2,unit:"adet",price:40,bought:false},{id:uid(),title:"Yumurta",qty:1,unit:"paket",price:95,bought:false},{id:uid(),title:"Ekmek",qty:2,unit:"adet",price:18,bought:true}],
  radar:[{id:uid(),title:"İnternet taahhüdü",cat:"subscription",dueAt:futureInput(11,12),reminderAt:futureInput(7,10),assignee:"dad",creator:"mom",doneAt:null,privateTo:null},{id:uid(),title:"Araç muayenesi",cat:"vehicle",dueAt:futureInput(7,15),reminderAt:futureInput(3,9),assignee:"dad",creator:"dad",doneAt:null,privateTo:null}],
- events:[{id:uid(),title:"Aile kahvaltısı",date:offsetDay(3),time:"10:00",notes:"Birlikte güzel bir kahvaltı",creator:"mom",invitees:["me","mom","dad"],rsvp:{mom:"yes"},privateTo:null}],notified:[]};
+ assets:[],workflows:[],events:[{id:uid(),title:"Aile kahvaltısı",date:offsetDay(3),time:"10:00",notes:"Birlikte güzel bir kahvaltı",creator:"mom",invitees:["me","mom","dad"],rsvp:{mom:"yes"},privateTo:null}],notified:[]};
 };
-const blank=(familyName,person)=>({version:VERSION,demo:false,familyName:safeText(familyName,50)||"Ailem",members:[{id:"me",name:safeText(person,40)||"Ben"}],currentMember:"me",shoppingBudget:0,shoppingMeta:{assignee:"me",reminderAt:null},tasks:[],shopping:[],radar:[],events:[],notified:[]});
+const blank=(familyName,person)=>({version:VERSION,demo:false,familyName:safeText(familyName,50)||"Ailem",members:[{id:"me",name:safeText(person,40)||"Ben"}],currentMember:"me",shoppingBudget:0,shoppingMeta:{assignee:"me",reminderAt:null},tasks:[],shopping:[],radar:[],events:[],assets:[],workflows:[],notified:[]});
 function normalize(input){
  if(!input||typeof input!=="object"||input.version!==VERSION||!Array.isArray(input.members)||!Array.isArray(input.tasks)||!Array.isArray(input.shopping)||!Array.isArray(input.radar)||!Array.isArray(input.events))throw Error("Desteklenmeyen yedek biçimi.");
  if(input.members.length<1||input.members.length>30)throw Error("Üye sayısı geçersiz.");
@@ -53,6 +53,13 @@ function normalize(input){
  s.radar=input.radar.slice(0,1000).map(x=>({id:safeText(x.id,90)||uid(),title:safeText(x.title,150),cat:cats[x.cat]?x.cat:"custom",dueAt:iso(x.dueAt),reminderAt:iso(x.reminderAt),assignee:validMember(x.assignee),creator:validMember(x.creator),doneAt:iso(x.doneAt),privateTo:s.members.some(m=>m.id===x.privateTo)?x.privateTo:null})).filter(x=>x.title&&x.dueAt&&!radarIds.has(x.id)&&radarIds.add(x.id));
  const eventIds=new Set();
  s.events=input.events.slice(0,1000).map(x=>({id:safeText(x.id,90)||uid(),title:safeText(x.title,150),date:iso(x.date)?.slice(0,10)||localDay(),time:/^([01]\d|2[0-3]):[0-5]\d$/.test(x.time)?x.time:"12:00",notes:safeText(x.notes,500),creator:validMember(x.creator),invitees:Array.isArray(x.invitees)?[...new Set(x.invitees.filter(id=>s.members.some(m=>m.id===id)))]:[validMember(x.creator)],rsvp:Object.fromEntries(Object.entries(x.rsvp||{}).filter(([k,v])=>s.members.some(m=>m.id===k)&&["yes","no","maybe"].includes(v))),privateTo:s.members.some(m=>m.id===x.privateTo)?x.privateTo:null})).filter(x=>x.title&&!eventIds.has(x.id)&&eventIds.add(x.id));
+ s.assets=(Array.isArray(input.assets)?input.assets:[]).slice(0,500).map(a=>({
+ id:safeText(a.id,90)||uid(),title:safeText(a.title,150)||"Ev eşyası",creator:validMember(a.creator),
+ category:safeText(a.category,60)||"Ev eşyası",brand:safeText(a.brand,70),model:safeText(a.model,70),
+ serial:safeText(a.serial,100),purchasedAt:iso(a.purchasedAt)||"",warrantyUntil:iso(a.warrantyUntil)||"",
+ notes:safeText(a.notes,500),services:Array.isArray(a.services)?a.services.slice(0,100):[],
+ privateTo:s.members.some(m=>m.id===a.privateTo)?a.privateTo:null}));
+ s.workflows=Array.isArray(input.workflows)?input.workflows.slice(0,200):[];
  s.notified=Array.isArray(input.notified)?input.notified.filter(x=>typeof x==="string").slice(-1200):[];
  return s;
 }
@@ -60,6 +67,7 @@ let state,storageHealthy=true;
 try{const data=localStorage.getItem(KEY);state=data?normalize(JSON.parse(data)):sample();}
 catch(e){console.error("Habitopia veri okuma",e);state=sample();storageHealthy=false;}
 function save(){
+ if(window.HabitopiaCloud?.active){window.HabitopiaCloud.save(state);return;}
  if(!storageHealthy)return;
  try{localStorage.setItem(KEY,JSON.stringify(state));}
  catch(e){storageHealthy=false;console.error(e);toast("Depolama kullanılamıyor; değişiklikler korunamayabilir.");}
@@ -73,7 +81,7 @@ const cost=x=>number(x.price)*number(x.qty);
 const estimated=()=>state.shopping.reduce((s,x)=>s+cost(x),0);
 const spent=()=>state.shopping.filter(x=>x.bought).reduce((s,x)=>s+cost(x),0);
 let page="home",taskFilter="mine",radarFilter="all",calendarMonth=new Date(now().getFullYear(),now().getMonth(),1),selectedDate=localDay(),notificationWindow=null;
-const pageTitle={home:"Genel Bakış",tasks:"Aile Görevleri",shopping:"Alışveriş",radar:"Aile Radarı",calendar:"Aile Takvimi",family:"Ailem",settings:"Ayarlar"};
+const pageTitle={home:"Genel Bakış",tasks:"Aile Görevleri",shopping:"Alışveriş",radar:"Aile Radarı",calendar:"Aile Takvimi",assets:"Evim ve Belgeler",family:"Ailem",settings:"Ayarlar"};
 let toastTimer;
 function toast(message){const el=$("#toast");el.textContent=message;el.classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove("show"),3000);}
 const header=(label,title,description,actions="")=>'<div class="page-heading"><div><p class="eyebrow">'+esc(label)+'</p><h1>'+esc(title)+'</h1><p class="subcopy">'+esc(description)+'</p></div><div class="page-actions">'+actions+'</div></div>';
@@ -134,8 +142,8 @@ function renderCalendar(){
  '<div class="calendar-layout"><section class="panel"><div class="month-head"><button data-action="month-prev" aria-label="Önceki ay">‹</button><h3>'+calendarMonth.toLocaleDateString("tr-TR",{month:"long",year:"numeric"})+'</h3><button data-action="month-next" aria-label="Sonraki ay">›</button></div><div class="month-grid">'+cells+'</div></section><section class="panel"><div class="panel-heading"><div><p class="eyebrow">SEÇİLEN GÜN</p><h3>'+stamp(selectedDate)+'</h3></div>'+pill(todays.length+" etkinlik")+'</div><div class="events-feed">'+(todays.length?todays.map(eventView).join(""):empty("▦","Bu gün boş","Yeni bir aile etkinliği oluşturabilirsin."))+'</div></section></div><section class="section-gap panel"><div class="panel-heading"><h3>Yaklaşan aile etkinlikleri</h3></div><div class="events-feed">'+(eventsVisible().filter(x=>x.date>=localDay()).sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time)).slice(0,6).map(eventView).join("")||empty("◷","Henüz etkinlik yok","Aile üyelerini davet ederek bir etkinlik oluştur."))+'</div></section>';
 }
 function renderFamily(){
- return header("BİRLİKTE BİR AİLE","Aile Üyeleri","Üyeleri yönet, bu cihazda farklı aile üyelerinin görünümünü dene.",button("＋ Üye ekle","new-member"))+
- '<div class="two-col"><section class="panel"><div class="panel-heading"><h3>'+esc(state.familyName)+'</h3>'+pill(state.members.length+" üye")+'</div>'+state.members.map(m=>'<div class="family-member"><div class="member-avatar">'+esc(m.name[0]?.toUpperCase()||"?")+'</div><div class="member-info"><strong>'+esc(m.name)+'</strong><small>'+(m.id===current()?"Bu cihazda seçili kişi":"Aile üyesi")+'</small></div>'+(m.id!==current()?button("Bu üyeye geç","switch-member","btn-light btn-small",'data-id="'+esc(m.id)+'"'):pill("Aktif"))+'</div>').join("")+'</section><div class="info-rail"><div class="rail-card"><h3>Üyeler arası görev akışı</h3><p>Örneğin Anne rolündeyken oğluna liste hazırlayabilir, sonra bu cihazda oğul rolüne geçerek listeyi görebilirsin. Gerçek telefonlar arasında hesap bağlantısı henüz aktif değildir.</p></div><div class="rail-card"><h3>Gizlilik</h3><p>Sağlık bilgileri ve kişisel etkinlikler varsayılan olarak yalnızca oluşturan kişiye gösterilebilir. Bu sürüm tek cihazlı olduğu için şifreli çoklu hesap güvenliği sağlamaz.</p></div></div></div>';
+ return header("BİRLİKTE BİR AİLE","Aile Üyeleri",window.HabitopiaCloud?.active?"Her aile üyesi kendi hesabıyla katılır; davet kodunu paylaşabilirsin.":"Üyeleri yönet, bu cihazda farklı aile üyelerinin görünümünü dene.",button(window.HabitopiaCloud?.active?"Davet kodu":"＋ Üye ekle",window.HabitopiaCloud?.active?"show-invite":"new-member"))+
+ '<div class="two-col"><section class="panel"><div class="panel-heading"><h3>'+esc(state.familyName)+'</h3>'+pill(state.members.length+" üye")+'</div>'+state.members.map(m=>'<div class="family-member"><div class="member-avatar">'+esc(m.name[0]?.toUpperCase()||"?")+'</div><div class="member-info"><strong>'+esc(m.name)+'</strong><small>'+(m.id===current()?"Bu cihazda seçili kişi":"Aile üyesi")+'</small></div>'+(!window.HabitopiaCloud?.active&&m.id!==current()?button("Bu üyeye geç","switch-member","btn-light btn-small",'data-id="'+esc(m.id)+'"'):pill("Aktif"))+'</div>').join("")+'</section><div class="info-rail"><div class="rail-card"><h3>Üyeler arası görev akışı</h3><p>Örneğin Anne rolündeyken oğluna liste hazırlayabilir, sonra bu cihazda oğul rolüne geçerek listeyi görebilirsin. Gerçek telefonlar arasında hesap bağlantısı henüz aktif değildir.</p></div><div class="rail-card"><h3>Gizlilik</h3><p>Sağlık bilgileri ve kişisel etkinlikler varsayılan olarak yalnızca oluşturan kişiye gösterilebilir. Bu sürüm tek cihazlı olduğu için şifreli çoklu hesap güvenliği sağlamaz.</p></div></div></div>';
 }
 function renderSettings(){
  return header("KONTROL SENDE","Ayarlar ve Veriler","Aile ismini, bildirim iznini ve cihazda kayıtlı bilgilerini yönet.")+
@@ -146,12 +154,13 @@ function updateHeader(){
  $("#sidebar-family").textContent=state.familyName;$("#current-initial").textContent=currentName().slice(0,1).toLocaleUpperCase("tr-TR");
  $("#today-small").textContent=now().toLocaleDateString("tr-TR",{day:"numeric",month:"long"});
  $$(".nav-link").forEach(b=>b.classList.toggle("active",b.dataset.page===page));
- $("#demo-banner").hidden=!state.demo;
+ $("#demo-banner").hidden=!state.demo||!!window.HabitopiaCloud?.active;
+ $(".mobile-bottom-nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===page));
  $("#notification-dot").hidden=notificationsForMember().length===0;
 }
 function render(){
  updateHeader();
- const views={home:renderHome,tasks:renderTasks,shopping:renderShopping,radar:renderRadar,calendar:renderCalendar,family:renderFamily,settings:renderSettings};
+ const views={home:renderHome,tasks:renderTasks,shopping:renderShopping,radar:renderRadar,calendar:renderCalendar,assets:renderAssets,family:renderFamily,settings:renderSettings};
  $("#page-content").innerHTML=(views[page]||renderHome)();
  document.title=pageTitle[page]+" — Habitopia Aile";
 }
@@ -222,20 +231,24 @@ function processForm(form){
 const noConfirm=(msg)=>confirm(msg);
 function act(action,id,value){
  if(action==="close-modal"){closeModal();return}
+ if(action==="show-invite"){window.HabitopiaCloud?.showInvite?.();return;}
  if(action==="goto-tasks"||action==="goto-radar"){navigate(action==="goto-tasks"?"tasks":"radar");return}
  if(["new-task","new-shop","set-budget","assign-shop","new-radar","new-event","new-member","rename-family","create-family"].includes(action)){openForm(action);return}
  if(action==="task-filter"){taskFilter=value;render();return}
  if(action==="radar-filter"){radarFilter=value;render();return}
  if(action==="select-date"){selectedDate=value;render();return}
  if(action==="month-prev"||action==="month-next"){calendarMonth.setMonth(calendarMonth.getMonth()+(action==="month-next"?1:-1));calendarMonth=new Date(calendarMonth.getFullYear(),calendarMonth.getMonth(),1);render();return}
+ if(action==="new-member"&&window.HabitopiaCloud?.active){window.HabitopiaCloud.showInvite();return;}
  if(action==="toggle-task"){const t=state.tasks.find(x=>x.id===id);if(t&&t.assignee===current()){t.doneAt=t.doneAt?null:now().toISOString();save();render();toast(t.doneAt?"Görev tamamlandı.":"Görev yeniden açıldı.");}else toast("Bu görevi tamamlamak için ilgili üyeyi seç.");return}
  if(action==="toggle-shop"){const x=state.shopping.find(t=>t.id===id);if(x){x.bought=!x.bought;save();render();}return}
  if(action==="toggle-radar"){const t=state.radar.find(x=>x.id===id);if(t&&shareable(t)&&t.assignee===current()){t.doneAt=t.doneAt?null:now().toISOString();save();render();toast("Radar durumu güncellendi.");}return}
  const collection={"delete-task":"tasks","delete-shop":"shopping","delete-radar":"radar","delete-event":"events"}[action];
- if(collection){const row=state[collection].find(x=>x.id===id);if(!row||!noConfirm("Bu kaydı silmek istiyor musun?"))return;state[collection]=state[collection].filter(x=>x.id!==id);save();render();toast("Kayıt silindi.");return;}
+ if(collection){const row=state[collection].find(x=>x.id===id);if(row&&window.HabitopiaCloud?.active&&row.creator!==current()){toast("Kaydı yalnızca oluşturan kişi silebilir.");return;}if(!row||!noConfirm("Bu kaydı silmek istiyor musun?"))return;state[collection]=state[collection].filter(x=>x.id!==id);save();render();toast("Kayıt silindi.");return;}
+ if(action==="switch-member"&&window.HabitopiaCloud?.active){toast("Her aile üyesi kendi hesabıyla giriş yapmalıdır.");return;}
  if(action==="switch-member"){if(state.members.some(x=>x.id===id)){state.currentMember=id;save();render();toast("Şimdi "+currentName()+" görünümündesin.");}return}
  if(action==="rsvp"){const e=state.events.find(x=>x.id===id);if(e&&e.invitees.includes(current())&&["yes","no","maybe"].includes(value)){e.rsvp[current()]=value;save();render();}return}
  if(action==="export"){const blob=new Blob([JSON.stringify({format:"habitopia-family",version:VERSION,exportedAt:now().toISOString(),data:state},null,2)],{type:"application/json"});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download="habitopia-aile-yedek-"+localDay()+".json";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),5000);toast("Yedek dosyası oluşturuldu.");return}
+ if(action==="reset"&&window.HabitopiaCloud?.active){toast("Buluttaki aile kaydını sıfırlama burada kapalıdır.");return;}
  if(action==="reset"){if(!noConfirm("Bu cihazdaki Habitopia Aile verilerini silmek istiyor musun? Önce yedek almanı öneririz."))return;state=sample();save();navigate("home");toast("Örnek aileye dönüldü.");return}
  if(action==="request-permission"){if(!("Notification" in window)){toast("Bu tarayıcı bildirimleri desteklemiyor.");return}if(!window.isSecureContext){toast("Bildirimler için güvenli HTTPS gerekir.");return}Notification.requestPermission().then(p=>toast(p==="granted"?"Uygulama açıkken bildirim izni verildi.":"Bildirim izni verilmedi.")).catch(()=>toast("Bildirim izni alınamadı."));return}
  if(action==="show-notifications"){showNotifications();return}
@@ -285,6 +298,7 @@ document.addEventListener("submit",e=>{
 });
 document.addEventListener("change",async e=>{
  if(e.target.name==="cat"&&e.target.closest('form[data-form="new-radar"]')){const privacy=e.target.closest("form").querySelector('[name="private"]');if(privacy&&e.target.value==="health")privacy.checked=true;return;}
+ if(e.target.id==="import-file"&&window.HabitopiaCloud?.active){toast("Bulut oturumundayken yerel yedek yükleme kapalıdır.");e.target.value="";return;}
  if(e.target.id!=="import-file")return;const file=e.target.files?.[0];e.target.value="";if(!file)return;
  if(file.size>1024*1024){toast("Yedek boyutu 1 MB'ı geçemez.");return;}
  try{const raw=JSON.parse(await file.text());if(raw.format!=="habitopia-family"||raw.version!==VERSION)throw Error("Habitopia Aile yedeği değil.");
@@ -300,15 +314,23 @@ $("#menu-toggle").addEventListener("click",toggleMenu);
 $("#mobile-shade").addEventListener("click",closeMenu);
 $("#notification-open").addEventListener("click",showNotifications);
 $("#user-switch").addEventListener("click",()=>{
+ if(window.HabitopiaCloud?.active){window.HabitopiaCloud.showAuth();return;}
  const content='<div class="list">'+state.members.map(m=>'<button type="button" class="list-row" style="width:100%;text-align:left;cursor:pointer" data-action="switch-member-and-close" data-id="'+esc(m.id)+'"><span class="member-avatar">'+esc(m.name[0])+'</span><div class="item-info"><span class="item-title">'+esc(m.name)+'</span><span class="item-sub">'+(m.id===current()?"Şu anda seçili":"Bu cihazda bu üyenin görünümüne geç")+'</span></div></button>').join("")+'</div><p class="archive-note">Üyeler arasında geçiş bir yerel önizlemedir. Gerçek hesap veya farklı telefon bağlantısı değildir.</p>';
  $("#modal").innerHTML='<button type="button" class="modal-close" data-action="close-modal" aria-label="Kapat">×</button><h2 id="modal-title">Aile üyesi seç</h2><p class="modal-intro">Aile görünümünü değiştir</p>'+content;
  $("#overlay").hidden=false;document.body.style.overflow="hidden";
 });
 $("#modal").addEventListener("click",e=>{const el=e.target.closest('[data-action="switch-member-and-close"]');if(el){act("switch-member",el.dataset.id);closeModal();}});
-$("#start-family").addEventListener("click",()=>openForm("create-family"));
+$("#start-family").addEventListener("click",()=>window.HabitopiaCloud?.user?window.HabitopiaCloud.showFamilies():window.HabitopiaCloud?.showAuth?.()||openForm("create-family"));
 window.addEventListener("hashchange",()=>{const p=location.hash.slice(1);if(pageTitle[p])navigate(p)});
 document.addEventListener("visibilitychange",()=>{if(!document.hidden){poll();render()}});
 const initial=location.hash.slice(1);if(pageTitle[initial])page=initial;
 if(!storageHealthy)setTimeout(()=>toast("Tarayıcıdaki eski veri okunamadı; üzerine yazılmadı."),100);
-render();setInterval(poll,30000);poll();
+render();
+ window.HabitopiaCloud?.init({
+  getState:()=>state,
+  setState:s=>{state=s;render();},
+  reset:()=>{state=sample();render();}
+ });
+ window.addEventListener("habitopia-cloud-error",e=>toast("Bulut kaydı başarısız: "+e.detail));
+ setInterval(poll,30000);poll();
 })();
