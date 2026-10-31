@@ -1,59 +1,57 @@
-# Habitopia Aile — Birlikte daha kolay
+# Habitopia Aile 2.0
 
-**Yeni ana uygulama:** `index.html` — mobil ve masaüstünde çalışan Habitopia Aile önizlemesi.
+Aileler için ortak görevler, alışveriş, Radar, aile takvimi ve **Evim ve Belgeler**.
 
-## Ne var?
+**Web:** https://iyiyolakademi-cpu.github.io/habitopia/
 
-- **Aile Görevleri:** Bir aile üyesi çok satırlı görev listesi hazırlar; aile üyesine atar, bitiş ve hatırlatma tarihi/saatini belirler. Sorumlu kişi tamamlandığını tek dokunuşla işaretler; onay gerekmez. Bildirim açıldığında ilgili listeye yönlendirme desteklenir.
-- **Ortak Alışveriş:** Ürün, miktar, birim, birim fiyatı, bütçe, tahmini toplam ve satın alınanlar. Listeyi aile üyesine atama ve hatırlatma tarihi.
-- **Aile Radarı:** Fatura, abonelik, araç, garanti, ev bakımı, sağlık, okul, özel hatırlatmalar kategorileri. Son tarih, hatırlatma saati, sorumlu, tamamlandı durumu. Sağlık kaydı seçilince gizlilik kutusu otomatik seçilir.
-- **Aile Takvimi:** Ay görünümü, etkinlik oluşturma, aile üyelerini davet etme ve katılıyorum/belki/katılamam yanıtları.
-- **Ailem:** Aynı cihazda farklı aile üyelerinin görünümünü deneyebilme.
-- **Ayarlar:** Aile adını değiştirme, JSON veri dışa/içe aktarma, bildirim izni, yerel sıfırlama.
+## İki çalışma biçimi
 
-## Önemli: önizlemenin sınırları
+- **Örnek / yerel kullanım:** Giriş yapmadan ürün incelenebilir. Bilgiler yalnızca aynı tarayıcıda kalır. Sahte "üye değiştir" işlevi yalnızca bu önizlemeye aittir.
+- **Gerçek aile hesabı:** Sağ üstte **Giriş yap** → hesap oluştur → e-posta doğrula → aile oluştur veya davet koduyla katıl. Her aile üyesi kendi hesabıyla katılır. Supabase Auth, Postgres RLS, Realtime ve 25 saniyelik yedek senkronizasyon kontrolü kullanılır. Gerçek üyeler birbirlerinin kimliğini taklit edemez.
 
-Bu sürüm **tek cihazda çalışan işlevsel bir prototiptir**. Veriler yalnızca `localStorage` içinde `habitopia-family-v1` anahtarıyla saklanır. Örnek aile verileri ürünün nasıl çalıştığını göstermek içindir.
+**Bulut projesi:** `Habitopia Aile`, ref `bcrbkrkgsiugsmxmginx`. Patiyiz Supabase projesinden tamamen ayrı. Web istemcisinde yalnızca herkese açık **publishable** anahtar vardır, asla admin / service-role anahtarı yoktur.
 
-- **Henüz farklı aile üyelerinin telefonları eşzamanlanmaz.** Üye değiştirme sadece aynı cihazdaki simülasyondur. Gerçek davet, oturum açma, erişim kontrolü, güvenli aile paylaşımı **yoktur**.
-- Hatırlatma zamanı gelen kayıtlar uygulama açıkken bildirimler bölümünde görünür. Bildirim izni verilirse tarayıcıda, uygulama açık ve görünürken sistem bildirimi denenir. **Uygulama kapalıyken garantili bildirim gönderilmez**. Sunucu tarafı zamanlama, push altyapısı ve bildirim servis anahtarları ayrı kurulmalıdır.
-- Sağlık ve özel etkinliklerde yerel görünüm filtresi vardır; **gerçek çok hesaplı veri güvenliği yerine geçmez**. Güvenli kullanıcı kimlik doğrulaması ve sunucu erişim politikaları tamamlanmadan hassas veri için kullanılmamalıdır.
-- Eski Habitopia hesapları, bulut verileri ve görevleri **otomatik aktarılmaz**. Eski uygulamanın kodları ve veri anahtarları değiştirilmez.
+## Altı geliştirme
 
-## Eski uygulamalar korundu
+1. **Aile hesabı ve davet:** E-posta/şifre, aile oluşturma, 128 bit rastgele davet kodu, aile üyesi olarak katılım. Üyeler farklı telefonlarla aynı haneye erişir.
+2. **Görevler ve bildirimler:** Aile görevi üyeye atanır, kişisel tarih/saat ile hatırlatılır, onay gerekmeden tamamlanır. Sunucu `pg_cron` ile her dakika zamanı gelen görev/Radar kayıtlarına **uygulama içi bildirim** üretir. Uygulama açıkken tarayıcı bildirimleri izne bağlı olarak görüntülenebilir. **Uygulama kapalıyken işletim sistemi push bildirimi henüz yoktur** (VAPID, service worker ve ayrı sağlayıcı kurulumu gerekir).
+3. **Evin dijital hafızası:** Ev eşyası, marka/model, seri, satın alma, garanti bitişi, servis geçmişi. Garanti tarihi girildiğinde Radar kaydı oluşturulur. Hesaba giriş yapıldığında özel PDF/fotoğraf belgeleri 5 MB sınırlı ve özel bucket'ta tutulabilir.
+4. **Birbirine bağlı işler:** Görev, alışveriş ürünü veya Radar kaydı bir takvim etkinliğine bağlanabilir. Etkinliğin altında bağlantılı işler ve tamamlanma durumları listelenir.
+5. **Güvenlik:** Her tabloda RLS. Aile kayıtlarını yalnızca üyeler görür. Özel kayıtları yalnızca oluşturan kişi okuyabilir. Sağlık Radar kayıtları zorunlu olarak özel kalır. Üyeye atanmayan görev tamamlanamaz. Bağlı etkinlik aynı aileye ait olmalıdır. Dosyalar anonim erişime kapalıdır. Sunucudaki 5 yetki yükseltilmiş RPC, `auth.uid()` ve aile üyeliği doğrular; Supabase security advisor bu kontrollü RPC'leri bilgilendirme/uyarı olarak listeleyebilir.
+6. **Mobil:** Dar ekran tasarımı, sabit 5'li alt gezinme, ayrı Evim ve Belgeler sayfası, hesap ve davet pencereleri.
 
-- Eski Habitopia: `habitopia.html`
-- Eski Hayat Borsası: `hayat-borsan.html`
-- Değişiklik öncesi tam dal yedeği: `backup/habitopia-before-family-20261031`
-- Önceki Habitopia Nova denemesi: `feat/habitopia-rebuild-v5-20261031`
+## Supabase e-posta doğrulama ayarı — yayın öncesi gerekli
 
-`src/launcher.html` ana sayfa için kaynak dosyasıdır; `scripts/build.mjs` `index.html` içeriğini buradan üretir. `assets/family.css` ve `assets/family.js` aile uygulamasının kendi dosyalarıdır.
+Supabase → **Habitopia Aile** → **Authentication → URL Configuration**:
 
-## Çalıştırma
+- **Site URL:** `https://iyiyolakademi-cpu.github.io/habitopia/`
+- **Redirect URLs:** `https://iyiyolakademi-cpu.github.io/habitopia/` ve `https://iyiyolakademi-cpu.github.io/habitopia/index.html`
 
-Statik sunucuyla:
+Bunlar ayarlanmadan e-postayla hesap doğrulaması doğru sayfaya dönmeyebilir. Bu ayarlar connector üzerinden otomatik düzenlenemediği için panelde kontrol edilmelidir. Geliştirme sırasında localhost için ayrıca izinli adres eklenmelidir.
 
-```sh
-python3 -m http.server 8000
-```
+## Veri ve güvenlik sınırları
 
-Tarayıcı: `http://localhost:8000/`
+- Eski `habitopia.html` ve `hayat-borsan.html` dosyaları korunur; eski veriler yeni buluta otomatik aktarılmaz.
+- Aynı anda hızlı, çakışan değişikliklerde otomatik birleştirme garantisi yoktur. Sunucu işlemleri seri gönderilir; diğer üyelerin değişiklikleri Supabase Realtime ile yüklenir ve ayrıca düzenli yenilenir. Özellikle eşzamanlı düzenleme için gerçek cihazlarla test gereklidir.
+- Aile davet kodunu yalnızca güvendiğiniz kişilerle paylaşın; davet kodu aile üyeliği sağlayabilir.
+- Sağlık verileri ve özel dosyalar için RLS uygulanmıştır; yine de geniş kullanıcı dağıtımından önce kimlik, yetki, storage, veri silme ve KVKK incelemesi gereklidir.
+- **Tam otomatik mobil push, telefon tamamen kapalıyken bildirim, Android/iOS mağaza paketleri, çok cihazlı kabul testleri ve hesap silme akışı henüz tamamlanmadı.** Bu sürüm halka açık mağazaya hazır olarak değerlendirilmemelidir.
 
-## Test
+## Geliştirme ve test
 
 ```sh
 node scripts/build.mjs --check
 node scripts/validate.mjs
+node --check assets/family.js
+node --check assets/family-cloud.js
 node --test tests/*.test.cjs
 ```
 
-GitHub Actions eski uygulamaların davranış kontrollerini ve yeni aile uygulamasının sözdizimi, gezinme, veri alanı ve ana ekran testlerini yürütür.
+Şema: `supabase/migrations/202611010001_...` ile `003_...`. Migration'lar yeni Habitopia Aile veritabanında çalıştırılmıştır; Patiyiz projesinde işlem yapılmamıştır.
 
-## Gerçek aile kullanımına açılmadan önce
+## Eski dosyalar ve geri dönüş
 
-1. Hesap oluşturma ve aile daveti (gerçek üyelik/roller).
-2. Paylaşım yetkileri, özel sağlık verisi izolasyonu, güvenlik kuralları.
-3. Gerçek zamanlı bulut senkronizasyonu ve çoklu cihaz tutarlılığı.
-4. Sunucu taraflı zamanlanmış push, cihaz token yönetimi ve bildirim tercihleri.
-5. Eski Habitopia kullanıcı verileri için kontrollü, onaylı geçiş ve geri alma.
-6. iPhone/Android manuel testleri, erişilebilirlik, veri silme ve hukuki metinler.
+- Önceki ana ekran yerine Habitopia Aile vardır.
+- Eski Habitopia: `habitopia.html`; Hayat Borsası: `hayat-borsan.html`.
+- 1.0 önceki yedek: `backup/habitopia-before-family-20261031`.
+- 2.0 ana dala aktarılmadan önce ayrıca GitHub PR ve commit ile sürüm geçmişi korunur.

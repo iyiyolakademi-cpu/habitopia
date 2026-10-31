@@ -30,9 +30,9 @@ const sample=()=>{
  {id:uid(),listId:uid(),listTitle:"Ev işleri",title:"Bulaşık makinesini boşalt",assignee:"dad",creator:"mom",dueAt:futureInput(1,19),reminderAt:null,doneAt:null}],
  shopping:[{id:uid(),title:"Süt",qty:2,unit:"adet",price:40,bought:false},{id:uid(),title:"Yumurta",qty:1,unit:"paket",price:95,bought:false},{id:uid(),title:"Ekmek",qty:2,unit:"adet",price:18,bought:true}],
  radar:[{id:uid(),title:"İnternet taahhüdü",cat:"subscription",dueAt:futureInput(11,12),reminderAt:futureInput(7,10),assignee:"dad",creator:"mom",doneAt:null,privateTo:null},{id:uid(),title:"Araç muayenesi",cat:"vehicle",dueAt:futureInput(7,15),reminderAt:futureInput(3,9),assignee:"dad",creator:"dad",doneAt:null,privateTo:null}],
- events:[{id:uid(),title:"Aile kahvaltısı",date:offsetDay(3),time:"10:00",notes:"Birlikte güzel bir kahvaltı",creator:"mom",invitees:["me","mom","dad"],rsvp:{mom:"yes"},privateTo:null}],notified:[]};
+ assets:[],workflows:[],events:[{id:uid(),title:"Aile kahvaltısı",date:offsetDay(3),time:"10:00",notes:"Birlikte güzel bir kahvaltı",creator:"mom",invitees:["me","mom","dad"],rsvp:{mom:"yes"},privateTo:null}],notified:[]};
 };
-const blank=(familyName,person)=>({version:VERSION,demo:false,familyName:safeText(familyName,50)||"Ailem",members:[{id:"me",name:safeText(person,40)||"Ben"}],currentMember:"me",shoppingBudget:0,shoppingMeta:{assignee:"me",reminderAt:null},tasks:[],shopping:[],radar:[],events:[],notified:[]});
+const blank=(familyName,person)=>({version:VERSION,demo:false,familyName:safeText(familyName,50)||"Ailem",members:[{id:"me",name:safeText(person,40)||"Ben"}],currentMember:"me",shoppingBudget:0,shoppingMeta:{assignee:"me",reminderAt:null},tasks:[],shopping:[],radar:[],events:[],assets:[],workflows:[],notified:[]});
 function normalize(input){
  if(!input||typeof input!=="object"||input.version!==VERSION||!Array.isArray(input.members)||!Array.isArray(input.tasks)||!Array.isArray(input.shopping)||!Array.isArray(input.radar)||!Array.isArray(input.events))throw Error("Desteklenmeyen yedek biçimi.");
  if(input.members.length<1||input.members.length>30)throw Error("Üye sayısı geçersiz.");
@@ -53,6 +53,13 @@ function normalize(input){
  s.radar=input.radar.slice(0,1000).map(x=>({id:safeText(x.id,90)||uid(),title:safeText(x.title,150),cat:cats[x.cat]?x.cat:"custom",dueAt:iso(x.dueAt),reminderAt:iso(x.reminderAt),assignee:validMember(x.assignee),creator:validMember(x.creator),doneAt:iso(x.doneAt),privateTo:s.members.some(m=>m.id===x.privateTo)?x.privateTo:null})).filter(x=>x.title&&x.dueAt&&!radarIds.has(x.id)&&radarIds.add(x.id));
  const eventIds=new Set();
  s.events=input.events.slice(0,1000).map(x=>({id:safeText(x.id,90)||uid(),title:safeText(x.title,150),date:iso(x.date)?.slice(0,10)||localDay(),time:/^([01]\d|2[0-3]):[0-5]\d$/.test(x.time)?x.time:"12:00",notes:safeText(x.notes,500),creator:validMember(x.creator),invitees:Array.isArray(x.invitees)?[...new Set(x.invitees.filter(id=>s.members.some(m=>m.id===id)))]:[validMember(x.creator)],rsvp:Object.fromEntries(Object.entries(x.rsvp||{}).filter(([k,v])=>s.members.some(m=>m.id===k)&&["yes","no","maybe"].includes(v))),privateTo:s.members.some(m=>m.id===x.privateTo)?x.privateTo:null})).filter(x=>x.title&&!eventIds.has(x.id)&&eventIds.add(x.id));
+ s.assets=(Array.isArray(input.assets)?input.assets:[]).slice(0,500).map(a=>({
+ id:safeText(a.id,90)||uid(),title:safeText(a.title,150)||"Ev eşyası",creator:validMember(a.creator),
+ category:safeText(a.category,60)||"Ev eşyası",brand:safeText(a.brand,70),model:safeText(a.model,70),
+ serial:safeText(a.serial,100),purchasedAt:iso(a.purchasedAt)||"",warrantyUntil:iso(a.warrantyUntil)||"",
+ notes:safeText(a.notes,500),services:Array.isArray(a.services)?a.services.slice(0,100):[],
+ privateTo:s.members.some(m=>m.id===a.privateTo)?a.privateTo:null}));
+ s.workflows=Array.isArray(input.workflows)?input.workflows.slice(0,200):[];
  s.notified=Array.isArray(input.notified)?input.notified.filter(x=>typeof x==="string").slice(-1200):[];
  return s;
 }
@@ -60,6 +67,7 @@ let state,storageHealthy=true;
 try{const data=localStorage.getItem(KEY);state=data?normalize(JSON.parse(data)):sample();}
 catch(e){console.error("Habitopia veri okuma",e);state=sample();storageHealthy=false;}
 function save(){
+ if(window.HabitopiaCloud?.active){window.HabitopiaCloud.save(state);return;}
  if(!storageHealthy)return;
  try{localStorage.setItem(KEY,JSON.stringify(state));}
  catch(e){storageHealthy=false;console.error(e);toast("Depolama kullanılamıyor; değişiklikler korunamayabilir.");}
@@ -73,7 +81,7 @@ const cost=x=>number(x.price)*number(x.qty);
 const estimated=()=>state.shopping.reduce((s,x)=>s+cost(x),0);
 const spent=()=>state.shopping.filter(x=>x.bought).reduce((s,x)=>s+cost(x),0);
 let page="home",taskFilter="mine",radarFilter="all",calendarMonth=new Date(now().getFullYear(),now().getMonth(),1),selectedDate=localDay(),notificationWindow=null;
-const pageTitle={home:"Genel Bakış",tasks:"Aile Görevleri",shopping:"Alışveriş",radar:"Aile Radarı",calendar:"Aile Takvimi",family:"Ailem",settings:"Ayarlar"};
+const pageTitle={home:"Genel Bakış",tasks:"Aile Görevleri",shopping:"Alışveriş",radar:"Aile Radarı",calendar:"Aile Takvimi",assets:"Evim ve Belgeler",family:"Ailem",settings:"Ayarlar"};
 let toastTimer;
 function toast(message){const el=$("#toast");el.textContent=message;el.classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove("show"),3000);}
 const header=(label,title,description,actions="")=>'<div class="page-heading"><div><p class="eyebrow">'+esc(label)+'</p><h1>'+esc(title)+'</h1><p class="subcopy">'+esc(description)+'</p></div><div class="page-actions">'+actions+'</div></div>';
@@ -95,7 +103,7 @@ function renderHome(){
  '<div class="stats-row"><div class="stat-card"><div class="stat-icon">☑</div><div><strong>'+pending+'</strong><span>Bekleyen görev</span></div></div><div class="stat-card"><div class="stat-icon warm">▤</div><div><strong>'+state.shopping.filter(x=>!x.bought).length+'</strong><span>Alışveriş ürünü</span></div></div><div class="stat-card"><div class="stat-icon cool">◉</div><div><strong>'+upcoming+'</strong><span>Yaklaşan iş</span></div></div></div>'+
  '<div class="section-title"><h2>Ailenin yaşam alanı</h2><span class="subtle">İhtiyacın olan her şey burada</span></div>'+
  '<div class="feature-grid"><button class="feature-tile" data-page="tasks"><span class="feature-arrow">↗</span><span class="feature-glyph">☑</span><strong>Aile Görevleri</strong><small>Görev gönder, takip et</small></button><button class="feature-tile" data-page="shopping"><span class="feature-arrow">↗</span><span class="feature-glyph">▤</span><strong>Alışveriş</strong><small>Ortak liste ve bütçe</small></button><button class="feature-tile" data-page="radar"><span class="feature-arrow">↗</span><span class="feature-glyph">◉</span><strong>Aile Radarı</strong><small>Önemli tarihleri unutma</small></button><button class="feature-tile" data-page="calendar"><span class="feature-arrow">↗</span><span class="feature-glyph">▦</span><strong>Aile Takvimi</strong><small>Birlikte planlayın</small></button></div>'+
- '<div class="panel-grid"><section class="panel"><div class="panel-heading"><div><p class="eyebrow">SANA ATANANLAR</p><h3>Bekleyen görevler</h3></div>'+button("Tümünü gör ↗","goto-tasks","btn-muted btn-small")+'</div><div class="list">'+(tasks.length?tasks.map(taskRow).join(""):empty("✓","Şimdilik görev yok","Yeni liste hazırlayabilir veya aileden görev alabilirsin."))+'</div></section><section class="panel"><div class="panel-heading"><div><p class="eyebrow">HABITOPIA RADAR</p><h3>Yaklaşan tarihler</h3></div>'+button("Radara git ↗","goto-radar","btn-muted btn-small")+'</div><div class="list">'+(rs.length?rs.map(x=>'<div class="list-row"><span class="stat-icon" style="width:33px;height:33px;border-radius:10px;font-size:17px">'+esc(cats[x.cat][1])+'</span><div class="item-info"><strong class="item-title">'+esc(x.title)+'</strong><span class="item-sub">'+stampTime(x.dueAt)+' · '+esc(memberName(x.assignee))+'</span></div></div>').join(""):empty("◉","Radar sakin","Yaklaşan önemli bir kayıt bulunmuyor."))+'</div></section></div>';
+ '<section class="section-gap"><div class="section-title"><h2>Evin dijital hafızası</h2>'+button("Eşyalarımı gör ↗","goto-assets","btn-muted btn-small")+'</div><div class="notice">⌂ '+(state.assets||[]).length+' eşya kayıtlı · Garanti bitişlerini ve servis geçmişini Evim ve Belgeler bölümünden yönetebilirsin.</div></section><div class="panel-grid"><section class="panel"><div class="panel-heading"><div><p class="eyebrow">SANA ATANANLAR</p><h3>Bekleyen görevler</h3></div>'+button("Tümünü gör ↗","goto-tasks","btn-muted btn-small")+'</div><div class="list">'+(tasks.length?tasks.map(taskRow).join(""):empty("✓","Şimdilik görev yok","Yeni liste hazırlayabilir veya aileden görev alabilirsin."))+'</div></section><section class="panel"><div class="panel-heading"><div><p class="eyebrow">HABITOPIA RADAR</p><h3>Yaklaşan tarihler</h3></div>'+button("Radara git ↗","goto-radar","btn-muted btn-small")+'</div><div class="list">'+(rs.length?rs.map(x=>'<div class="list-row"><span class="stat-icon" style="width:33px;height:33px;border-radius:10px;font-size:17px">'+esc(cats[x.cat][1])+'</span><div class="item-info"><strong class="item-title">'+esc(x.title)+'</strong><span class="item-sub">'+stampTime(x.dueAt)+' · '+esc(memberName(x.assignee))+'</span></div></div>').join(""):empty("◉","Radar sakin","Yaklaşan önemli bir kayıt bulunmuyor."))+'</div></section></div>';
 }
 function renderTasks(){
  const all=state.tasks.filter(t=>taskFilter==="all"||taskFilter==="mine"&&t.assignee===current()||taskFilter==="completed"&&!!t.doneAt);
@@ -120,7 +128,9 @@ function renderRadar(){
 const eventsVisible=()=>state.events.filter(shareable).filter(x=>x.invitees.includes(current())||x.creator===current()||(!x.privateTo));
 const eventView=e=>{
  const status=e.rsvp[current()]||"pending",myInvite=e.invitees.includes(current());
- return '<article class="event-card"><div class="event-top"><span class="eyebrow">'+esc(stamp(e.date))+' · '+esc(e.time)+'</span>'+pill(e.privateTo?"Özel":"Aile etkinliği",e.privateTo?"purple":"")+'</div><h3>'+esc(e.title)+'</h3><p>'+esc(e.notes||"")+ (e.notes?" · ":"")+'Oluşturan: '+esc(memberName(e.creator))+'</p><p style="margin-top:8px">Davetliler: '+esc(e.invitees.map(memberName).join(", ")||"Yok")+'</p>'+(myInvite?'<div class="rsvp-actions"><button data-action="rsvp" data-id="'+esc(e.id)+'" data-value="yes" class="'+(status==="yes"?"active":"")+'">✓ Katılacağım</button><button data-action="rsvp" data-id="'+esc(e.id)+'" data-value="maybe" class="'+(status==="maybe"?"active":"")+'">? Belki</button><button data-action="rsvp" data-id="'+esc(e.id)+'" data-value="no" class="'+(status==="no"?"active":"")+'">× Katılamam</button></div>':"")+'<div class="compact-detail"><small class="muted">Yanıtlar: '+esc(e.invitees.map(id=>memberName(id)+": "+({yes:"Katılıyor",no:"Katılamıyor",maybe:"Belki",pending:"Bekliyor"}[e.rsvp[id]||"pending"])).join(" · "))+'</small>'+deleteButton("delete-event",e.id)+'</div></article>';
+ const linked=[...state.tasks,...state.shopping,...state.radar].filter(x=>x.linkedEventId===e.id);
+ const linkedHtml=linked.length?'<div class="workflow-timeline">'+linked.slice(0,7).map(x=>'<div class="workflow-row"><span>↳</span><div class="item-info"><strong class="item-title">'+esc(x.title)+'</strong><span class="item-sub">'+(x.doneAt||x.bought?"Tamamlandı":"Bekliyor")+'</span></div></div>').join("")+'</div>':"";
+ return '<article class="event-card"><div class="event-top"><span class="eyebrow">'+esc(stamp(e.date))+' · '+esc(e.time)+'</span>'+pill(e.privateTo?"Özel":"Aile etkinliği",e.privateTo?"purple":"")+'</div><h3>'+esc(e.title)+'</h3><p>'+esc(e.notes||"")+ (e.notes?" · ":"")+'Oluşturan: '+esc(memberName(e.creator))+'</p><p style="margin-top:8px">Davetliler: '+esc(e.invitees.map(memberName).join(", ")||"Yok")+'</p>'+linkedHtml+(myInvite?'<div class="rsvp-actions"><button data-action="rsvp" data-id="'+esc(e.id)+'" data-value="yes" class="'+(status==="yes"?"active":"")+'">✓ Katılacağım</button><button data-action="rsvp" data-id="'+esc(e.id)+'" data-value="maybe" class="'+(status==="maybe"?"active":"")+'">? Belki</button><button data-action="rsvp" data-id="'+esc(e.id)+'" data-value="no" class="'+(status==="no"?"active":"")+'">× Katılamam</button></div>':"")+'<div class="compact-detail"><small class="muted">Yanıtlar: '+esc(e.invitees.map(id=>memberName(id)+": "+({yes:"Katılıyor",no:"Katılamıyor",maybe:"Belki",pending:"Bekliyor"}[e.rsvp[id]||"pending"])).join(" · "))+'</small>'+deleteButton("delete-event",e.id)+'</div></article>';
 };
 function renderCalendar(){
  const y=calendarMonth.getFullYear(),m=calendarMonth.getMonth(),start=(new Date(y,m,1).getDay()+6)%7,days=new Date(y,m+1,0).getDate();
@@ -133,9 +143,43 @@ function renderCalendar(){
  return header("AİLENİN ORTAK TAKVİMİ","Aile Takvimi","Etkinlikleri paylaşın, aile üyelerini davet edin ve katılım durumlarını görün.",button("＋ Etkinlik oluştur","new-event"))+
  '<div class="calendar-layout"><section class="panel"><div class="month-head"><button data-action="month-prev" aria-label="Önceki ay">‹</button><h3>'+calendarMonth.toLocaleDateString("tr-TR",{month:"long",year:"numeric"})+'</h3><button data-action="month-next" aria-label="Sonraki ay">›</button></div><div class="month-grid">'+cells+'</div></section><section class="panel"><div class="panel-heading"><div><p class="eyebrow">SEÇİLEN GÜN</p><h3>'+stamp(selectedDate)+'</h3></div>'+pill(todays.length+" etkinlik")+'</div><div class="events-feed">'+(todays.length?todays.map(eventView).join(""):empty("▦","Bu gün boş","Yeni bir aile etkinliği oluşturabilirsin."))+'</div></section></div><section class="section-gap panel"><div class="panel-heading"><h3>Yaklaşan aile etkinlikleri</h3></div><div class="events-feed">'+(eventsVisible().filter(x=>x.date>=localDay()).sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time)).slice(0,6).map(eventView).join("")||empty("◷","Henüz etkinlik yok","Aile üyelerini davet ederek bir etkinlik oluştur."))+'</div></section>';
 }
+
+function renderAssets(){
+ const assets=state.assets||[];
+ const cards=assets.map(a=>{
+  const count=state.radar.filter(r=>r.linkedAssetId===a.id&&!r.doneAt).length;
+  return '<article class="asset-card"><div class="asset-icon">▣</div><span class="eyebrow">'+esc(a.category||"Ev eşyası")+'</span><h3>'+esc(a.title)+'</h3><p>'+esc(a.brand||"")+(a.model?" · "+esc(a.model):"")+'</p><p>'+ (a.warrantyUntil?"Garanti: "+stamp(a.warrantyUntil):"Garanti tarihi eklenmedi") +'</p><div class="people-row">'+pill((a.services||[]).length+" servis kaydı")+(count?pill(count+" Radar kaydı","warning"):"")+'</div>'+button("Ayrıntıları aç ↗","asset-detail","btn-light btn-small",'data-id="'+esc(a.id)+'"')+'</article>';
+ }).join("");
+ return header("EVİN DİJİTAL HAFIZASI","Evim ve Belgeler","Garanti, cihaz bilgisi, bakım geçmişi ve belgeler bir arada.",button("＋ Eşya ekle","new-asset"))+
+ '<div class="notice">🔒 Özel eşya kayıtları yalnızca sahibine görünür. Hesabınla giriş yapınca belge yükleyebilirsin.</div>'+
+ (cards?'<div class="asset-grid">'+cards+'</div>':empty("⌂","Henüz eşya eklenmedi","İlk ev eşyası, telefon, kombi veya araç kaydını oluştur."));
+}
+async function viewAssetDocuments(id){
+ const holder=document.getElementById("asset-doc-list");
+ if(!holder)return;
+ if(!window.HabitopiaCloud?.active){holder.innerHTML='<p class="muted">Gerçek belge yüklemek için bulut hesabınla giriş yap.</p>';return;}
+ try{
+  const documents=await window.HabitopiaCloud.listDocuments(id);
+  const target=document.getElementById("asset-doc-list");if(!target)return;
+  target.innerHTML=documents.length?documents.map(d=>'<div class="list-row"><span class="item-info">'+esc(d.display_name)+'</span>'+button("Belgeyi aç","asset-doc-open","btn-light btn-small",'data-path="'+esc(d.path)+'"')+'</div>').join(""):'<p class="muted">Henüz belge yüklenmedi.</p>';
+ }catch(e){holder.textContent="Belgeler yüklenemedi: "+e.message;}
+}
+function showAsset(id){
+ const a=(state.assets||[]).find(x=>x.id===id);if(!a)return;
+ const details=[["Kategori",a.category||"Ev eşyası"],["Marka",a.brand||"—"],["Model",a.model||"—"],["Seri / ürün kodu",a.serial||"—"],["Satın alma",a.purchasedAt?stamp(a.purchasedAt):"—"],["Garanti bitişi",a.warrantyUntil?stamp(a.warrantyUntil):"—"]]
+  .map(([l,v])=>'<div class="detail-line"><span>'+esc(l)+'</span><strong>'+esc(v)+'</strong></div>').join("");
+ const services=(a.services||[]).map(s=>'<div class="list-row"><span class="stat-icon">✧</span><div class="item-info"><span class="item-title">'+esc(s.title||"Servis")+'</span><span class="item-sub">'+stamp(s.date)+' · '+esc(s.notes||"")+'</span></div></div>').join("");
+ $("#modal").innerHTML='<button type="button" class="modal-close" data-action="close-modal" aria-label="Kapat">×</button><h2 id="modal-title">'+esc(a.title)+'</h2><p class="modal-intro">Evin dijital hafızası · '+esc(a.category||"")+'</p><div class="asset-detail">'+details+'</div>'+(a.notes?'<p class="notice">'+esc(a.notes)+'</p>':"")+
+ '<div class="section-title section-gap"><h2>Servis geçmişi</h2>'+button("＋ Servis ekle","asset-service","btn-light btn-small",'data-id="'+esc(a.id)+'"')+'</div>'+(services||empty("✧","Servis kaydı yok","Bakım ya da tamirat sonrası kayıt ekleyebilirsin."))+
+ '<div class="section-title section-gap"><h2>Belgeler ve faturalar</h2></div><div id="asset-doc-list" class="list"><p class="muted">Belgeler kontrol ediliyor…</p></div>'+
+ (window.HabitopiaCloud?.active?'<label class="field"><span>PDF veya fotoğraf yükle (en fazla 5 MB)</span><input class="doc-input" type="file" id="asset-doc-upload" data-id="'+esc(a.id)+'" accept="application/pdf,image/png,image/jpeg,image/webp"></label>':"")+
+ '<div class="form-actions">'+button("Eşyayı sil","delete-asset","btn-danger",'data-id="'+esc(a.id)+'"')+button("Kapat","close-modal","btn-muted")+'</div>';
+ $("#overlay").hidden=false;document.body.style.overflow="hidden";viewAssetDocuments(id);
+}
+
 function renderFamily(){
- return header("BİRLİKTE BİR AİLE","Aile Üyeleri","Üyeleri yönet, bu cihazda farklı aile üyelerinin görünümünü dene.",button("＋ Üye ekle","new-member"))+
- '<div class="two-col"><section class="panel"><div class="panel-heading"><h3>'+esc(state.familyName)+'</h3>'+pill(state.members.length+" üye")+'</div>'+state.members.map(m=>'<div class="family-member"><div class="member-avatar">'+esc(m.name[0]?.toUpperCase()||"?")+'</div><div class="member-info"><strong>'+esc(m.name)+'</strong><small>'+(m.id===current()?"Bu cihazda seçili kişi":"Aile üyesi")+'</small></div>'+(m.id!==current()?button("Bu üyeye geç","switch-member","btn-light btn-small",'data-id="'+esc(m.id)+'"'):pill("Aktif"))+'</div>').join("")+'</section><div class="info-rail"><div class="rail-card"><h3>Üyeler arası görev akışı</h3><p>Örneğin Anne rolündeyken oğluna liste hazırlayabilir, sonra bu cihazda oğul rolüne geçerek listeyi görebilirsin. Gerçek telefonlar arasında hesap bağlantısı henüz aktif değildir.</p></div><div class="rail-card"><h3>Gizlilik</h3><p>Sağlık bilgileri ve kişisel etkinlikler varsayılan olarak yalnızca oluşturan kişiye gösterilebilir. Bu sürüm tek cihazlı olduğu için şifreli çoklu hesap güvenliği sağlamaz.</p></div></div></div>';
+ return header("BİRLİKTE BİR AİLE","Aile Üyeleri",window.HabitopiaCloud?.active?"Her aile üyesi kendi hesabıyla katılır; davet kodunu paylaşabilirsin.":"Üyeleri yönet, bu cihazda farklı aile üyelerinin görünümünü dene.",button(window.HabitopiaCloud?.active?"Davet kodu":"＋ Üye ekle",window.HabitopiaCloud?.active?"show-invite":"new-member"))+
+ '<div class="two-col"><section class="panel"><div class="panel-heading"><h3>'+esc(state.familyName)+'</h3>'+pill(state.members.length+" üye")+'</div>'+state.members.map(m=>'<div class="family-member"><div class="member-avatar">'+esc(m.name[0]?.toUpperCase()||"?")+'</div><div class="member-info"><strong>'+esc(m.name)+'</strong><small>'+(m.id===current()?"Bu cihazda seçili kişi":"Aile üyesi")+'</small></div>'+(!window.HabitopiaCloud?.active&&m.id!==current()?button("Bu üyeye geç","switch-member","btn-light btn-small",'data-id="'+esc(m.id)+'"'):pill("Aktif"))+'</div>').join("")+'</section><div class="info-rail"><div class="rail-card"><h3>Üyeler arası görev akışı</h3><p>Örneğin Anne rolündeyken oğluna liste hazırlayabilir, sonra bu cihazda oğul rolüne geçerek listeyi görebilirsin. Gerçek telefonlar arasında hesap bağlantısı henüz aktif değildir.</p></div><div class="rail-card"><h3>Gizlilik</h3><p>Sağlık bilgileri ve kişisel etkinlikler varsayılan olarak yalnızca oluşturan kişiye gösterilebilir. Bu sürüm tek cihazlı olduğu için şifreli çoklu hesap güvenliği sağlamaz.</p></div></div></div>';
 }
 function renderSettings(){
  return header("KONTROL SENDE","Ayarlar ve Veriler","Aile ismini, bildirim iznini ve cihazda kayıtlı bilgilerini yönet.")+
@@ -146,12 +190,13 @@ function updateHeader(){
  $("#sidebar-family").textContent=state.familyName;$("#current-initial").textContent=currentName().slice(0,1).toLocaleUpperCase("tr-TR");
  $("#today-small").textContent=now().toLocaleDateString("tr-TR",{day:"numeric",month:"long"});
  $$(".nav-link").forEach(b=>b.classList.toggle("active",b.dataset.page===page));
- $("#demo-banner").hidden=!state.demo;
+ $("#demo-banner").hidden=!state.demo||!!window.HabitopiaCloud?.active;
+ $$(".mobile-bottom-nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===page));
  $("#notification-dot").hidden=notificationsForMember().length===0;
 }
 function render(){
  updateHeader();
- const views={home:renderHome,tasks:renderTasks,shopping:renderShopping,radar:renderRadar,calendar:renderCalendar,family:renderFamily,settings:renderSettings};
+ const views={home:renderHome,tasks:renderTasks,shopping:renderShopping,radar:renderRadar,calendar:renderCalendar,assets:renderAssets,family:renderFamily,settings:renderSettings};
  $("#page-content").innerHTML=(views[page]||renderHome)();
  document.title=pageTitle[page]+" — Habitopia Aile";
 }
@@ -168,15 +213,19 @@ function closeModal(){$("#overlay").hidden=true;$("#modal").innerHTML="";documen
 const field=(label,name,type="text",attrs="",value="",extra="")=>'<label class="field"><span>'+esc(label)+'</span><input name="'+name+'" type="'+type+'" '+attrs+' value="'+esc(value)+'">'+extra+'</label>';
 const selectField=(label,name,options,selected)=>'<label class="field"><span>'+esc(label)+'</span><select name="'+name+'">'+options.map(([value,text])=>'<option value="'+esc(value)+'" '+(selected===value?"selected":"")+'>'+esc(text)+'</option>').join("")+'</select></label>';
 const memberField=(label,name,selected=current())=>selectField(label,name,state.members.map(m=>[m.id,m.name]),selected);
+const linkedEventField=()=>state.events.length?selectField("Bağlı aile etkinliği (isteğe bağlı)","linkedEventId",[["","Bağımsız iş"],...state.events.filter(shareable).map(x=>[x.id,x.title])],""):"";
+let targetAssetId=null;
 const textareaField=(label,name,placeholder)=>'<label class="field"><span>'+esc(label)+'</span><textarea name="'+name+'" placeholder="'+esc(placeholder)+'" maxlength="3000" required></textarea></label>';
 function openForm(name){
  const rem=field("Bildirim tarihi ve saati","reminderAt","datetime-local")+'<span class="field-help">Boş bırakırsan bildirim ayarlanmaz.</span>';
  switch(name){
- case "new-task":openModal("Yeni aile görev listesi","Bir veya daha fazla görevi yaz, sorumlu kişiyi ve bildirim saatini seç.",'<div class="form-grid">'+field("Liste adı","listTitle","text",'required maxlength="90" placeholder="Örn. Akşam işleri"')+' '+memberField("Kime atanacak?","assignee")+'<div class="span-two">'+textareaField("Görevler (her satıra bir görev)","items","Çamaşırları topla\nOdayı düzenle\nÇöpü çıkar")+'</div>'+field("Tamamlanma tarihi","dueAt","datetime-local",'required',futureInput(1,20))+' '+field("Hatırlatma zamanı","reminderAt","datetime-local")+'</div>',name);break;
- case "new-shop":openModal("Alışveriş listesine ekle","Miktarı ve tahmini birim fiyatını yaz.",'<div class="form-grid">'+field("Ürün adı","title","text",'required maxlength="100" placeholder="Örn. Süt"')+' '+field("Miktar","qty","number",'required min="0.01" max="100000" step="0.01"',"1")+selectField("Birim","unit",[["adet","Adet"],["paket","Paket"],["kg","Kilogram"],["lt","Litre"],["kutu","Kutu"],["gram","Gram"]],"adet")+field("Birim fiyatı (TL)","price","number",'min="0" max="100000000" step="0.01"',"0")+'</div>',name);break;
+ case "new-asset":openModal("Evin dijital hafızasına ekle","Eşyanın garanti, satın alma ve bakım bilgilerini sakla.",'<div class="form-grid">'+field("Eşya adı","title","text",'required maxlength="150" placeholder="Örn. Çamaşır makinesi"')+selectField("Kategori","category",[["Ev eşyası","Ev eşyası"],["Elektronik","Elektronik"],["Araç","Araç"],["Diğer","Diğer"]],"Ev eşyası")+field("Marka","brand","text",'maxlength="70"')+field("Model","model","text",'maxlength="70"')+field("Seri / ürün kodu","serial","text",'maxlength="100"')+field("Satın alma tarihi","purchasedAt","date")+field("Garanti bitişi","warrantyUntil","date")+field("Garanti bildirim tarihi ve saati","reminderAt","datetime-local")+memberField("Garanti hatırlatma sorumlusu","assignee")+'<label class="field span-two"><span>Not</span><textarea name="notes" maxlength="500"></textarea></label><label class="form-check span-two"><input type="checkbox" name="private"> Bu eşya yalnızca bana özel olsun</label></div>',name);break;
+ case "asset-service":openModal("Servis ve bakım kaydı","Yapılan işlemi ve tarihi eşya geçmişine ekle.",'<div class="form-grid">'+field("Yapılan işlem","title","text",'required maxlength="100" placeholder="Örn. Yetkili servis bakımı"')+field("Tarih","date","date","required",localDay())+'<label class="field span-two"><span>Not</span><textarea name="notes" maxlength="300"></textarea></label></div>',name);break;
+ case "new-task":openModal("Yeni aile görev listesi","Bir veya daha fazla görevi yaz, sorumlu kişiyi ve bildirim saatini seç.",'<div class="form-grid">'+field("Liste adı","listTitle","text",'required maxlength="90" placeholder="Örn. Akşam işleri"')+' '+memberField("Kime atanacak?","assignee")+'<div class="span-two">'+textareaField("Görevler (her satıra bir görev)","items","Çamaşırları topla\nOdayı düzenle\nÇöpü çıkar")+'</div>'+field("Tamamlanma tarihi","dueAt","datetime-local",'required',futureInput(1,20))+' '+field("Hatırlatma zamanı","reminderAt","datetime-local")+linkedEventField()+'</div>',name);break;
+ case "new-shop":openModal("Alışveriş listesine ekle","Miktarı ve tahmini birim fiyatını yaz.",'<div class="form-grid">'+field("Ürün adı","title","text",'required maxlength="100" placeholder="Örn. Süt"')+' '+field("Miktar","qty","number",'required min="0.01" max="100000" step="0.01"',"1")+selectField("Birim","unit",[["adet","Adet"],["paket","Paket"],["kg","Kilogram"],["lt","Litre"],["kutu","Kutu"],["gram","Gram"]],"adet")+field("Birim fiyatı (TL)","price","number",'min="0" max="100000000" step="0.01"',"0")+linkedEventField()+'</div>',name);break;
  case "set-budget":openModal("Alışveriş bütçesi","Ortak listeniz için isteğe bağlı bir hedef bütçe belirleyin.",field("Bütçe (TL)","budget","number",'min="0" max="100000000" step="0.01" required',String(state.shoppingBudget)),name);break;
  case "assign-shop":openModal("Alışveriş listesini görevlendir","Alışveriş için aile üyesi ve bildirim zamanı belirle.",'<div class="form-grid">'+memberField("Sorumlu aile üyesi","assignee",state.shoppingMeta.assignee)+field("Bildirim zamanı","reminderAt","datetime-local","",state.shoppingMeta.reminderAt||"")+'</div>',name);break;
- case "new-radar":openModal("Radar'a önemli tarih ekle","Takip türünü, sorumlu kişiyi ve tam hatırlatma saatini belirle.",'<div class="form-grid">'+selectField("Kategori","cat",Object.entries(cats).map(([id,v])=>[id,v[0]]),"bill")+field("Konu / açıklama","title","text",'required maxlength="150" placeholder="Örn. Elektrik faturası"')+memberField("Sorumlu kişi","assignee")+field("Son tarih ve saat","dueAt","datetime-local","required",futureInput(7,17))+field("Hatırlatma tarihi ve saati","reminderAt","datetime-local")+ '<label class="form-check span-two"><input type="checkbox" name="private"> Yalnızca benim görebileceğim özel bir kayıt olsun</label></div>',name);break;
+ case "new-radar":openModal("Radar'a önemli tarih ekle","Takip türünü, sorumlu kişiyi ve tam hatırlatma saatini belirle.",'<div class="form-grid">'+selectField("Kategori","cat",Object.entries(cats).map(([id,v])=>[id,v[0]]),"bill")+field("Konu / açıklama","title","text",'required maxlength="150" placeholder="Örn. Elektrik faturası"')+memberField("Sorumlu kişi","assignee")+field("Son tarih ve saat","dueAt","datetime-local","required",futureInput(7,17))+field("Hatırlatma tarihi ve saati","reminderAt","datetime-local")+ '<label class="form-check span-two"><input type="checkbox" name="private"> Yalnızca benim görebileceğim özel bir kayıt olsun</label>'+linkedEventField()+'</div>',name);break;
  case "new-event":openModal("Aile etkinliği oluştur","Etkinlik takvimde görünür; davet edilen üyeler katılım yanıtı verebilir.",'<div class="form-grid">'+field("Etkinlik adı","title","text",'required maxlength="150" placeholder="Örn. Aile yemeği"')+field("Tarih","date","date","required",selectedDate)+field("Saat","time","time","required","18:00")+'<div class="field span-two"><span>Davet edilecek aile üyeleri</span><div class="modal-tags">'+state.members.map(m=>'<label class="modal-tag"><input type="checkbox" name="invitees" value="'+esc(m.id)+'" '+(m.id===current()?"checked":"")+'> '+esc(m.name)+'</label>').join("")+'</div></div><label class="field span-two"><span>Not (isteğe bağlı)</span><textarea name="notes" maxlength="500" placeholder="Yer, hazırlık veya küçük bir not"></textarea></label><label class="form-check span-two"><input type="checkbox" name="private"> Yalnızca bana özel etkinlik</label></div>',name);break;
  case "new-member":openModal("Aile üyesi ekle","Bu önizlemede üyeler yalnızca aynı cihazda kullanılabilir.",field("Üyenin adı","name","text",'required maxlength="40" placeholder="Örn. Anne"'),name);break;
  case "rename-family":openModal("Aile ismini değiştir","Aile alanınıza bir ad verin.",field("Aile adı","name","text",'required maxlength="50"',state.familyName),name);break;
@@ -185,24 +234,48 @@ function openForm(name){
 }
 function processForm(form){
  const name=form.dataset.form,fd=new FormData(form),v=k=>safeText(fd.get(k)),datetime=k=>validDate(v(k))?v(k):null;
+ if(name==="create-family"&&window.HabitopiaCloud?.user){window.HabitopiaCloud.showFamilies();closeModal();return;}
  if(name==="create-family"){if(!confirm("Örnek aile verilerinin yerine boş bir aile alanı oluşturulsun mu?"))return;state=blank(v("family"),v("name"));taskFilter="mine";save();closeModal();navigate("home");toast("Aile alanın oluşturuldu.");return;}
+ if(name==="new-asset"){
+  if(!v("title"))return;
+  const assetId=uid(),privateTo=fd.has("private")?current():null;
+  if(privateTo&&v("assignee")!==current()&&datetime("reminderAt")){toast("Özel eşya hatırlatmasını yalnızca kendine gönderebilirsin.");return;}
+  const asset={id:assetId,title:v("title"),category:v("category"),brand:v("brand"),model:v("model"),serial:v("serial"),
+    purchasedAt:v("purchasedAt"),warrantyUntil:v("warrantyUntil"),notes:v("notes"),services:[],creator:current(),privateTo};
+  (state.assets??=[]).push(asset);
+  const reminderAt=datetime("reminderAt"),warrantyUntil=v("warrantyUntil");
+  if(warrantyUntil){
+   const dueAt=warrantyUntil+"T18:00";
+   if(reminderAt&&new Date(reminderAt)>new Date(dueAt)){state.assets.pop();toast("Hatırlatma garanti bitişinden sonra olamaz.");return;}
+   state.radar.push({id:uid(),title:asset.title+" garanti bitişi",cat:"warranty",assignee:privateTo?current():v("assignee"),
+     creator:current(),dueAt,reminderAt,doneAt:null,privateTo,linkedAssetId:assetId});
+  }
+  save();closeModal();navigate("assets");toast("Eşya kaydı eklendi.");return;
+ }
+ if(name==="asset-service"){
+  const asset=(state.assets||[]).find(a=>a.id===targetAssetId);
+  if(!asset){toast("Eşya bulunamadı.");return;}
+  if(window.HabitopiaCloud?.active&&asset.creator!==current()){toast("Servis kaydını yalnızca eşya sahibi ekleyebilir.");return;}
+  (asset.services??=[]).push({id:uid(),title:v("title"),date:v("date")||localDay(),notes:v("notes")});
+  save();closeModal();showAsset(asset.id);toast("Servis geçmişi güncellendi.");return;
+ }
  if(name==="new-task"){
   const rows=v("items").split(/\r?\n/).map(x=>safeText(x,140)).filter(Boolean).slice(0,40);
   if(!rows.length){toast("En az bir görev yaz.");return;}
   const listId=uid(),dueAt=datetime("dueAt"),reminderAt=datetime("reminderAt");
   if(reminderAt&&dueAt&&new Date(reminderAt)>new Date(dueAt)){toast("Bildirim tarihi son tarihten sonra olamaz.");return;}
   const assignee=v("assignee");
-  rows.forEach(title=>state.tasks.push({id:uid(),listId,listTitle:v("listTitle")||"Aile görevleri",title,assignee,creator:current(),dueAt,reminderAt,doneAt:null}));
+  rows.forEach(title=>state.tasks.push({id:uid(),listId,listTitle:v("listTitle")||"Aile görevleri",title,assignee,creator:current(),dueAt,reminderAt,doneAt:null,linkedEventId:v("linkedEventId")||null}));
   taskFilter="all";save();closeModal();navigate("tasks");toast(rows.length+" görev eklendi.");return;
  }
- if(name==="new-shop"){if(!v("title"))return;state.shopping.push({id:uid(),title:v("title"),qty:number(v("qty"))||1,unit:v("unit")||"adet",price:number(v("price")),bought:false});}
+ if(name==="new-shop"){if(!v("title"))return;state.shopping.push({id:uid(),title:v("title"),qty:number(v("qty"))||1,unit:v("unit")||"adet",price:number(v("price")),bought:false,creator:current(),linkedEventId:v("linkedEventId")||null});}
  if(name==="set-budget")state.shoppingBudget=number(v("budget"));
  if(name==="assign-shop")state.shoppingMeta={assignee:v("assignee"),reminderAt:datetime("reminderAt")};
  if(name==="new-radar"){
   if(!datetime("dueAt")){toast("Geçerli bir son tarih seç.");return;}
   const rem=datetime("reminderAt"),due=datetime("dueAt");if(rem&&new Date(rem)>new Date(due)){toast("Bildirim son tarihten sonra olamaz.");return;}
   if(fd.has("private")&&v("assignee")!==current()){toast("Özel Radar kaydını yalnızca kendine atayabilirsin.");return;}
-  state.radar.push({id:uid(),title:v("title"),cat:cats[v("cat")]?v("cat"):"custom",assignee:v("assignee"),creator:current(),dueAt:due,reminderAt:rem,doneAt:null,privateTo:fd.has("private")?current():null});
+  state.radar.push({id:uid(),title:v("title"),cat:cats[v("cat")]?v("cat"):"custom",assignee:v("assignee"),creator:current(),dueAt:due,reminderAt:rem,doneAt:null,privateTo:fd.has("private")?current():null,linkedEventId:v("linkedEventId")||null});
  }
  if(name==="new-event"){
   if(!validDate(v("date"))){toast("Geçerli tarih seç.");return;}
@@ -220,25 +293,41 @@ function processForm(form){
  save();closeModal();render();toast("Kaydedildi.");
 }
 const noConfirm=(msg)=>confirm(msg);
-function act(action,id,value){
+function act(action,id,value,path){
  if(action==="close-modal"){closeModal();return}
+ if(action==="show-invite"){window.HabitopiaCloud?.showInvite?.();return;}
+ if(action==="goto-assets"){navigate("assets");return;}
  if(action==="goto-tasks"||action==="goto-radar"){navigate(action==="goto-tasks"?"tasks":"radar");return}
- if(["new-task","new-shop","set-budget","assign-shop","new-radar","new-event","new-member","rename-family","create-family"].includes(action)){openForm(action);return}
+ if(action==="new-member"&&window.HabitopiaCloud?.active){window.HabitopiaCloud.showInvite();return;}
+ if(["new-task","new-shop","set-budget","assign-shop","new-radar","new-event","new-member","rename-family","create-family","new-asset"].includes(action)){openForm(action);return}
+ if(action==="asset-detail"){showAsset(id);return;}
+ if(action==="asset-service"){targetAssetId=id;openForm("asset-service");return;}
+ if(action==="asset-doc-open"){window.HabitopiaCloud?.openDocument?.(path).catch(e=>toast("Belge açılamadı: "+e.message));return;}
+ if(action==="delete-asset"){
+  const asset=(state.assets||[]).find(x=>x.id===id);if(!asset)return;
+  if(window.HabitopiaCloud?.active&&asset.creator!==current()){toast("Yalnızca eşya sahibi silebilir.");return;}
+  if(!confirm("Eşya kaydını silmek istiyor musun? Bağlı Radar hatırlatmaları da silinecek."))return;
+  state.radar=state.radar.filter(x=>x.linkedAssetId!==id);state.assets=state.assets.filter(x=>x.id!==id);
+  save();closeModal();render();toast("Eşya silindi.");return;
+ }
  if(action==="task-filter"){taskFilter=value;render();return}
  if(action==="radar-filter"){radarFilter=value;render();return}
  if(action==="select-date"){selectedDate=value;render();return}
  if(action==="month-prev"||action==="month-next"){calendarMonth.setMonth(calendarMonth.getMonth()+(action==="month-next"?1:-1));calendarMonth=new Date(calendarMonth.getFullYear(),calendarMonth.getMonth(),1);render();return}
  if(action==="toggle-task"){const t=state.tasks.find(x=>x.id===id);if(t&&t.assignee===current()){t.doneAt=t.doneAt?null:now().toISOString();save();render();toast(t.doneAt?"Görev tamamlandı.":"Görev yeniden açıldı.");}else toast("Bu görevi tamamlamak için ilgili üyeyi seç.");return}
- if(action==="toggle-shop"){const x=state.shopping.find(t=>t.id===id);if(x){x.bought=!x.bought;save();render();}return}
+ if(action==="toggle-shop"){const x=state.shopping.find(t=>t.id===id);if(x){x.bought=!x.bought;x.doneAt=x.bought?now().toISOString():null;save();render();}return}
  if(action==="toggle-radar"){const t=state.radar.find(x=>x.id===id);if(t&&shareable(t)&&t.assignee===current()){t.doneAt=t.doneAt?null:now().toISOString();save();render();toast("Radar durumu güncellendi.");}return}
  const collection={"delete-task":"tasks","delete-shop":"shopping","delete-radar":"radar","delete-event":"events"}[action];
- if(collection){const row=state[collection].find(x=>x.id===id);if(!row||!noConfirm("Bu kaydı silmek istiyor musun?"))return;state[collection]=state[collection].filter(x=>x.id!==id);save();render();toast("Kayıt silindi.");return;}
+ if(collection){const row=state[collection].find(x=>x.id===id);if(row&&window.HabitopiaCloud?.active&&row.creator!==current()){toast("Kaydı yalnızca oluşturan kişi silebilir.");return;}if(!row||!noConfirm("Bu kaydı silmek istiyor musun?"))return;state[collection]=state[collection].filter(x=>x.id!==id);save();render();toast("Kayıt silindi.");return;}
+ if(action==="switch-member"&&window.HabitopiaCloud?.active){toast("Her aile üyesi kendi hesabıyla giriş yapmalıdır.");return;}
  if(action==="switch-member"){if(state.members.some(x=>x.id===id)){state.currentMember=id;save();render();toast("Şimdi "+currentName()+" görünümündesin.");}return}
  if(action==="rsvp"){const e=state.events.find(x=>x.id===id);if(e&&e.invitees.includes(current())&&["yes","no","maybe"].includes(value)){e.rsvp[current()]=value;save();render();}return}
  if(action==="export"){const blob=new Blob([JSON.stringify({format:"habitopia-family",version:VERSION,exportedAt:now().toISOString(),data:state},null,2)],{type:"application/json"});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download="habitopia-aile-yedek-"+localDay()+".json";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),5000);toast("Yedek dosyası oluşturuldu.");return}
+ if(action==="reset"&&window.HabitopiaCloud?.active){toast("Buluttaki aile kaydını sıfırlama burada kapalıdır.");return;}
  if(action==="reset"){if(!noConfirm("Bu cihazdaki Habitopia Aile verilerini silmek istiyor musun? Önce yedek almanı öneririz."))return;state=sample();save();navigate("home");toast("Örnek aileye dönüldü.");return}
  if(action==="request-permission"){if(!("Notification" in window)){toast("Bu tarayıcı bildirimleri desteklemiyor.");return}if(!window.isSecureContext){toast("Bildirimler için güvenli HTTPS gerekir.");return}Notification.requestPermission().then(p=>toast(p==="granted"?"Uygulama açıkken bildirim izni verildi.":"Bildirim izni verilmedi.")).catch(()=>toast("Bildirim izni alınamadı."));return}
  if(action==="show-notifications"){showNotifications();return}
+ if(action==="mark-notification"){window.HabitopiaCloud?.acknowledge?.(id).then(()=>showNotifications()).catch(e=>toast("Bildirim güncellenemedi: "+e.message));return;}
  if(action==="notification-go"){closeModal();navigate(value==="tasks"?"tasks":value==="shopping"?"shopping":"radar");if(value==="tasks"&&id){setTimeout(()=>document.getElementById("list-"+id)?.scrollIntoView({block:"center",behavior:"smooth"}),40);}return}
 }
 function notificationsForMember(){
@@ -250,12 +339,20 @@ function notificationsForMember(){
  out.push(...byList.values());
  state.radar.filter(x=>!x.doneAt&&x.assignee===current()&&shareable(x)&&x.reminderAt&&new Date(x.reminderAt).getTime()<=ts).forEach(x=>out.push({id:"radar:"+x.id,type:"radar",title:"Radar: "+x.title,message:"Son tarih: "+stampTime(x.dueAt),at:x.reminderAt}));
  if(state.shoppingMeta.assignee===current()&&state.shoppingMeta.reminderAt&&state.shopping.some(x=>!x.bought)&&new Date(state.shoppingMeta.reminderAt).getTime()<=ts)out.push({id:"shop:"+state.shoppingMeta.reminderAt,type:"shopping",title:"Aile alışveriş listesi",message:state.shopping.filter(x=>!x.bought).length+" ürün alınmayı bekliyor.",at:state.shoppingMeta.reminderAt});
+ const existing=new Set(out.map(x=>x.type+":"+(x.group||x.id.replace(/^(?:task|radar):/,""))));
+ (window.HabitopiaCloud?.active?window.HabitopiaCloud.notifications:[]).forEach(n=>{
+  const task=state.tasks.find(x=>x.id===n.item_id),radar=state.radar.find(x=>x.id===n.item_id);
+  if(!task&&!radar)return;
+  const type=task?"tasks":"radar",group=task?.listId||radar?.id;
+  if(existing.has(type+":"+group))return;
+  out.push({id:"server:"+n.id,serverId:n.id,group,type,title:n.title,message:"Sunucu hatırlatması",at:n.due_at});
+ });
  return out.sort((a,b)=>b.at.localeCompare(a.at));
 }
 function showNotifications(){
  const notices=notificationsForMember();
- const content='<div class="notice">Bildirimler yalnızca bu cihazdaki seçili kişiye aittir. Uygulama kapalıyken otomatik gönderim henüz etkin değildir.</div>'+
- (notices.length?notices.map(n=>'<div class="notification-card"><strong>'+esc(n.title)+'</strong><p>'+esc(n.message)+' · '+stampTime(n.at)+'</p><button type="button" data-action="notification-go" data-id="'+esc(n.group||"")+'" data-value="'+esc(n.type)+'">İlgili listeyi aç ↗</button></div>').join(""):empty("✓","Yeni bildirim yok","Zamanı gelmiş bekleyen hatırlatma görünmüyor."));
+ const content='<div class="notice">'+(window.HabitopiaCloud?.active?"Zamanı gelen görevler sunucuda da kaydedilir. Telefon tamamen kapalıyken push bildirim henüz etkin değildir.":"Bildirimler yalnızca bu cihazdaki seçili kişiye aittir. Uygulama kapalıyken otomatik gönderim henüz etkin değildir.")+'</div>'+
+ (notices.length?notices.map(n=>'<div class="notification-card"><strong>'+esc(n.title)+'</strong><p>'+esc(n.message)+' · '+stampTime(n.at)+'</p><button type="button" data-action="notification-go" data-id="'+esc(n.group||"")+'" data-value="'+esc(n.type)+'">İlgili listeyi aç ↗</button>'+(n.serverId?'<button type="button" data-action="mark-notification" data-id="'+esc(n.serverId)+'">Okundu</button>':"")+'</div>').join(""):empty("✓","Yeni bildirim yok","Zamanı gelmiş bekleyen hatırlatma görünmüyor."));
  $("#modal").innerHTML='<button type="button" class="modal-close" data-action="close-modal" aria-label="Kapat">×</button><h2 id="modal-title">Bildirimler</h2><p class="modal-intro">Sana ait hatırlatmalar</p>'+content;
  $("#overlay").hidden=false;document.body.style.overflow="hidden";
 }
@@ -272,19 +369,32 @@ function poll(){
    state.notified.push(n.id);changed=true;
   }catch(e){console.warn("Bildirim gösterilemedi",e);}
  });
- if(changed){state.notified=state.notified.slice(-1200);save();}
+ if(changed){state.notified=state.notified.slice(-1200);
+   if(window.HabitopiaCloud?.active){try{localStorage.setItem("habitopia-family-notified-"+current(),JSON.stringify(state.notified))}catch{}}
+   else save();
+  }
 }
 document.addEventListener("click",e=>{
  const pageButton=e.target.closest("[data-page]");
  if(pageButton){e.preventDefault();navigate(pageButton.dataset.page);return;}
  const actionButton=e.target.closest("[data-action]");
- if(actionButton){act(actionButton.dataset.action,actionButton.dataset.id,actionButton.dataset.value);return;}
+ if(actionButton){act(actionButton.dataset.action,actionButton.dataset.id,actionButton.dataset.value,actionButton.dataset.path);return;}
 });
 document.addEventListener("submit",e=>{
  const form=e.target.closest("form[data-form]");if(!form)return;e.preventDefault();processForm(form);
 });
 document.addEventListener("change",async e=>{
  if(e.target.name==="cat"&&e.target.closest('form[data-form="new-radar"]')){const privacy=e.target.closest("form").querySelector('[name="private"]');if(privacy&&e.target.value==="health")privacy.checked=true;return;}
+ if(e.target.id==="asset-doc-upload"){
+  const file=e.target.files?.[0],assetId=e.target.dataset.id;e.target.value="";
+  if(!file)return;
+  try{
+   await window.HabitopiaCloud.uploadDocument(assetId,file,"private");
+   toast("Belge güvenli alana yüklendi.");await viewAssetDocuments(assetId);
+  }catch(err){toast("Belge yüklenemedi: "+err.message);}
+  return;
+ }
+ if(e.target.id==="import-file"&&window.HabitopiaCloud?.active){toast("Bulut oturumundayken yerel yedek yükleme kapalıdır.");e.target.value="";return;}
  if(e.target.id!=="import-file")return;const file=e.target.files?.[0];e.target.value="";if(!file)return;
  if(file.size>1024*1024){toast("Yedek boyutu 1 MB'ı geçemez.");return;}
  try{const raw=JSON.parse(await file.text());if(raw.format!=="habitopia-family"||raw.version!==VERSION)throw Error("Habitopia Aile yedeği değil.");
@@ -300,15 +410,30 @@ $("#menu-toggle").addEventListener("click",toggleMenu);
 $("#mobile-shade").addEventListener("click",closeMenu);
 $("#notification-open").addEventListener("click",showNotifications);
 $("#user-switch").addEventListener("click",()=>{
+ if(window.HabitopiaCloud?.active){window.HabitopiaCloud.showAuth();return;}
  const content='<div class="list">'+state.members.map(m=>'<button type="button" class="list-row" style="width:100%;text-align:left;cursor:pointer" data-action="switch-member-and-close" data-id="'+esc(m.id)+'"><span class="member-avatar">'+esc(m.name[0])+'</span><div class="item-info"><span class="item-title">'+esc(m.name)+'</span><span class="item-sub">'+(m.id===current()?"Şu anda seçili":"Bu cihazda bu üyenin görünümüne geç")+'</span></div></button>').join("")+'</div><p class="archive-note">Üyeler arasında geçiş bir yerel önizlemedir. Gerçek hesap veya farklı telefon bağlantısı değildir.</p>';
  $("#modal").innerHTML='<button type="button" class="modal-close" data-action="close-modal" aria-label="Kapat">×</button><h2 id="modal-title">Aile üyesi seç</h2><p class="modal-intro">Aile görünümünü değiştir</p>'+content;
  $("#overlay").hidden=false;document.body.style.overflow="hidden";
 });
 $("#modal").addEventListener("click",e=>{const el=e.target.closest('[data-action="switch-member-and-close"]');if(el){act("switch-member",el.dataset.id);closeModal();}});
-$("#start-family").addEventListener("click",()=>openForm("create-family"));
+$("#start-family").addEventListener("click",()=>{
+  if(window.HabitopiaCloud){window.HabitopiaCloud.user?window.HabitopiaCloud.showFamilies():window.HabitopiaCloud.showAuth();return;}
+  openForm("create-family");
+ });
 window.addEventListener("hashchange",()=>{const p=location.hash.slice(1);if(pageTitle[p])navigate(p)});
 document.addEventListener("visibilitychange",()=>{if(!document.hidden){poll();render()}});
 const initial=location.hash.slice(1);if(pageTitle[initial])page=initial;
 if(!storageHealthy)setTimeout(()=>toast("Tarayıcıdaki eski veri okunamadı; üzerine yazılmadı."),100);
-render();setInterval(poll,30000);poll();
+render();
+ window.HabitopiaCloud?.init({
+  getState:()=>state,
+  setState:s=>{
+   try{s.notified=JSON.parse(localStorage.getItem("habitopia-family-notified-"+s.currentMember)||"[]");}
+   catch{s.notified=[];}
+   state=s;render();
+  },
+  reset:()=>{state=sample();render();}
+ });
+ window.addEventListener("habitopia-cloud-error",e=>toast("Bulut kaydı başarısız: "+e.detail));
+ setInterval(poll,30000);poll();
 })();
