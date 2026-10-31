@@ -4,10 +4,23 @@ Aileler için ortak görevler, alışveriş, Radar, aile takvimi ve **Evim ve Be
 
 **Web:** https://iyiyolakademi-cpu.github.io/habitopia/
 
-## İki çalışma biçimi
+## Kayıt zorunlu: Örnek aile kaldırıldı
 
-- **Örnek / yerel kullanım:** Giriş yapmadan ürün incelenebilir. Bilgiler yalnızca aynı tarayıcıda kalır. Sahte "üye değiştir" işlevi yalnızca bu önizlemeye aittir.
-- **Gerçek aile hesabı:** Sağ üstte **Giriş yap** → hesap oluştur → e-posta doğrula → aile oluştur veya davet koduyla katıl. Her aile üyesi kendi hesabıyla katılır. Supabase Auth, Postgres RLS, Realtime ve 25 saniyelik yedek senkronizasyon kontrolü kullanılır. Gerçek üyeler birbirlerinin kimliğini taklit edemez.
+- İlk açılışta yalnızca **Kayıt ol / Giriş yap** ekranı görünür. Örnek aile, demo verisi veya kayıt dışı kullanım yoktur.
+- **Yeni hesap:** Ad + aile adı + e-posta + şifre gir → **Kayıt ol ve başla**. E-posta doğrulama açıksa bağlantıyı onayla. Oturum açılınca aile otomatik oluşturulur.
+- **Davetli üye:** **Davet kodum var** seçeneğinde ad, davet kodu, e-posta ve şifre girilir. Hesap doğrulanınca kullanıcı aileye katılır.
+- **Mevcut hesap:** Giriş yap → daha önce katıldığı aile alanı açılır.
+- Tek seferlik aile oluşturma/katılma bilgileri, e-posta doğrulamasını sürdürmek için yalnızca geçici `sessionStorage` içinde saklanır. Bağlantı farklı tarayıcıda açılırsa aile oluşturma veya davet kodu adımının yeniden tamamlanması gerekebilir.
+- Bulut bağlantısı kurulamazsa, kişisel verileri korumak için uygulama boş bir demo ekranına düşmez; yeniden deneme ekranı gösterilir.
+
+## Yeni görsel kimlik
+
+- **Aile Akışı:** Günün önceliği, bekleyen görevler, yaklaşan tarihler ve haftalık takvim tek akışta.
+- **Hızlı işlemler:** Görev gönder, alışverişe ekle, Radar hatırlatması kur, etkinlik oluştur.
+- **Görünüm:** Kırık beyaz zemin, koyu orman yeşili, sıcak şeftali vurguları, daha doğal ve geniş aralıklı düzen.
+- **Kayıt tasarımı:** Masaüstünde iki bölmeli marka + form, mobilde tamamen tek sütunlu kayıt ekranı.
+
+Bulut senkronizasyonunda Supabase Auth, Postgres RLS, Realtime ve 25 saniyelik yedek yenileme kullanılır.
 
 **Bulut projesi:** `Habitopia Aile`, ref `bcrbkrkgsiugsmxmginx`. Patiyiz Supabase projesinden tamamen ayrı. Web istemcisinde yalnızca herkese açık **publishable** anahtar vardır, asla admin / service-role anahtarı yoktur.
 
