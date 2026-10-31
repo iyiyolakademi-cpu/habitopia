@@ -60,7 +60,7 @@ function harness(){
 test("Initial app actually renders dashboard and separate screens",()=>{
  const h=harness();
  assert.match(h.node("#page-content").innerHTML,/Bugünün Akışı|Birlikte halledeceğiz|Günün planı hazır/);
- assert.match(h.node("#page-content").innerHTML,/Aile Görevleri/);
+ assert.match(h.node("#page-content").innerHTML,/Görev gönder/);
  h.handlers.click({target:{closest(selector){return selector==="[data-page]"?{dataset:{page:"shopping"}}:null}},preventDefault(){}});
  assert.match(h.node("#page-content").innerHTML,/ALIŞVERİŞ BÜTÇESİ/);
  h.handlers.click({target:{closest(selector){return selector==="[data-page]"?{dataset:{page:"radar"}}:null}},preventDefault(){}});
