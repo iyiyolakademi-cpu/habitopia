@@ -34,7 +34,7 @@ function brandGraphic(){
 function overlay(content){
  const el=element();if(!el)return;
  el.hidden=false;
- el.classList.toggle("auth-gated",!activeHousehold);
+ el.classList?.toggle?.("auth-gated",!activeHousehold);
  el.innerHTML=brandGraphic()+'<div class="cloud-dialog" role="dialog" aria-modal="true" aria-labelledby="cloud-dialog-title">'+(activeHousehold?'<button class="cloud-exit" type="button" data-cloud="close" aria-label="Kapat">×</button>':"")+content+'<p id="cloud-message" class="cloud-message" role="status" hidden></p></div>';
  el.querySelector("input")?.focus();
 }
