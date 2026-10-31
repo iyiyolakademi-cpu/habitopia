@@ -195,7 +195,7 @@ function updateHeader(){
  $("#today-small").textContent=now().toLocaleDateString("tr-TR",{day:"numeric",month:"long"});
  $$(".nav-link").forEach(b=>b.classList.toggle("active",b.dataset.page===page));
  $$(".mobile-bottom-nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===page));
- const unread=notificationsForMember().length;
+ const unread=unreadNotifications().length;
  const badge=$("#notification-count");
  if(badge){badge.textContent=unread>99?"99+":String(unread);badge.hidden=unread===0;}
  const dot=$("#notification-dot");
@@ -371,8 +371,25 @@ function act(action,id,value,path){
  if(action==="reset"){if(!noConfirm("Bu cihazdaki Habitopia Aile verilerini silmek istiyor musun? Önce yedek almanı öneririz."))return;state=sample();save();navigate("home");toast("Örnek aileye dönüldü.");return}
  if(action==="request-permission"){if(!("Notification" in window)){toast("Bu tarayıcı bildirimleri desteklemiyor.");return}if(!window.isSecureContext){toast("Bildirimler için güvenli HTTPS gerekir.");return}Notification.requestPermission().then(p=>toast(p==="granted"?"Uygulama açıkken bildirim izni verildi.":"Bildirim izni verilmedi.")).catch(()=>toast("Bildirim izni alınamadı."));return}
  if(action==="show-notifications"){showNotifications();return}
- if(action==="mark-notification"){window.HabitopiaCloud?.acknowledge?.(id).then(()=>showNotifications()).catch(e=>toast("Bildirim güncellenemedi: "+e.message));return;}
+ if(action==="mark-notification"){markNotificationRead(id);updateHeader();showNotifications();return;}
  if(action==="notification-go"){closeModal();navigate(value==="tasks"?"tasks":value==="shopping"?"shopping":"radar");if(value==="tasks"&&id){setTimeout(()=>document.getElementById("list-"+id)?.scrollIntoView({block:"center",behavior:"smooth"}),40);}return}
+}
+function notificationReadKey(){
+ return "habitopia-aile-read:"+(window.HabitopiaCloud?.household||"local")+":"+current();
+}
+function notificationReadIds(){
+ try{const ids=JSON.parse(localStorage.getItem(notificationReadKey())||"[]");return new Set(Array.isArray(ids)?ids:[]);}
+ catch{return new Set();}
+}
+function unreadNotifications(){
+ const read=notificationReadIds();
+ return notificationsForMember().filter(n=>!read.has(n.id));
+}
+function markNotificationRead(id){
+ if(!id)return;
+ const seen=notificationReadIds();
+ seen.add(id);
+ try{localStorage.setItem(notificationReadKey(),JSON.stringify([...seen].slice(-300)));}catch{}
 }
 function notificationsForMember(){
  const out=[];const ts=Date.now();
@@ -395,11 +412,11 @@ function notificationsForMember(){
 }
 function showNotifications(){
  closeMenu();
- const notices=notificationsForMember();
+ const notices=unreadNotifications();
  const noticeIcon='<svg aria-hidden="true" viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9Z"/><path d="M10 21h4"/></svg>';
  const content=(notices.length?notices.map((n,i)=>
- '<article class="notification-entry"><span class="notification-entry-icon">'+noticeIcon+'</span><div class="notification-entry-content"><div class="notification-entry-top"><span class="notification-type">'+(n.type==="tasks"?"Aile görevi":n.type==="shopping"?"Alışveriş":"Aile Radarı")+'</span><time>'+stampTime(n.at)+'</time></div><strong>'+esc(n.title)+'</strong><p>'+esc(n.message)+'</p><div class="notification-entry-actions"><button type="button" class="btn btn-light btn-small" data-action="notification-go" data-id="'+esc(n.group||"")+'" data-value="'+esc(n.type)+'">Ayrıntıları gör ↗</button>'+
- (n.serverId?'<button type="button" class="btn btn-muted btn-small" data-action="mark-notification" data-id="'+esc(n.serverId)+'">Okundu</button>':"")+'</div></div></article>'
+ '<article class="notification-entry"><span class="notification-entry-icon">'+noticeIcon+'</span><div class="notification-entry-content"><div class="notification-entry-top"><span class="notification-type">'+(n.type==="tasks"?"Aile görevi":n.type==="shopping"?"Alışveriş":"Aile Radarı")+'</span><time>'+stampTime(n.at)+'</time></div><strong>'+esc(n.title)+'</strong><p>'+esc(n.message)+'</p><div class="notification-entry-actions"><button type="button" class="btn btn-light btn-small" data-action="notification-go" data-id="'+esc(n.group||"")+'" data-value="'+esc(n.type)+'" data-notice-id="'+esc(n.id)+'" data-server-id="'+esc(n.serverId||"")+'">Ayrıntıları gör ↗</button>'+
+ '<button type="button" class="btn btn-muted btn-small" data-action="mark-notification" data-id="'+esc(n.id)+'" data-server-id="'+esc(n.serverId||"")+'">Okundu</button>'+'</div></div></article>'
  ).join(""):'<div class="notifications-empty"><div class="notifications-empty-icon">'+noticeIcon+'</div><h3>Her şey yolunda!</h3><p>Henüz okunmamış bir hatırlatman yok. Yeni görevler ve önemli tarihler burada görünecek.</p></div>');
  const modal=$("#modal"),overlay=$("#overlay");
  overlay.classList.remove("form-fullscreen");
@@ -431,7 +448,7 @@ document.addEventListener("click",e=>{
  const pageButton=e.target.closest("[data-page]");
  if(pageButton){e.preventDefault();navigate(pageButton.dataset.page);return;}
  const actionButton=e.target.closest("[data-action]");
- if(actionButton){act(actionButton.dataset.action,actionButton.dataset.id,actionButton.dataset.value,actionButton.dataset.path);return;}
+ if(actionButton){if(["mark-notification","notification-go"].includes(actionButton.dataset.action)){markNotificationRead(actionButton.dataset.noticeId||actionButton.dataset.id);if(actionButton.dataset.serverId){window.HabitopiaCloud?.acknowledge?.(actionButton.dataset.serverId).catch(err=>toast("Bildirim güncellenemedi: "+err.message));}}act(actionButton.dataset.action,actionButton.dataset.id,actionButton.dataset.value,actionButton.dataset.path);return;}
 });
 document.addEventListener("submit",e=>{
  const form=e.target.closest("form[data-form]");if(!form)return;e.preventDefault();processForm(form);
