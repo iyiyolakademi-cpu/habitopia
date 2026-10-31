@@ -43,34 +43,49 @@ async function refresh(){
  try{
    const r=await sw();
    const sub=await r.pushManager.getSubscription();
-   enabled=!!sub&&Notification.permission==="granted";
+   if(sub&&Notification.permission==="granted"){
+     const api=db();
+     const result=api?await api.from("family_push_subscriptions").select("id")
+       .eq("household_id",family()).eq("user_id",member()).eq("endpoint",sub.endpoint).limit(1):{data:[]};
+     enabled=!result.error&&!!result.data?.length;
+   }else enabled=false;
    report(enabled?"Bu cihazda bildirimler açık. Görev ve Radar hatırlatmaları telefonuna gönderilebilir.":guidance(),enabled?"ok":"");
  }catch(e){enabled=false;report("Bildirim durumu kontrol edilemedi: "+String(e.message||e),"warn");}
  if(btn)btn.textContent=enabled?"Bildirimler açık ✓":"Telefon bildirimlerini aç";
+}
+async function storeSubscription(sub){
+ const details=sub.toJSON(),keys=details.keys;
+ if(!keys?.p256dh||!keys?.auth||!sub.endpoint)throw Error("Cihazın bildirim anahtarları alınamadı.");
+ const api=db();if(!api)throw Error("Sunucu bağlantısı kurulamadı.");
+ const {error}=await api.from("family_push_subscriptions").upsert({
+   household_id:family(),user_id:member(),endpoint:sub.endpoint,
+   p256dh:keys.p256dh,auth:keys.auth,user_agent:navigator.userAgent.slice(0,255)
+ },{onConflict:"household_id,user_id,endpoint"});
+ if(error)throw error;
+}
+async function syncExisting(){
+ if(!member()||!family()||!supported()||Notification.permission!=="granted")return;
+ try{const r=await sw(),sub=await r.pushManager.getSubscription();
+   if(sub)await storeSubscription(sub);
+ }catch(e){console.warn("Habitopia notification sync",e);}
+ await refresh();
 }
 async function enable(){
  if(busy)return;
  if(!member()||!family()){report("Önce hesabına giriş yap.","warn");return;}
  if(!supported()||(isiOS()&&!installed())){report(guidance(),"warn");return;}
- // Keep the permission prompt directly within the user-initiated click.
+ // Trigger OS permission immediately in the click event.
  const asked=Notification.permission==="default"?Notification.requestPermission():Promise.resolve(Notification.permission);
- busy=true;const btn=document.getElementById("push-enable");if(btn){btn.disabled=true;btn.textContent="Bağlanıyor…";}
+ busy=true;const btn=document.getElementById("push-enable");
+ if(btn){btn.disabled=true;btn.textContent="Bağlanıyor…";}
  try{
    const permission=await asked;
    if(permission!=="granted"){report(guidance(),"warn");return;}
    const r=await sw();
    let sub=await r.pushManager.getSubscription();
    if(!sub)sub=await r.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:publicKey()});
-   const details=sub.toJSON(),keys=details.keys;
-   if(!keys?.p256dh||!keys?.auth||!sub.endpoint)throw Error("Cihazın bildirim anahtarları alınamadı.");
-   const api=db();if(!api)throw Error("Sunucu bağlantısı kurulamadı.");
-   const {error}=await api.from("family_push_subscriptions").upsert({
-     household_id:family(),user_id:member(),endpoint:sub.endpoint,
-     p256dh:keys.p256dh,auth:keys.auth,user_agent:navigator.userAgent.slice(0,255)
-   },{onConflict:"household_id,user_id,endpoint"});
-   if(error)throw error;
-   enabled=true;
-   report("Bu cihaz bildirimlere bağlandı. Önemli işler için telefon izinlerini açık tut.","ok");
+   await storeSubscription(sub);
+   enabled=true;report("Bu cihaz bildirimlere bağlandı.","ok");
  }catch(e){
    enabled=false;report("Bildirim bağlantısı başarısız: "+String(e.message||e),"warn");
  }finally{busy=false;await refresh();}
@@ -98,7 +113,7 @@ function setBadge(count){
 function init(){
  if(bound)return;bound=true;
  if(supported()){sw().catch(()=>{});}
- window.addEventListener("habitopia-family-ready",refresh);
+ window.addEventListener("habitopia-family-ready",syncExisting);
  window.addEventListener("habitopia-family-updated",refresh);
  navigator.serviceWorker?.addEventListener("message",event=>{
    if(event.data?.type==="HABITOPIA_OPEN_NOTIFICATIONS")window.dispatchEvent(new Event("habitopia-open-notifications"));
