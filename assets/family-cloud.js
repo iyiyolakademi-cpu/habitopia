@@ -17,16 +17,44 @@ function message(msg,kind=""){
  const n=document.getElementById("cloud-message");
  if(n){n.textContent=msg;n.className="cloud-message "+kind;n.hidden=!msg;}
 }
+const ONBOARD_KEY="habitopia-aile-onboarding";
+function gate(allowed){
+ const app=document.getElementById("app-layout");
+ if(app){app.hidden=!allowed;app.inert=!allowed;}
+ const nav=document.querySelector?.(".mobile-bottom-nav");
+ if(nav){nav.hidden=!allowed;nav.inert=!allowed;}
+}
+function connectionError(reason){
+ gate(false);
+ overlay('<div class="cloud-mark">⌂</div><h2 id="cloud-dialog-title">Bağlantı kurulamadı</h2><p class="cloud-intro">Güvenli aile hesabına şu anda erişemiyoruz. Örnek veya kayıt dışı kullanım açılmayacak.</p><p class="notice warn">'+escapeHtml(reason||"Lütfen internet bağlantını kontrol et.")+'</p><button class="btn btn-primary" type="button" data-cloud="retry">Yeniden dene</button>');
+}
+function brandGraphic(){
+ return '<div class="auth-art" aria-hidden="true"><div class="auth-art-top"><span class="auth-art-logo">⌂</span><strong>habitopia <em>AİLE</em></strong></div><div class="auth-art-center"><span class="auth-kicker">BİRLİKTE DAHA KOLAY</span><strong>Bir ev.<br>Birlikte bir hayat.</strong><p>Ailenizin planları, görevleri, önemli tarihleri ve küçük hatırlatmaları artık tek yerde.</p></div><div class="auth-art-bottom"><span>◌ &nbsp; ORTAK GÖREVLER</span><span>◌ &nbsp; AİLE TAKVİMİ</span><span>◌ &nbsp; EVİN HAFIZASI</span></div><div class="auth-art-orbit one"></div><div class="auth-art-orbit two"></div><div class="auth-art-symbol">⌂</div></div>';
+}
 function overlay(content){
- const el=element();el.hidden=false;
- el.innerHTML='<div class="cloud-dialog" role="dialog" aria-modal="true" aria-labelledby="cloud-dialog-title"><button class="cloud-exit" type="button" data-cloud="close" aria-label="Kapat">×</button>'+content+'<p id="cloud-message" class="cloud-message" role="status" hidden></p></div>';
+ const el=element();if(!el)return;
+ el.hidden=false;
+ el.classList.toggle("auth-gated",!activeHousehold);
+ el.innerHTML=brandGraphic()+'<div class="cloud-dialog" role="dialog" aria-modal="true" aria-labelledby="cloud-dialog-title">'+(activeHousehold?'<button class="cloud-exit" type="button" data-cloud="close" aria-label="Kapat">×</button>':"")+content+'<p id="cloud-message" class="cloud-message" role="status" hidden></p></div>';
  el.querySelector("input")?.focus();
 }
-function close(){element().hidden=true;element().innerHTML="";}
+function close(){
+ if(!activeHousehold){gate(false);return;}
+ const el=element();if(el){el.hidden=true;el.innerHTML="";}
+}
 function label(text,name,type="text",extra=""){return '<label class="field"><span>'+text+'</span><input name="'+name+'" type="'+type+'" '+extra+' required></label>';}
-function authView(mode="signin"){
- const signup=mode==="signup";
- overlay('<div class="cloud-mark">⌂</div><h2 id="cloud-dialog-title">'+(signup?"Habitopia Aile'ye katıl":"Aile hesabına giriş yap")+'</h2><p class="cloud-intro">Farklı telefonlarda aynı aileye bağlanmak için kişisel hesabını kullan.</p><form data-cloud-form="'+mode+'" class="cloud-form">'+label("E-posta","email","email",'autocomplete="email" maxlength="200"')+label("Şifre","password","password",'autocomplete="'+(signup?"new-password":"current-password")+'" minlength="8" maxlength="128"')+'<button class="btn btn-primary" type="submit">'+(signup?"Hesap oluştur":"Giriş yap")+'</button></form><button type="button" class="cloud-switch" data-cloud="'+(signup?"signin":"signup")+'">'+(signup?"Zaten hesabın var mı? Giriş yap":"Hesabın yok mu? Ücretsiz kayıt ol")+'</button><p class="cloud-notice">Giriş yaptığında bu cihazın tarayıcısında oturumun açık kalabilir.</p>');
+function authView(mode="signup"){
+ gate(false);
+ const signup=mode==="signup"||mode==="signup-invite",invited=mode==="signup-invite";
+ const title=signup?"Aileni bir araya getir.":"Tekrar hoş geldin.";
+ let body='<div class="auth-mini-mark"><span>⌂</span> HABITOPIA AİLE</div><span class="auth-step">'+(signup?"01 / AİLENİN BAŞLANGICI":"AİLENE HOŞ GELDİN")+'</span><h2 id="cloud-dialog-title">'+title+'</h2><p class="cloud-intro">'+(signup?"Bir hesapla başlayın. İster kendi ailenizi oluşturun, ister size gelen davetle katılın.":"Kayıtlı hesabınla aile alanına kaldığın yerden devam et.")+'</p><div class="auth-tabs"><button type="button" class="'+(signup?"active":"")+'" data-cloud="signup">Kayıt ol</button><button type="button" class="'+(!signup?"active":"")+'" data-cloud="signin">Giriş yap</button></div>';
+ if(signup){
+  body+='<div class="auth-join-pills"><button type="button" data-cloud="signup" class="'+(!invited?"active":"")+'">Aile oluştur</button><button type="button" data-cloud="signup-invite" class="'+(invited?"active":"")+'">Davet kodum var</button></div><form data-cloud-form="'+mode+'" class="cloud-form">'+label("Adın","name","text",'autocomplete="given-name" maxlength="60" placeholder="Adın"')+(invited?label("Aile davet kodu","code","text",'placeholder="Davet kodunu yapıştır" minlength="36" maxlength="36"'):label("Aile adı","family","text",'maxlength="80" placeholder="Örn. Bizim Ev"'))+label("E-posta","email","email",'autocomplete="email" maxlength="200" placeholder="ornek@eposta.com"')+label("Şifre (en az 8 karakter)","password","password",'autocomplete="new-password" minlength="8" maxlength="128"')+'<button class="btn btn-primary auth-submit" type="submit">Kayıt ol ve başla <span aria-hidden="true">→</span></button></form>';
+ }else{
+  body+='<form data-cloud-form="signin" class="cloud-form">'+label("E-posta","email","email",'autocomplete="email" maxlength="200" placeholder="ornek@eposta.com"')+label("Şifre","password","password",'autocomplete="current-password" minlength="8" maxlength="128"')+'<button class="btn btn-primary auth-submit" type="submit">Aileme giriş yap <span aria-hidden="true">→</span></button></form>';
+ }
+ body+='<p class="auth-footnote">Ailenizin bilgileri yalnızca yetkili hesaplarla paylaşılır. E-posta doğrulaması istenebilir.</p>';
+ overlay(body);
 }
 function chooseFamily(){
  const list=householdList.map(m=>'<button type="button" class="cloud-family-entry" data-cloud="choose" data-id="'+escapeHtml(m.household_id)+'">⌂ <strong>'+escapeHtml(m.display_name)+'</strong><small>'+escapeHtml(m.household_name||"Ailem")+'</small> ↗</button>').join("");
@@ -69,7 +97,7 @@ function rowsFromState(s){
  return idToRow;
 }
 async function fullLoad(){
- if(!activeHousehold||loading||busy)return;
+ if(!activeHousehold||loading||busy)return false;
  loading=true;
  try{
  const [house,members,items]=await Promise.all([
@@ -106,7 +134,8 @@ async function fullLoad(){
  lastSnapshot=clone(s);
  callbacks?.setState(s);
  status("Bulutta eşzamanlandı");
- }catch(e){status("Senkronizasyon hatası");console.error("Habitopia cloud load",e);lastError=e.message||"Senkronizasyon hatası";}
+ return true;
+ }catch(e){status("Senkronizasyon hatası");console.error("Habitopia cloud load",e);lastError=e.message||"Senkronizasyon hatası";return false;}
  finally{loading=false;}
 }
 function compare(old,next){return JSON.stringify(old)===JSON.stringify(next)}
@@ -170,7 +199,7 @@ function save(snapshot){
 function queueReload(delay=600){
  if(!activeHousehold)return;
  clearTimeout(reloadTimer);
- reloadTimer=setTimeout(()=>{if(!busy&&!loading)fullLoad();else queueReload(1000);},delay);
+ reloadTimer=setTimeout(()=>{if(!busy&&!loading)fullLoad().catch(e=>console.warn(e));else queueReload(1000);},delay);
 }
 function subscribe(){
  if(unsub){client.removeChannel(unsub);unsub=null;}
@@ -185,25 +214,62 @@ function subscribe(){
  clearInterval(tick);tick=setInterval(()=>{if(document.visibilityState==="visible")queueReload(50);},25000);
 }
 function status(text){
- const x=document.getElementById("sync-indicator");if(x)x.textContent=activeHousehold?text:"Önizleme · Bulut hesabı bağlı değil";
- const b=document.getElementById("cloud-account");if(b)b.textContent=auth?(activeHousehold?"☁ Hesabım":"Aile seç"):"Giriş yap";
+ const x=document.getElementById("sync-indicator");if(x)x.textContent=activeHousehold?text:"Güvenli aile hesabı gerekiyor";
+ const b=document.getElementById("cloud-account");if(b)b.textContent=auth?(activeHousehold?"☁ Ailem":"Aile seç"):"Kayıt ol";
 }
 async function useHousehold(id){
  await op;
  if(!householdList.some(h=>h.household_id===id))throw Error("Bu aileye üye değilsin.");
  activeHousehold=id;sessionStorage.setItem("hbt-family-household",id);
- close();await fullLoad();subscribe();status("Buluta bağlı");
+ try{
+  const loaded=await fullLoad();
+  if(!loaded)throw Error(lastError||"Aile verileri henüz alınamadı");
+  subscribe();
+  gate(true);
+  close();
+  status("Buluta bağlı");
+ }catch(e){activeHousehold=null;gate(false);connectionError(e.message);throw e;}
+}
+function getPending(){
+ try{const v=JSON.parse(sessionStorage.getItem(ONBOARD_KEY)||"null");return v&&typeof v.name==="string"?v:null;}catch{return null;}
+}
+async function resumeOnboarding(){
+ const pending=getPending();
+ if(!pending)return false;
+ const name=pending.name.trim().slice(0,60);
+ let result;
+ if(pending.code){
+  result=await client.rpc("family_join",{p_code:pending.code,p_display_name:name});
+ }else{
+  result=await client.rpc("family_create",{p_name:pending.family?.trim().slice(0,80)||"Ailem",p_display_name:name});
+ }
+ if(result.error)throw result.error;
+ sessionStorage.removeItem(ONBOARD_KEY);
+ await families();
+ await useHousehold(result.data);
+ return true;
 }
 async function start(){
+ gate(false);
  const {data:{session},error}=await client.auth.getSession();
  if(error)throw error;
  auth=session?.user||null;
- if(!auth){activeHousehold=null;status("");return;}
+ if(!auth){
+  activeHousehold=null;
+  status("");
+  authView("signup");
+  return;
+ }
  await families();
  const preferred=sessionStorage.getItem("hbt-family-household");
  if(householdList.length){
+  sessionStorage.removeItem(ONBOARD_KEY);
   await useHousehold(householdList.some(h=>h.household_id===preferred)?preferred:householdList[0].household_id);
- }else chooseFamily();
+ }else{
+  const pending=getPending();
+  if(pending){try{await resumeOnboarding();return;}catch(e){console.warn("Habitopia onboarding",e);chooseFamily();message("Aile bağlantısı tamamlanamadı: "+e.message,"bad");return;}}
+  chooseFamily();
+ }
 }
 async function signout(){
  await op;
@@ -211,7 +277,8 @@ async function signout(){
  if(tick)clearInterval(tick);
  const {error}=await client.auth.signOut();if(error)throw error;
  activeHousehold=null;auth=null;lastSnapshot=null;queuedSnapshot=null;notifications=[];householdList=[];
- sessionStorage.removeItem("hbt-family-household");close();callbacks?.reset();status("");
+ sessionStorage.removeItem("hbt-family-household");sessionStorage.removeItem(ONBOARD_KEY);
+ callbacks?.reset();gate(false);status("");authView("signup");
 }
 function currentUser(){return auth}
 async function uploadDocument(itemId,file,privacy="private"){
