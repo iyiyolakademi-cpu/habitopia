@@ -62,7 +62,7 @@ test("Scheduled server notifications and private storage migration present",()=>
  const sql2=fs.readFileSync("supabase/migrations/202611010002_habitopia_aile_v2_realtime_storage.sql","utf8");
  const sql3=fs.readFileSync("supabase/migrations/202611010003_habitopia_aile_v2_scheduled_notifications.sql","utf8");
  assert.match(sql2,/habitopia-family-docs/);
- assert.match(sql2,/public,false/); // private bucket bool must be false
+ assert.match(sql2,/false,5242880/); // private bucket bool must be false
  assert.match(sql2,/create policy "family secured download"/);
  assert.match(sql3,/cron.schedule/);
  assert.match(sql3,/enqueue_due_notifications/);
