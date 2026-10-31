@@ -396,10 +396,11 @@ body{background:#e9eee8!important}
 <body>
 
 <div class="app" id="app">
-  <header class="topbar"><div class="top-row"><div class="brand-orb" id="brandIcon"></div><div class="head-copy"><div class="eyebrow"><span class="date-dot"></span><span id="dateLabel"></span></div><div class="greeting" id="greeting"></div></div><button class="coin" data-action="rewards" aria-label="Puan mağazasını aç"><span class="coin-dot">P</span><span class="coin-value" id="coinCount">0</span><span class="coin-copy" id="coinCopy">Puan</span></button></div><div class="progress-card"><span class="level-label" id="levelLabel"></span><span class="xp-value" id="xpValue">0 / 50 XP</span><div class="xp-track"><div class="xp-fill" id="xpFill"></div></div></div></header>
+  <header class="topbar"><div class="top-row"><div class="brand-orb" id="brandIcon"></div><div class="head-copy"><div class="eyebrow"><span class="date-dot"></span><span id="dateLabel"></span></div><div class="greeting" id="greeting"></div></div><button type="button" class="top-avatar" data-action="go-account" aria-label="Profilim"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 21a7.5 7.5 0 0 1 15 0"/></svg></button><button class="coin" data-action="rewards" aria-label="Puan mağazasını aç"><span class="coin-dot">P</span><span class="coin-value" id="coinCount">0</span><span class="coin-copy" id="coinCopy">Puan</span></button></div><div class="progress-card"><span class="level-label" id="levelLabel"></span><span class="xp-value" id="xpValue">0 / 50 XP</span><div class="xp-track"><div class="xp-fill" id="xpFill"></div></div></div></header>
   <main class="main" id="main">
     <section class="view active" id="view-today">
       <div class="page-head"><div><h1 data-i18n="today"></h1><p id="todaySubtitle"></p></div><button class="icon-btn" data-action="gift" id="giftButton"></button></div>
+      <section class="hbt-today-summary" id="hbtTodaySummary" aria-label="Günlük ilerleme"><div class="hbt-summary-top"><span class="hbt-eyebrow" id="hbtDailyGreeting">GÜNLÜK PLAN</span><span id="hbtSummaryWeek">Bugün</span></div><div class="hbt-summary-main"><div><strong class="hbt-summary-title" id="hbtSummaryTitle">Kendi yolunda ilerle.</strong><p id="hbtSummaryCopy">Küçük adımlar birikir.</p></div><div class="hbt-progress-circle" id="hbtProgressCircle" style="--progress:0"><div><strong id="hbtProgressPercent">0%</strong><span id="hbtPercentLabel">tamamlandı</span></div></div></div><div class="hbt-summary-bottom"><span id="hbtSummaryCount">0 / 0 adım</span><button type="button" data-action="open-task" id="hbtQuickTask">+ Görev ekle</button></div></section>
       <div class="card hero"><div class="hero-kicker" data-i18n="dailyOverview"></div><div class="hero-line" id="heroLine"></div><div class="pill-row" id="heroPills"></div></div><div id="growthDashboard" class="growth-board"></div>
       <div class="quick-add"><input class="text-input" id="quickTask" maxlength="90" data-i18n-placeholder="quickTask"><button class="primary" data-action="quick-task">+</button></div>
       <div class="section-head"><h2 data-i18n="tasks"></h2><span id="taskSummary"></span></div><div class="task-list" id="taskList"></div>
@@ -413,12 +414,26 @@ body{background:#e9eee8!important}
       <div class="habit-table" id="habitTable"></div>
       <div class="section-head"><h2 data-i18n="weeklySummary"></h2><span id="habitWeekScore"></span></div><div class="stat-grid" id="habitStats"></div>
     </section>
+    <section class="view" id="view-plan">
+      <div class="page-head"><div><h1 id="hbtPlanTitle">Planım</h1><p id="hbtPlanSubtitle">Takvimin ve kişisel planın tek yerde.</p></div><button type="button" class="icon-btn" data-action="calendar" aria-label="Gelişim takvimini aç">▦</button></div>
+      <section class="hbt-calendar-card" aria-label="Aylık takvim"><div class="hbt-calendar-head"><div><span class="hbt-eyebrow" id="hbtCalendarCaption">TAKVİM</span><h2 id="hbtCalendarMonth"></h2></div><div class="hbt-calendar-arrows"><button type="button" data-action="hbt-month-prev" aria-label="Önceki ay">‹</button><button type="button" data-action="hbt-month-next" aria-label="Sonraki ay">›</button></div></div><div class="hbt-calendar-weekdays" id="hbtCalendarWeekdays"></div><div class="hbt-calendar-days" id="hbtCalendarDays"></div></section>
+      <section class="hbt-selected-day" id="hbtSelectedDay" aria-live="polite"></section>
+      <div class="section-head"><h2 id="hbtPlanToolsHeading">Planlama araçların</h2></div>
+      <div class="hbt-shortcuts">
+        <button type="button" data-action="calendar"><span class="hbt-shortcut-icon">▦</span><strong id="hbtCalendarAction">Gelişim takvimi</strong><small id="hbtCalendarActionDetail">Tüm geçmişini incele</small></button>
+        <button type="button" data-action="routines"><span class="hbt-shortcut-icon">☀</span><strong id="hbtRoutineAction">Rutinlerim</strong><small id="hbtRoutineActionDetail">Sabah ve akşam</small></button>
+        <button type="button" data-action="weekly-goals"><span class="hbt-shortcut-icon">◎</span><strong id="hbtGoalsAction">Haftalık hedefler</strong><small id="hbtGoalsActionDetail">Bu haftanın odağı</small></button>
+        <button type="button" data-action="go-challenges"><span class="hbt-shortcut-icon">◇</span><strong id="hbtChallengeAction">21 günlük hedefler</strong><small id="hbtChallengeActionDetail">Meydan okumalarını aç</small></button>
+      </div>
+    </section>
     <section class="view" id="view-challenges">
+      <button type="button" class="hbt-back-link" data-action="go-plan" id="hbtBackToPlan">← Planıma dön</button>
       <div class="page-head"><div><h1 data-i18n="challenges"></h1><p data-i18n="challengeSubtitle"></p></div><button class="icon-btn" data-action="add-challenge" id="addChallengeIcon"></button></div>
       <div id="challengeContent"></div>
     </section>
     <section class="view" id="view-profile">
       <div class="page-head"><div><h1 data-i18n="progress"></h1><p data-i18n="progressSubtitle"></p></div><button class="icon-btn" data-action="settings" id="settingsIcon"></button></div>
+      <div class="hbt-insight-summary" id="hbtInsightSummary" aria-label="Gelişim özeti"></div>
       <div class="tracker-grid"><button class="tracker water" data-action="water-stats"><div class="feature-icon" id="trackerWaterIcon"></div><strong data-i18n="water"></strong><b id="trackerWaterValue"></b><span id="trackerWaterCopy"></span></button><button class="tracker weight" data-action="weight"><div class="feature-icon" id="trackerWeightIcon"></div><strong data-i18n="weight"></strong><b id="trackerWeightValue"></b><span id="trackerWeightCopy"></span></button><button class="tracker focus" data-action="focus-stats"><div class="feature-icon" id="trackerFocusIcon"></div><strong data-i18n="focus"></strong><b id="trackerFocusValue"></b><span id="trackerFocusCopy"></span></button><button class="tracker notes" data-action="notes"><div class="feature-icon" id="trackerNotesIcon"></div><strong data-i18n="notebook"></strong><b id="trackerNotesValue"></b><span id="trackerNotesCopy"></span></button><button class="tracker mood" data-action="mood"><div class="feature-icon" id="trackerMoodIcon"><span class="ui-glyph" data-ui-icon="mood-neutral"></span></div><strong data-i18n="mood"></strong><b id="trackerMoodValue"></b><span id="trackerMoodCopy"></span></button><button class="tracker report" data-action="weekly-report"><div class="feature-icon" id="trackerReportIcon"></div><strong data-i18n="weeklyReport"></strong><b id="trackerReportValue"></b><span id="trackerReportCopy"></span></button></div>
       <div class="section-head hub-section"><h2 id="growthHubTitle">Gelişim Merkezi</h2><span id="growthHubSub">Planla · uygula · değerlendir</span></div><div class="growth-actions" id="growthHubActions"><button class="growth-action" data-action="calendar"><b>📅</b><strong>Takvim</strong><span>Günlük gelişimini gör</span></button><button class="growth-action" data-action="routines"><b>🌅</b><strong>Rutinler</strong><span>Sabah ve akşam</span></button><button class="growth-action" data-action="journal"><b>📖</b><strong>Günlük</strong><span>Gününü düşün ve yaz</span></button><button class="growth-action" data-action="weekly-goals"><b>🎯</b><strong>Haftalık Hedefler</strong><span>Haftanın odağını takip et</span></button><button class="growth-action" data-action="weekly-review"><b>🧠</b><strong>Haftayı Değerlendir</strong><span>Öğren ve yeni haftayı kur</span></button><button class="growth-action" data-action="growth-details"><b>📈</b><strong>Gelişim Skoru</strong><span>Skorunun detaylarını gör</span></button></div>
       <!-- Eski profil istatistikleri görünümden tamamen kaldırıldı.
@@ -433,8 +448,20 @@ body{background:#e9eee8!important}
         <div id="badgeGrid"></div>
       </div>
     </section>
+    <section class="view" id="view-account">
+      <div class="page-head"><div><h1 id="hbtAccountTitle">Profilim</h1><p id="hbtAccountSubtitle">Hedeflerin ve kişisel ayarların.</p></div><button type="button" class="icon-btn" data-action="settings" aria-label="Ayarları aç">⚙</button></div>
+      <div class="hbt-account-head" id="hbtAccountHero"></div>
+      <div class="section-head"><h2 id="hbtAccountToolsHeading">Kişisel alanım</h2></div>
+      <div class="hbt-account-actions">
+        <button type="button" data-action="notes"><span>✎</span><strong id="hbtNotesLabel">Not defteri</strong><b>›</b></button>
+        <button type="button" data-action="journal"><span>☷</span><strong id="hbtJournalLabel">Günlük</strong><b>›</b></button>
+        <button type="button" data-action="weekly-review"><span>▥</span><strong id="hbtWeeklyLabel">Haftalık değerlendirme</strong><b>›</b></button>
+        <button type="button" data-action="settings"><span>⚙</span><strong id="hbtSettingsLabel">Ayarlar ve görünüm</strong><b>›</b></button>
+      </div>
+      <p class="hbt-account-footnote" id="hbtAccountPrivacy">Verilerin ve kişisel gelişimin senin kontrolünde.</p>
+    </section>
   </main>
-  <nav class="nav"><button class="nav-btn active" data-view="today"></button><button class="nav-btn" data-view="habits"></button><button class="nav-btn" data-view="challenges"></button><button class="nav-btn" data-view="profile"></button></nav>
+  <nav class="nav" aria-label="Ana menü"><button type="button" class="nav-btn active" data-view="today"></button><button type="button" class="nav-btn" data-view="habits"></button><button type="button" class="nav-btn" data-view="plan"></button><button type="button" class="nav-btn" data-view="profile"></button><button type="button" class="nav-btn" data-view="account"></button></nav>
   <button class="focus-float" id="focusFloat" data-action="reopen-focus"><span id="focusFloatLabel"></span><strong id="focusFloatTime"></strong></button>
 
   <div class="sheet-backdrop" id="taskSheet"><div class="sheet"><div class="handle"></div><div class="sheet-head"><h2 data-i18n="newTask"></h2><button class="close" data-close="taskSheet">×</button></div><div class="stack"><div class="field"><label data-i18n="taskName"></label><input class="text-input" id="taskTitleInput" maxlength="90"></div><div class="field-row"><div class="field"><label data-i18n="taskType"></label><select class="select-input" id="taskTypeInput"><option value="once" data-i18n="oneTime"></option><option value="focus" data-i18n="focusTask"></option></select></div><div class="field"><label data-i18n="area"></label><select class="select-input" id="taskCategoryInput"></select></div></div><div class="field" id="effortField"><label data-i18n="difficulty"></label><div class="choice-row" id="effortChoices"></div></div><div class="field" id="taskDurationField" hidden><label data-i18n="duration"></label><input class="text-input" id="taskDurationInput" type="number" inputmode="numeric" min="5" max="180" step="1" value="25"></div><button class="primary" data-action="save-task" data-i18n="add"></button></div></div></div>
@@ -1726,6 +1753,332 @@ button:focus,button:active,a:focus,a:active{outline:none!important;-webkit-tap-h
 }
 
 </style>
+<style id="habitopia-redesign">
+/* Habitopia 3.0 — single cohesive visual language, last-loaded layer.
+   Existing views and handlers remain intact; no old data is mutated. */
+:root{
+  --hbt-forest:#173f2a;--hbt-green:#32855a;--hbt-mint:#b4ddbc;
+  --hbt-canvas:#f3f7f1;--hbt-panel:#ffffff;--hbt-subtle:#eff5ee;
+  --hbt-border:#e0eae0;--hbt-text:#192d20;--hbt-muted:#708072;
+  --hbt-shadow:0 10px 34px rgba(25,68,41,.065);
+  --hbt-shadow-strong:0 22px 48px rgba(24,62,40,.14);
+  --nav-h:76px;--top-h:92px;
+  --bg:var(--hbt-canvas)!important;--surface:var(--hbt-panel)!important;
+  --surface-2:var(--hbt-canvas)!important;--surface-3:var(--hbt-subtle)!important;
+  --ink:var(--hbt-text)!important;--muted:var(--hbt-muted)!important;
+  --line:var(--hbt-border)!important;--primary:var(--hbt-green)!important;
+  --primary-2:var(--hbt-forest)!important;--primary-soft:#e5f3e8!important;
+}
+html{background:var(--hbt-canvas)!important}
+html body{background:var(--hbt-canvas)!important;color:var(--ink)!important}
+html body .app{background:var(--hbt-canvas)!important;box-shadow:var(--hbt-shadow-strong)!important}
+html body .topbar{
+  height:calc(92px + env(safe-area-inset-top))!important;
+  flex-basis:calc(92px + env(safe-area-inset-top))!important;
+  background:linear-gradient(115deg,#183e2b 0%,#215739 55%,#327650 100%)!important;
+  padding:calc(14px + env(safe-area-inset-top)) 18px 12px!important;
+  box-shadow:0 7px 22px rgba(24,71,42,.12)!important
+}
+.topbar .top-row{gap:12px}
+.topbar .brand-orb{border-radius:17px!important;overflow:hidden;box-shadow:0 5px 16px #10271826!important}
+.topbar .eyebrow{opacity:.86;letter-spacing:.095em}
+.topbar .greeting{font-size:17px!important;line-height:1.3!important;letter-spacing:-.035em}
+.top-avatar{
+  margin-left:auto;flex:0 0 40px;width:40px;height:40px;border-radius:14px;
+  border:1px solid rgba(255,255,255,.24);background:rgba(255,255,255,.14);
+  color:#fff;display:grid;place-items:center;transition:background .15s
+}
+.top-avatar:hover{background:rgba(255,255,255,.26)}
+html body .main{padding:21px 17px calc(108px + env(safe-area-inset-bottom))!important;scrollbar-color:#a8c5ac transparent}
+.main .view{max-width:880px;margin:0 auto}
+.page-head{margin:0 1px 19px!important;align-items:center!important}
+.page-head h1{font-size:27px!important;font-weight:850!important;letter-spacing:-.045em!important;line-height:1.12!important;color:var(--ink)!important}
+.page-head p{font-size:12.5px!important;line-height:1.55!important;color:var(--muted)!important;margin-top:6px!important}
+.icon-btn{border-radius:15px!important;background:var(--surface)!important;border:1px solid var(--line)!important;color:var(--ink)!important}
+.section-head{margin-top:21px!important;margin-bottom:12px!important}
+.section-head h2{font-size:16px!important;font-weight:820!important;letter-spacing:-.025em!important}
+.card,.task,.habit-table,.tracker,.growth-action,.growth-score-card,.daily-plan,.chart-card,.v21-score,.v21-plan,.v21-quick button,.stat,.stat-card{
+  border-color:var(--line)!important;border-radius:21px!important;box-shadow:var(--hbt-shadow)!important
+}
+.task{padding:13px!important;min-height:67px!important;border-radius:17px!important}
+.task-check{border-radius:12px!important;background:var(--surface)!important}
+.task.done .task-check{background:var(--primary)!important}
+.quick-add{margin-top:13px!important;margin-bottom:4px!important}
+.quick-add .text-input{border-radius:16px!important;background:var(--surface)!important;border-color:var(--line)!important;min-height:52px!important}
+.quick-add .primary{border-radius:16px!important;min-height:52px!important;background:var(--hbt-green)!important}
+button.primary{background:var(--hbt-green)!important;color:#fff!important;border-radius:14px!important}
+button.secondary,.small-btn{border-radius:13px!important}
+.hbt-today-summary{
+  background:linear-gradient(135deg,#1a482f 0%,#28714b 100%);border-radius:27px;
+  padding:19px 20px 18px;color:#fff;margin:0 0 15px;
+  box-shadow:0 15px 35px rgba(27,86,50,.18);position:relative;overflow:hidden
+}
+.hbt-today-summary:after{
+  content:"";width:200px;height:200px;border:1px solid rgba(255,255,255,.11);
+  border-radius:50%;position:absolute;right:-94px;top:-109px;pointer-events:none
+}
+.hbt-summary-top,.hbt-summary-bottom{display:flex;align-items:center;justify-content:space-between;gap:10px;position:relative;z-index:1}
+.hbt-eyebrow{font-size:10px;letter-spacing:.13em;font-weight:840;text-transform:uppercase}
+.hbt-summary-top{font-size:11px;color:#d5e9da}
+.hbt-summary-main{display:flex;align-items:center;gap:10px;justify-content:space-between;margin:18px 0 20px;position:relative;z-index:1}
+.hbt-summary-main>div:first-child{flex:1;min-width:0}
+.hbt-summary-title{font-size:22px;font-weight:820;letter-spacing:-.045em;line-height:1.12;display:block;max-width:230px}
+.hbt-summary-main p{font-size:12px;color:#d5e9da;line-height:1.5;margin:10px 0 0;max-width:200px}
+.hbt-progress-circle{
+  --progress:0;width:110px;height:110px;flex:0 0 110px;border-radius:50%;
+  display:grid;place-items:center;
+  background:conic-gradient(#e2f3db calc(var(--progress)*1%),rgba(255,255,255,.20) 0);
+  padding:8px
+}
+.hbt-progress-circle>div{
+  width:100%;height:100%;display:flex;align-items:center;justify-content:center;
+  flex-direction:column;background:#245f40;border-radius:50%;gap:3px
+}
+.hbt-progress-circle strong{font-size:25px;letter-spacing:-.06em;line-height:1}
+.hbt-progress-circle span{font-size:9px;opacity:.86}
+.hbt-summary-bottom{padding-top:13px;border-top:1px solid rgba(255,255,255,.18)}
+.hbt-summary-bottom span{font-size:12px;color:#dceee0;font-weight:650}
+.hbt-summary-bottom button{
+  color:#173f2a;background:#fff;border:0;border-radius:11px;padding:9px 12px;
+  font-size:11px;font-weight:800;min-height:36px
+}
+html body #view-today .hero{
+  background:var(--surface)!important;border:1px solid var(--line)!important;
+  color:var(--ink)!important;box-shadow:var(--hbt-shadow)!important;
+  padding:17px 18px!important;border-radius:20px!important
+}
+#view-today .hero .hero-kicker{color:var(--hbt-green)!important;font-size:10px!important;font-weight:800!important}
+#view-today .hero .hero-line{color:var(--ink)!important;font-size:16px!important;font-weight:660!important;line-height:1.48!important}
+#view-today .growth-board{margin-top:14px}
+#view-today .v21-score,#view-today .v21-plan,#view-today .v21-quick button{background:var(--surface)!important;color:var(--ink)!important}
+.water-card,.focus-card{background:var(--surface)!important;border:1px solid var(--line)!important}
+.water-card .water-ring{border-color:var(--hbt-mint)!important}
+#view-habits .habit-toolbar{gap:8px;margin-bottom:12px}
+#view-habits .week-nav{background:var(--surface)!important;border:1px solid var(--line)!important;border-radius:14px!important}
+#view-habits .habit-head{background:var(--surface-3)!important}
+#view-habits .habit-row{background:var(--surface)!important}
+#view-habits .habit-table{overflow-x:auto;scrollbar-width:thin}
+#view-habits .habit-info{color:var(--ink)}
+#view-habits .habit-day{border-radius:11px!important}
+#view-challenges .challenge-card,#view-challenges .challenge-days,#view-challenges .challenge-nav{border-radius:20px!important}
+.hbt-back-link{border:0;background:transparent;color:var(--primary-2);font-size:12px;font-weight:750;margin-bottom:15px;padding:7px 0}
+.hbt-calendar-card{
+  background:var(--surface);border:1px solid var(--line);border-radius:25px;
+  padding:20px 16px 18px;box-shadow:var(--hbt-shadow)
+}
+.hbt-calendar-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:23px}
+.hbt-calendar-head .hbt-eyebrow{color:var(--hbt-green)}
+.hbt-calendar-head h2{font-size:22px;margin:5px 0 0;letter-spacing:-.04em;color:var(--ink)}
+.hbt-calendar-arrows{display:flex;gap:7px}
+.hbt-calendar-arrows button{
+  width:37px;height:37px;border:1px solid var(--line);border-radius:12px;
+  background:var(--surface-3);color:var(--ink);font-size:23px
+}
+.hbt-calendar-weekdays,.hbt-calendar-days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}
+.hbt-calendar-weekdays{margin-bottom:8px}
+.hbt-calendar-weekdays span{text-align:center;font-size:10px;color:var(--muted);font-weight:750}
+.hbt-calendar-days button,.hbt-calendar-days .hbt-blank{
+  min-width:0;aspect-ratio:1;border:1px solid transparent;background:transparent;
+  color:var(--ink);border-radius:14px;position:relative;font-size:12px;font-weight:680;
+  display:flex;align-items:center;justify-content:center;flex-direction:column;gap:2px
+}
+.hbt-calendar-days button:hover{background:var(--surface-3)}
+.hbt-calendar-days button.is-today{border-color:var(--hbt-mint)}
+.hbt-calendar-days button.is-selected{background:var(--hbt-green)!important;color:#fff!important}
+.hbt-calendar-days button.is-future{color:var(--muted)}
+.hbt-calendar-days i{width:4px;height:4px;border-radius:50%;background:var(--hbt-green);position:absolute;bottom:4px}
+.hbt-calendar-days button.is-selected i{background:#fff}
+.hbt-selected-day{background:var(--surface);border:1px solid var(--line);border-radius:22px;margin-top:13px;padding:17px;box-shadow:var(--hbt-shadow)}
+.hbt-selected-day-title{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:15px}
+.hbt-selected-day-title strong{font-size:15px}
+.hbt-selected-day-title span{font-size:10px;color:var(--muted)}
+.hbt-selected-day-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.hbt-selected-day-metrics>div{background:var(--surface-3);border-radius:14px;padding:12px 8px;text-align:center}
+.hbt-selected-day-metrics strong{display:block;font-size:20px;color:var(--ink);letter-spacing:-.045em}
+.hbt-selected-day-metrics span{display:block;margin-top:4px;font-size:10px;color:var(--muted);line-height:1.3}
+.hbt-shortcuts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.hbt-shortcuts button{
+  background:var(--surface);color:var(--ink);border:1px solid var(--line);
+  text-align:left;border-radius:20px;padding:15px 13px 14px;
+  display:flex;flex-direction:column;align-items:flex-start;min-height:127px;
+  box-shadow:var(--hbt-shadow)
+}
+.hbt-shortcut-icon{
+  width:34px;height:34px;background:var(--surface-3);color:var(--hbt-green);
+  border-radius:11px;display:grid;place-items:center;font-size:19px;margin-bottom:10px
+}
+.hbt-shortcuts strong{font-size:12px;font-weight:780}
+.hbt-shortcuts small{font-size:10px;color:var(--muted);margin-top:5px;line-height:1.35}
+.hbt-insight-summary{
+  background:linear-gradient(135deg,#1a472f,#28734c);color:#fff;
+  border-radius:23px;margin-bottom:15px;padding:19px;box-shadow:0 13px 28px rgba(34,99,56,.16)
+}
+.hbt-insight-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.hbt-insight-top strong{font-size:16px;font-weight:780}
+.hbt-insight-top span{font-size:10px;opacity:.82}
+.hbt-insight-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:18px}
+.hbt-insight-metrics>div{border-right:1px solid rgba(255,255,255,.22);padding-right:4px}
+.hbt-insight-metrics>div:last-child{border-right:0}
+.hbt-insight-metrics strong{font-size:23px;letter-spacing:-.06em;display:block}
+.hbt-insight-metrics span{display:block;margin-top:5px;font-size:10px;line-height:1.4;color:#d9eddf}
+#view-profile .tracker-grid{gap:10px!important}
+#view-profile .tracker{min-height:131px!important;border:1px solid var(--line)!important;transition:transform .16s}
+#view-profile .tracker:active{transform:scale(.98)}
+#view-profile .growth-action{min-height:94px!important;border:1px solid var(--line)!important}
+#view-profile .growth-action strong{font-size:12px!important}
+#view-profile .growth-action span{font-size:10px!important;line-height:1.4}
+.hbt-account-head{
+  background:var(--surface);border:1px solid var(--line);border-radius:24px;
+  padding:22px 18px;box-shadow:var(--hbt-shadow)
+}
+.hbt-account-intro{display:flex;align-items:center;gap:14px}
+.hbt-account-avatar{
+  width:63px;height:63px;flex:0 0 63px;border-radius:21px;
+  background:linear-gradient(135deg,#215c3e,#5da87c);color:#fff;
+  display:grid;place-items:center;font-size:29px;font-weight:800
+}
+.hbt-account-intro strong{font-size:20px;letter-spacing:-.035em;display:block}
+.hbt-account-intro span{font-size:12px;color:var(--muted);margin-top:5px;display:block}
+.hbt-account-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));margin-top:21px;padding-top:18px;border-top:1px solid var(--line)}
+.hbt-account-stats>div{text-align:center;border-right:1px solid var(--line)}
+.hbt-account-stats>div:last-child{border-right:0}
+.hbt-account-stats strong{font-size:22px;letter-spacing:-.04em;display:block}
+.hbt-account-stats span{font-size:10px;color:var(--muted);margin-top:5px;display:block}
+.hbt-account-actions{border:1px solid var(--line);border-radius:22px;background:var(--surface);overflow:hidden;box-shadow:var(--hbt-shadow)}
+.hbt-account-actions button{
+  display:flex;align-items:center;gap:12px;padding:15px;border:0;
+  background:transparent;color:var(--ink);width:100%;text-align:left;
+  border-bottom:1px solid var(--line);min-height:61px
+}
+.hbt-account-actions button:last-child{border-bottom:0}
+.hbt-account-actions button>span{
+  border-radius:12px;background:var(--surface-3);color:var(--hbt-green);
+  display:grid;place-items:center;width:34px;height:34px;font-size:19px
+}
+.hbt-account-actions button strong{font-size:13px;font-weight:750;flex:1}
+.hbt-account-actions button b{font-size:23px;color:var(--muted);font-weight:500}
+.hbt-account-footnote{text-align:center;font-size:11px;color:var(--muted);line-height:1.6;margin:19px 12px}
+html body .nav{
+  display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;
+  left:10px!important;right:10px!important;bottom:calc(9px + env(safe-area-inset-bottom))!important;
+  height:67px!important;padding:6px!important;border:1px solid var(--line)!important;
+  border-radius:22px!important;background:rgba(255,255,255,.97)!important;
+  box-shadow:0 9px 36px rgba(29,65,40,.14)!important;backdrop-filter:blur(18px)
+}
+.nav .nav-btn{
+  display:flex;align-items:center;justify-content:center;gap:4px;
+  color:#778b7d!important;background:transparent!important;border-radius:16px!important;
+  font-size:10px!important;font-weight:730!important;letter-spacing:-.015em!important;min-width:0
+}
+.nav .nav-btn svg{width:21px!important;height:21px!important;stroke-width:1.9}
+.nav .nav-btn span{white-space:nowrap;font-size:9.5px!important}
+.nav .nav-btn.active{background:#e7f4e8!important;color:#236e44!important}
+.nav .nav-btn.active svg{stroke-width:2.25}
+.sheet-backdrop{z-index:80!important}
+.dialog-backdrop{z-index:100!important}
+.sheet{background:var(--surface)!important;color:var(--ink)!important;border-radius:26px 26px 0 0!important}
+.sheet-head{background:var(--surface)!important}
+.sheet-head h2{color:var(--ink)!important;font-size:19px!important}
+.dialog{background:var(--surface)!important;color:var(--ink)!important;border-radius:23px!important}
+.text-input,.select-input,textarea,input:not([type=checkbox]):not([type=radio]):not([type=range]),select{
+  color:var(--ink)!important;background:var(--surface)!important;border-color:var(--line)!important
+}
+.close{background:var(--surface-3)!important;color:var(--ink)!important}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,[role=button]:focus-visible{
+  outline:3px solid #60a978!important;outline-offset:3px!important
+}
+.dark{
+  color-scheme:dark;
+  --hbt-canvas:#0e1511;--hbt-panel:#17231c;--hbt-subtle:#213229;
+  --hbt-border:#304438;--hbt-text:#f0f6f0;--hbt-muted:#acbaad;
+  --hbt-green:#7cbe91;--hbt-mint:#579b71;
+  --hbt-shadow:0 10px 34px rgba(0,0,0,.16);
+  --primary:#7cbe91!important;--primary-2:#c5e6ce!important;
+  --primary-soft:#233f30!important;--bg:#0e1511!important;
+  --surface:#17231c!important;--surface-2:#0e1511!important;
+  --surface-3:#213229!important;--ink:#f0f6f0!important;
+  --muted:#acbaad!important;--line:#304438!important
+}
+html.dark,html.dark body,html.dark body .app{background:#0e1511!important;color:#f0f6f0!important}
+html.dark body .topbar{background:linear-gradient(115deg,#0b1d13,#193c27)!important}
+html.dark body .nav{background:rgba(23,35,28,.98)!important;border-color:#304438!important}
+html.dark .nav .nav-btn{color:#a8baa9!important}
+html.dark .nav .nav-btn.active{background:#294d35!important;color:#d1f0d8!important}
+html.dark .hbt-today-summary,html.dark .hbt-insight-summary{
+  background:linear-gradient(135deg,#173a27,#215639)!important
+}
+html.dark .hbt-progress-circle>div{background:#214d33}
+html.dark body #view-today .hero,
+html.dark body .card,html.dark body .tracker,html.dark body .growth-action,
+html.dark body .growth-score-card,html.dark body .daily-plan,
+html.dark body .v21-score,html.dark body .v21-plan,
+html.dark body .v21-quick button,html.dark body .task,
+html.dark body .habit-table,html.dark body .chart-card{
+  background:#17231c!important;color:#f0f6f0!important;border-color:#304438!important
+}
+html.dark .hbt-calendar-card,html.dark .hbt-shortcuts button,
+html.dark .hbt-selected-day,html.dark .hbt-account-head,
+html.dark .hbt-account-actions,html.dark .sheet,html.dark .sheet-head,
+html.dark .dialog{background:#17231c!important;border-color:#304438!important;color:#f0f6f0!important}
+html.dark .hbt-summary-bottom button{background:#e6f5e8;color:#173f2a}
+html.dark #view-habits .habit-head,html.dark #view-habits .habit-row{
+  background:#17231c!important;border-color:#304438!important
+}
+html.dark .hbt-calendar-arrows button,html.dark .hbt-account-actions button>span,
+html.dark .hbt-selected-day-metrics>div,html.dark .hbt-shortcut-icon{background:#24372b!important;color:#c7e8d0!important}
+html.dark .hbt-account-actions button{color:#f0f6f0!important;border-color:#304438!important}
+html.dark .hbt-calendar-days button{color:#edf5ed}
+html.dark .hbt-calendar-days button.is-future{color:#a4b5a5}
+html.dark .hbt-calendar-days button.is-selected{background:#397b52!important}
+html.dark .hbt-calendar-head .hbt-eyebrow,html.dark .hbt-back-link{color:#9dddab!important}
+html.dark body .quick-add .text-input,html.dark .text-input,html.dark .select-input,
+html.dark textarea,html.dark input:not([type=checkbox]):not([type=radio]):not([type=range]),
+html.dark select{background:#213229!important;color:#f0f6f0!important;border-color:#3b5041!important}
+html.dark .quick-add input::placeholder,html.dark input::placeholder,html.dark textarea::placeholder{color:#a4b4a6}
+html.dark .icon-btn,html.dark .close{background:#213229!important;color:#f0f6f0!important;border-color:#304438!important}
+html.dark .page-head h1,html.dark .page-head p,html.dark .section-head h2,
+html.dark .tracker b,html.dark .tracker strong,html.dark .task-title,html.dark .card-title,
+html.dark .hbt-calendar-head h2,html.dark .hbt-selected-day-metrics strong,
+html.dark .hbt-account-stats strong{color:var(--ink)!important}
+html.dark .hbt-account-intro span,html.dark .hbt-account-stats span,html.dark .hbt-selected-day-metrics span{color:var(--muted)!important}
+@media(max-width:370px){
+  html body .main{padding-left:11px!important;padding-right:11px!important}
+  .hbt-today-summary{padding:16px}
+  .hbt-progress-circle{width:93px;height:93px;flex-basis:93px}
+  .hbt-summary-title{font-size:19px}
+  .hbt-calendar-card{padding:16px 11px}
+  .hbt-calendar-weekdays,.hbt-calendar-days{gap:2px}
+  .hbt-shortcuts{gap:8px}
+  .nav .nav-btn span{font-size:8.5px!important}
+}
+@media(min-width:900px){
+  html body{display:flex;align-items:stretch;justify-content:center}
+  html body .app{width:min(100%,1120px)!important;max-width:1120px!important;height:100dvh;min-height:0!important;border-radius:0}
+  html body .topbar{padding-left:30px!important;padding-right:30px!important}
+  html body .main{margin-left:205px;padding:28px 29px 38px!important}
+  html body .nav{
+    position:absolute!important;top:116px!important;left:24px!important;
+    right:auto!important;bottom:24px!important;width:186px!important;height:auto!important;
+    display:flex!important;flex-direction:column!important;
+    justify-content:flex-start!important;gap:6px!important;padding:10px!important;
+    align-items:stretch!important;border-radius:22px!important
+  }
+  .nav .nav-btn{flex:0 0 52px!important;flex-direction:row!important;justify-content:flex-start!important;padding:0 15px!important;gap:14px!important}
+  .nav .nav-btn span{font-size:12px!important}
+  .hbt-shortcuts{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .hbt-today-summary{padding:24px 28px}
+  .hbt-summary-title{font-size:25px;max-width:400px}
+  .hbt-account-actions{max-width:690px}
+  .hbt-calendar-days button{aspect-ratio:1.45}
+  .sheet-backdrop{align-items:center!important;justify-content:center!important}
+  .sheet{max-width:580px!important;max-height:min(88vh,790px)!important;border-radius:24px!important;padding:24px!important}
+  .fullscreen-stat .sheet{max-width:760px!important}
+}
+@media(prefers-reduced-motion:reduce){
+  .view.active,.sheet-backdrop.open,.dialog-backdrop.open,.sheet,
+  .hbt-today-summary,.hbt-calendar-days button{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+}
+</style>
 
 <div class="focus-alarm" id="focusAlarm" role="alert" aria-live="assertive">
   <div class="focus-alarm-icon">⏰</div>
@@ -2641,6 +2994,184 @@ function renderHabitVisualChart(){
   }catch(e){}
 })();
 
+</script>
+<script id="habitopia-redesign-behavior">/* Habitopia 3.0: navigation, calendar and accessible dashboard presentation.
+   Read-only projections of existing state: no schema changes. */
+(function(){
+  "use strict";
+  const labels={
+    tr:{today:"Bugün",habits:"Alışkanlıklar",plan:"Planım",profile:"Gelişim",account:"Profil",
+      daily:"GÜNLÜK PLAN",todayLabel:"Bugün",progress:"tamamlandı",slogan:"Kendi yolunda ilerle.",
+      summary:"Küçük adımlar her gün birikir.",empty:"İlk adımını bugün planla.",steps:"adım",
+      task:"+ Görev ekle",calendar:"TAKVİM",planTitle:"Planım",planSub:"Takvimin ve kişisel planın tek yerde.",
+      tools:"Planlama araçların",calendarAction:"Gelişim takvimi",calendarDetail:"Tüm geçmişini incele",
+      routineAction:"Rutinlerim",routineDetail:"Sabah ve akşam",
+      goalsAction:"Haftalık hedefler",goalsDetail:"Bu haftanın odağı",
+      challengeAction:"21 günlük hedefler",challengeDetail:"Meydan okumalarını aç",back:"← Planıma dön",
+      tasksDone:"Görev",habitsDone:"Alışkanlık",focusDone:"Odak (dk)",
+      dayActivity:"Seçili günün ilerlemesi",future:"Gelecek gün",past:"Günlük kayıt",
+      performance:"Gelişim özeti",last30:"Son 30 gün",
+      habitSuccess:"Alışkanlık",focusMin:"Odak (dk)",streak:"Günlük seri",
+      accountTitle:"Profilim",accountSub:"Hedeflerin ve kişisel ayarların.",accountTools:"Kişisel alanım",
+      personal:"Kişisel gelişim yolculuğun",habits:"Alışkanlıklar",doneTotal:"Tamamlanan",notesCount:"Notlar",
+      notes:"Not defteri",journal:"Günlük",weekly:"Haftalık değerlendirme",settings:"Ayarlar ve görünüm",
+      privacy:"Verilerin ve kişisel gelişimin senin kontrolünde.",
+      goalFocus:"Odaklanma",goalHealth:"Sağlıklı yaşam",goalOrder:"Düzen",goalBalance:"Dengeli yaşam"},
+    en:{today:"Today",habits:"Habits",plan:"My Plan",profile:"Growth",account:"Profile",
+      daily:"DAILY PLAN",todayLabel:"Today",progress:"complete",slogan:"Grow at your own pace.",
+      summary:"Small steps add up every day.",empty:"Take your first step today.",steps:"steps",
+      task:"+ Add task",calendar:"CALENDAR",planTitle:"My Plan",planSub:"Your calendar and personal plan in one place.",
+      tools:"Planning tools",calendarAction:"Growth calendar",calendarDetail:"Review your history",
+      routineAction:"My routines",routineDetail:"Morning and evening",
+      goalsAction:"Weekly goals",goalsDetail:"Focus for this week",
+      challengeAction:"21-day challenges",challengeDetail:"See your challenges",back:"← Back to my plan",
+      tasksDone:"Tasks",habitsDone:"Habits",focusDone:"Focus (min)",
+      dayActivity:"Progress for selected day",future:"Upcoming day",past:"Daily record",
+      performance:"Growth overview",last30:"Last 30 days",
+      habitSuccess:"Habits",focusMin:"Focus (min)",streak:"Day streak",
+      accountTitle:"My Profile",accountSub:"Your goals and preferences.",accountTools:"Personal space",
+      personal:"Your personal growth journey",doneTotal:"Completed",notesCount:"Notes",
+      notes:"Notebook",journal:"Journal",weekly:"Weekly review",settings:"Settings and appearance",
+      privacy:"Your personal progress and data remain in your control.",
+      goalFocus:"Focus",goalHealth:"Healthy living",goalOrder:"Organization",goalBalance:"Balanced life"}
+  };
+  const NAV=[
+    {name:"today",svg:'<path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/>'},
+    {name:"habits",svg:'<rect x="4" y="4" width="16" height="16" rx="4"/><path d="m8 12 3 3 5-6"/>'},
+    {name:"plan",svg:'<rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4m8-4v4M3 10h18"/>'},
+    {name:"profile",svg:'<path d="M4 19V12m5 7V5m5 14v-9m5 9V8"/>'},
+    {name:"account",svg:'<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>'}
+  ];
+  let displayMonth=new Date(new Date().getFullYear(),new Date().getMonth(),1,12);
+  let selectedDay=localDateKey();
+  function locale(){return state?.settings?.lang==="en"?"en":"tr"}
+  function dict(){return labels[locale()]}
+  function setText(id,value){const el=document.getElementById(id);if(el)el.textContent=value}
+  function niceDate(key,opts){
+    return dateFromKey(key).toLocaleDateString(locale()==="en"?"en-US":"tr-TR",opts)
+  }
+  function calendarKey(year,month,day){return year+"-"+String(month+1).padStart(2,"0")+"-"+String(day).padStart(2,"0")}
+  function activityOn(key){
+    const completedTasks=(state.tasks||[]).filter(x=>Array.isArray(x.completedDates)&&x.completedDates.includes(key)).length;
+    const completedHabits=(state.habits||[]).filter(x=>habitDue(x,key)&&habitCompletedOn(x,key)).length;
+    const focus=(state.tracking?.focusSessions||[]).filter(x=>x.date===key).reduce((sum,x)=>sum+(Number(x.minutes)||0),0);
+    return {completedTasks,completedHabits,focus:Math.round(focus)};
+  }
+  function drawNav(){
+    const d=dict();
+    const current=document.querySelector(".view.active")?.id?.replace("view-","");
+    const selected=current==="challenges"?"plan":current;
+    document.querySelectorAll(".nav-btn").forEach(button=>{
+      const item=NAV.find(x=>x.name===button.dataset.view);
+      if(!item)return;
+      const title=d[item.name];
+      button.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+item.svg+'</svg><span>'+title+'</span>';
+      button.setAttribute("aria-label",title);
+      if(selected===item.name){button.setAttribute("aria-current","page");button.classList.add("active")}
+      else{button.removeAttribute("aria-current");button.classList.remove("active")}
+    });
+    document.documentElement.lang=locale()==="en"?"en":"tr";
+  }
+  function summary(){
+    const el=document.getElementById("hbtTodaySummary");if(!el||!state)return;
+    const d=dict(),today=localDateKey(),tasks=dueTasks(),habits=(state.habits||[]).filter(x=>habitDue(x,today));
+    const doneTasks=tasks.filter(x=>Array.isArray(x.completedDates)&&x.completedDates.includes(today)).length;
+    const doneHabits=habits.filter(x=>habitCompletedOn(x,today)).length;
+    const total=tasks.length+habits.length,done=doneTasks+doneHabits,pct=total?Math.round(done*100/total):0;
+    setText("hbtDailyGreeting",d.daily);
+    setText("hbtSummaryWeek",niceDate(today,{weekday:"long",day:"numeric",month:"short"}));
+    setText("hbtSummaryTitle",d.slogan);
+    setText("hbtSummaryCopy",total?d.summary:d.empty);
+    setText("hbtProgressPercent",pct+"%");
+    setText("hbtPercentLabel",d.progress);
+    setText("hbtSummaryCount",done+" / "+total+" "+d.steps);
+    setText("hbtQuickTask",d.task);
+    document.getElementById("hbtProgressCircle")?.style.setProperty("--progress",String(pct));
+  }
+  function calendar(){
+    const host=document.getElementById("hbtCalendarDays");if(!host||!state)return;
+    const d=dict(),year=displayMonth.getFullYear(),month=displayMonth.getMonth(),
+          today=localDateKey(),last=new Date(year,month+1,0).getDate(),start=(new Date(year,month,1).getDay()+6)%7;
+    setText("hbtPlanTitle",d.planTitle);setText("hbtPlanSubtitle",d.planSub);
+    setText("hbtPlanToolsHeading",d.tools);setText("hbtCalendarCaption",d.calendar);
+    setText("hbtCalendarMonth",displayMonth.toLocaleDateString(locale()==="en"?"en-US":"tr-TR",{month:"long",year:"numeric"}));
+    for(const [id,text] of [
+      ["hbtCalendarAction",d.calendarAction],["hbtCalendarActionDetail",d.calendarDetail],
+      ["hbtRoutineAction",d.routineAction],["hbtRoutineActionDetail",d.routineDetail],
+      ["hbtGoalsAction",d.goalsAction],["hbtGoalsActionDetail",d.goalsDetail],
+      ["hbtChallengeAction",d.challengeAction],["hbtChallengeActionDetail",d.challengeDetail],
+      ["hbtBackToPlan",d.back]])setText(id,text);
+    document.getElementById("hbtCalendarWeekdays").innerHTML=(locale()==="en"?["M","T","W","T","F","S","S"]:["P","S","Ç","P","C","C","P"]).map(x=>'<span>'+x+'</span>').join("");
+    let html='<span class="hbt-blank" aria-hidden="true"></span>'.repeat(start);
+    for(let i=1;i<=last;i++){
+      const key=calendarKey(year,month,i),activity=activityOn(key),marked=activity.completedTasks+activity.completedHabits+activity.focus>0;
+      const classes=[key===today?"is-today":"",key===selectedDay?"is-selected":"",key>today?"is-future":""].filter(Boolean).join(" ");
+      html+='<button type="button" class="'+classes+'" data-action="hbt-select-day" data-date="'+key+'" aria-pressed="'+String(key===selectedDay)+'" aria-label="'+niceDate(key,{day:"numeric",month:"long",year:"numeric"})+'">'+i+(marked?"<i aria-hidden=\"true\"></i>":"")+'</button>';
+    }
+    host.innerHTML=html;selected();
+  }
+  function selected(){
+    const host=document.getElementById("hbtSelectedDay");if(!host||!state)return;
+    const d=dict(),a=activityOn(selectedDay),today=localDateKey();
+    host.innerHTML='<div class="hbt-selected-day-title"><strong>'+niceDate(selectedDay,{day:"numeric",month:"long",year:"numeric"})+'</strong><span>'+(selectedDay>today?d.future:d.dayActivity)+'</span></div>'+
+      '<div class="hbt-selected-day-metrics">'+
+      '<div><strong>'+a.completedTasks+'</strong><span>'+d.tasksDone+'</span></div>'+
+      '<div><strong>'+a.completedHabits+'</strong><span>'+d.habitsDone+'</span></div>'+
+      '<div><strong>'+a.focus+'</strong><span>'+d.focusDone+'</span></div></div>';
+  }
+  function insights(){
+    const host=document.getElementById("hbtInsightSummary");if(!host||!state)return;
+    const d=dict(),today=localDateKey();let due=0,done=0,focus=0;
+    for(let k=0;k<30;k++){
+      const day=addDays(today,-k);
+      for(const h of state.habits||[]){if(habitDue(h,day)){due++;if(habitCompletedOn(h,day))done++}}
+    }
+    for(const x of state.tracking?.focusSessions||[]){if(x.date>=addDays(today,-29)&&x.date<=today)focus+=Number(x.minutes)||0}
+    const rate=due?Math.round(done/due*100):0;
+    host.innerHTML='<div class="hbt-insight-top"><strong>'+d.performance+'</strong><span>'+d.last30+'</span></div>'+
+      '<div class="hbt-insight-metrics"><div><strong>'+rate+'%</strong><span>'+d.habitSuccess+'</span></div>'+
+      '<div><strong>'+Math.round(focus)+'</strong><span>'+d.focusMin+'</span></div>'+
+      '<div><strong>'+Math.max(0,Number(state.progress?.currentStreak)||0)+'</strong><span>'+d.streak+'</span></div></div>';
+  }
+  function account(){
+    const host=document.getElementById("hbtAccountHero");if(!host||!state)return;
+    const d=dict(),profile=state.profile||{},name=String(profile.name||"Habitopia").slice(0,28),
+    names={focusGoal:d.goalFocus,healthGoal:d.goalHealth,orderGoal:d.goalOrder,balanceGoal:d.goalBalance};
+    setText("hbtAccountTitle",d.accountTitle);setText("hbtAccountSubtitle",d.accountSub);
+    setText("hbtAccountToolsHeading",d.accountTools);
+    for(const [id,text] of [
+      ["hbtNotesLabel",d.notes],["hbtJournalLabel",d.journal],
+      ["hbtWeeklyLabel",d.weekly],["hbtSettingsLabel",d.settings],
+      ["hbtAccountPrivacy",d.privacy]])setText(id,text);
+    host.innerHTML='<div class="hbt-account-intro"><div class="hbt-account-avatar" aria-hidden="true">'+esc(name[0]?.toLocaleUpperCase(locale()==="en"?"en-US":"tr-TR")||"H")+'</div><div><strong>'+esc(name)+'</strong><span>'+esc(names[profile.goal]||d.personal)+'</span></div></div>'+
+      '<div class="hbt-account-stats"><div><strong>'+(state.habits||[]).length+'</strong><span>'+d.habits+'</span></div>'+
+      '<div><strong>'+Math.max(0,Number(state.progress?.totalCompleted)||0)+'</strong><span>'+d.doneTotal+'</span></div>'+
+      '<div><strong>'+(state.tracking?.notes||[]).length+'</strong><span>'+d.notesCount+'</span></div></div>';
+  }
+  function redraw(){drawNav();summary();calendar();insights();account()}
+  const priorRenderStatic=renderStatic;
+  renderStatic=function(){priorRenderStatic();drawNav()};
+  const priorRenderAll=renderAll;
+  renderAll=function(){priorRenderAll();redraw()};
+  const priorShowView=showView;
+  showView=function(name){priorShowView(name);drawNav();if(name==="plan")calendar();if(name==="account")account();if(name==="profile")insights()};
+  const priorHandleAction=handleAction;
+  handleAction=function(action,el){
+    switch(action){
+      case "go-account":showView("account");return;
+      case "go-plan":showView("plan");return;
+      case "go-challenges":showView("challenges");return;
+      case "hbt-month-prev":displayMonth=new Date(displayMonth.getFullYear(),displayMonth.getMonth()-1,1,12);calendar();return;
+      case "hbt-month-next":displayMonth=new Date(displayMonth.getFullYear(),displayMonth.getMonth()+1,1,12);calendar();return;
+      case "hbt-select-day":
+        if(/^\d{4}-\d{2}-\d{2}$/.test(el.dataset.date||"")){
+          selectedDay=el.dataset.date;calendar();
+        }
+        return;
+      default:return priorHandleAction(action,el);
+    }
+  };
+})();
 </script>
 
 </body>

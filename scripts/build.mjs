@@ -9,7 +9,9 @@ const parts=[
   ["DATA_SAFETY_JS","src/scripts/data-safety.js",c=>`<script>${c}</script>`],
   ["CORE_JS","src/scripts/core.js",c=>`<script>${c}</script>`],
   ["POLISH_CSS","src/styles/polish.css",c=>`<style id="habitopia-v3-polish">${c}</style>`],
-  ["POLISH_JS","src/scripts/polish.js",c=>`<script id="habitopia-v3-behavior">${c}</script>`]
+  ["REDESIGN_CSS","src/styles/redesign.css",c=>`<style id="habitopia-redesign">${c}</style>`],
+  ["POLISH_JS","src/scripts/polish.js",c=>`<script id="habitopia-v3-behavior">${c}</script>`],
+  ["REDESIGN_JS","src/scripts/redesign.js",c=>`<script id="habitopia-redesign-behavior">${c}</script>`]
 ];
 let output=await readFile(resolve(root,"src/index.template.html"),"utf8");
 for(const [key,path,wrap] of parts){

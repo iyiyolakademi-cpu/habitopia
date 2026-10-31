@@ -15,10 +15,11 @@
 <body>
 
 <div class="app" id="app">
-  <header class="topbar"><div class="top-row"><div class="brand-orb" id="brandIcon"></div><div class="head-copy"><div class="eyebrow"><span class="date-dot"></span><span id="dateLabel"></span></div><div class="greeting" id="greeting"></div></div><button class="coin" data-action="rewards" aria-label="Puan mağazasını aç"><span class="coin-dot">P</span><span class="coin-value" id="coinCount">0</span><span class="coin-copy" id="coinCopy">Puan</span></button></div><div class="progress-card"><span class="level-label" id="levelLabel"></span><span class="xp-value" id="xpValue">0 / 50 XP</span><div class="xp-track"><div class="xp-fill" id="xpFill"></div></div></div></header>
+  <header class="topbar"><div class="top-row"><div class="brand-orb" id="brandIcon"></div><div class="head-copy"><div class="eyebrow"><span class="date-dot"></span><span id="dateLabel"></span></div><div class="greeting" id="greeting"></div></div><button type="button" class="top-avatar" data-action="go-account" aria-label="Profilim"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 21a7.5 7.5 0 0 1 15 0"/></svg></button><button class="coin" data-action="rewards" aria-label="Puan mağazasını aç"><span class="coin-dot">P</span><span class="coin-value" id="coinCount">0</span><span class="coin-copy" id="coinCopy">Puan</span></button></div><div class="progress-card"><span class="level-label" id="levelLabel"></span><span class="xp-value" id="xpValue">0 / 50 XP</span><div class="xp-track"><div class="xp-fill" id="xpFill"></div></div></div></header>
   <main class="main" id="main">
     <section class="view active" id="view-today">
       <div class="page-head"><div><h1 data-i18n="today"></h1><p id="todaySubtitle"></p></div><button class="icon-btn" data-action="gift" id="giftButton"></button></div>
+      <section class="hbt-today-summary" id="hbtTodaySummary" aria-label="Günlük ilerleme"><div class="hbt-summary-top"><span class="hbt-eyebrow" id="hbtDailyGreeting">GÜNLÜK PLAN</span><span id="hbtSummaryWeek">Bugün</span></div><div class="hbt-summary-main"><div><strong class="hbt-summary-title" id="hbtSummaryTitle">Kendi yolunda ilerle.</strong><p id="hbtSummaryCopy">Küçük adımlar birikir.</p></div><div class="hbt-progress-circle" id="hbtProgressCircle" style="--progress:0"><div><strong id="hbtProgressPercent">0%</strong><span id="hbtPercentLabel">tamamlandı</span></div></div></div><div class="hbt-summary-bottom"><span id="hbtSummaryCount">0 / 0 adım</span><button type="button" data-action="open-task" id="hbtQuickTask">+ Görev ekle</button></div></section>
       <div class="card hero"><div class="hero-kicker" data-i18n="dailyOverview"></div><div class="hero-line" id="heroLine"></div><div class="pill-row" id="heroPills"></div></div><div id="growthDashboard" class="growth-board"></div>
       <div class="quick-add"><input class="text-input" id="quickTask" maxlength="90" data-i18n-placeholder="quickTask"><button class="primary" data-action="quick-task">+</button></div>
       <div class="section-head"><h2 data-i18n="tasks"></h2><span id="taskSummary"></span></div><div class="task-list" id="taskList"></div>
@@ -32,12 +33,26 @@
       <div class="habit-table" id="habitTable"></div>
       <div class="section-head"><h2 data-i18n="weeklySummary"></h2><span id="habitWeekScore"></span></div><div class="stat-grid" id="habitStats"></div>
     </section>
+    <section class="view" id="view-plan">
+      <div class="page-head"><div><h1 id="hbtPlanTitle">Planım</h1><p id="hbtPlanSubtitle">Takvimin ve kişisel planın tek yerde.</p></div><button type="button" class="icon-btn" data-action="calendar" aria-label="Gelişim takvimini aç">▦</button></div>
+      <section class="hbt-calendar-card" aria-label="Aylık takvim"><div class="hbt-calendar-head"><div><span class="hbt-eyebrow" id="hbtCalendarCaption">TAKVİM</span><h2 id="hbtCalendarMonth"></h2></div><div class="hbt-calendar-arrows"><button type="button" data-action="hbt-month-prev" aria-label="Önceki ay">‹</button><button type="button" data-action="hbt-month-next" aria-label="Sonraki ay">›</button></div></div><div class="hbt-calendar-weekdays" id="hbtCalendarWeekdays"></div><div class="hbt-calendar-days" id="hbtCalendarDays"></div></section>
+      <section class="hbt-selected-day" id="hbtSelectedDay" aria-live="polite"></section>
+      <div class="section-head"><h2 id="hbtPlanToolsHeading">Planlama araçların</h2></div>
+      <div class="hbt-shortcuts">
+        <button type="button" data-action="calendar"><span class="hbt-shortcut-icon">▦</span><strong id="hbtCalendarAction">Gelişim takvimi</strong><small id="hbtCalendarActionDetail">Tüm geçmişini incele</small></button>
+        <button type="button" data-action="routines"><span class="hbt-shortcut-icon">☀</span><strong id="hbtRoutineAction">Rutinlerim</strong><small id="hbtRoutineActionDetail">Sabah ve akşam</small></button>
+        <button type="button" data-action="weekly-goals"><span class="hbt-shortcut-icon">◎</span><strong id="hbtGoalsAction">Haftalık hedefler</strong><small id="hbtGoalsActionDetail">Bu haftanın odağı</small></button>
+        <button type="button" data-action="go-challenges"><span class="hbt-shortcut-icon">◇</span><strong id="hbtChallengeAction">21 günlük hedefler</strong><small id="hbtChallengeActionDetail">Meydan okumalarını aç</small></button>
+      </div>
+    </section>
     <section class="view" id="view-challenges">
+      <button type="button" class="hbt-back-link" data-action="go-plan" id="hbtBackToPlan">← Planıma dön</button>
       <div class="page-head"><div><h1 data-i18n="challenges"></h1><p data-i18n="challengeSubtitle"></p></div><button class="icon-btn" data-action="add-challenge" id="addChallengeIcon"></button></div>
       <div id="challengeContent"></div>
     </section>
     <section class="view" id="view-profile">
       <div class="page-head"><div><h1 data-i18n="progress"></h1><p data-i18n="progressSubtitle"></p></div><button class="icon-btn" data-action="settings" id="settingsIcon"></button></div>
+      <div class="hbt-insight-summary" id="hbtInsightSummary" aria-label="Gelişim özeti"></div>
       <div class="tracker-grid"><button class="tracker water" data-action="water-stats"><div class="feature-icon" id="trackerWaterIcon"></div><strong data-i18n="water"></strong><b id="trackerWaterValue"></b><span id="trackerWaterCopy"></span></button><button class="tracker weight" data-action="weight"><div class="feature-icon" id="trackerWeightIcon"></div><strong data-i18n="weight"></strong><b id="trackerWeightValue"></b><span id="trackerWeightCopy"></span></button><button class="tracker focus" data-action="focus-stats"><div class="feature-icon" id="trackerFocusIcon"></div><strong data-i18n="focus"></strong><b id="trackerFocusValue"></b><span id="trackerFocusCopy"></span></button><button class="tracker notes" data-action="notes"><div class="feature-icon" id="trackerNotesIcon"></div><strong data-i18n="notebook"></strong><b id="trackerNotesValue"></b><span id="trackerNotesCopy"></span></button><button class="tracker mood" data-action="mood"><div class="feature-icon" id="trackerMoodIcon"><span class="ui-glyph" data-ui-icon="mood-neutral"></span></div><strong data-i18n="mood"></strong><b id="trackerMoodValue"></b><span id="trackerMoodCopy"></span></button><button class="tracker report" data-action="weekly-report"><div class="feature-icon" id="trackerReportIcon"></div><strong data-i18n="weeklyReport"></strong><b id="trackerReportValue"></b><span id="trackerReportCopy"></span></button></div>
       <div class="section-head hub-section"><h2 id="growthHubTitle">Gelişim Merkezi</h2><span id="growthHubSub">Planla · uygula · değerlendir</span></div><div class="growth-actions" id="growthHubActions"><button class="growth-action" data-action="calendar"><b>📅</b><strong>Takvim</strong><span>Günlük gelişimini gör</span></button><button class="growth-action" data-action="routines"><b>🌅</b><strong>Rutinler</strong><span>Sabah ve akşam</span></button><button class="growth-action" data-action="journal"><b>📖</b><strong>Günlük</strong><span>Gününü düşün ve yaz</span></button><button class="growth-action" data-action="weekly-goals"><b>🎯</b><strong>Haftalık Hedefler</strong><span>Haftanın odağını takip et</span></button><button class="growth-action" data-action="weekly-review"><b>🧠</b><strong>Haftayı Değerlendir</strong><span>Öğren ve yeni haftayı kur</span></button><button class="growth-action" data-action="growth-details"><b>📈</b><strong>Gelişim Skoru</strong><span>Skorunun detaylarını gör</span></button></div>
       <!-- Eski profil istatistikleri görünümden tamamen kaldırıldı.
@@ -52,8 +67,20 @@
         <div id="badgeGrid"></div>
       </div>
     </section>
+    <section class="view" id="view-account">
+      <div class="page-head"><div><h1 id="hbtAccountTitle">Profilim</h1><p id="hbtAccountSubtitle">Hedeflerin ve kişisel ayarların.</p></div><button type="button" class="icon-btn" data-action="settings" aria-label="Ayarları aç">⚙</button></div>
+      <div class="hbt-account-head" id="hbtAccountHero"></div>
+      <div class="section-head"><h2 id="hbtAccountToolsHeading">Kişisel alanım</h2></div>
+      <div class="hbt-account-actions">
+        <button type="button" data-action="notes"><span>✎</span><strong id="hbtNotesLabel">Not defteri</strong><b>›</b></button>
+        <button type="button" data-action="journal"><span>☷</span><strong id="hbtJournalLabel">Günlük</strong><b>›</b></button>
+        <button type="button" data-action="weekly-review"><span>▥</span><strong id="hbtWeeklyLabel">Haftalık değerlendirme</strong><b>›</b></button>
+        <button type="button" data-action="settings"><span>⚙</span><strong id="hbtSettingsLabel">Ayarlar ve görünüm</strong><b>›</b></button>
+      </div>
+      <p class="hbt-account-footnote" id="hbtAccountPrivacy">Verilerin ve kişisel gelişimin senin kontrolünde.</p>
+    </section>
   </main>
-  <nav class="nav"><button class="nav-btn active" data-view="today"></button><button class="nav-btn" data-view="habits"></button><button class="nav-btn" data-view="challenges"></button><button class="nav-btn" data-view="profile"></button></nav>
+  <nav class="nav" aria-label="Ana menü"><button type="button" class="nav-btn active" data-view="today"></button><button type="button" class="nav-btn" data-view="habits"></button><button type="button" class="nav-btn" data-view="plan"></button><button type="button" class="nav-btn" data-view="profile"></button><button type="button" class="nav-btn" data-view="account"></button></nav>
   <button class="focus-float" id="focusFloat" data-action="reopen-focus"><span id="focusFloatLabel"></span><strong id="focusFloatTime"></strong></button>
 
   <div class="sheet-backdrop" id="taskSheet"><div class="sheet"><div class="handle"></div><div class="sheet-head"><h2 data-i18n="newTask"></h2><button class="close" data-close="taskSheet">×</button></div><div class="stack"><div class="field"><label data-i18n="taskName"></label><input class="text-input" id="taskTitleInput" maxlength="90"></div><div class="field-row"><div class="field"><label data-i18n="taskType"></label><select class="select-input" id="taskTypeInput"><option value="once" data-i18n="oneTime"></option><option value="focus" data-i18n="focusTask"></option></select></div><div class="field"><label data-i18n="area"></label><select class="select-input" id="taskCategoryInput"></select></div></div><div class="field" id="effortField"><label data-i18n="difficulty"></label><div class="choice-row" id="effortChoices"></div></div><div class="field" id="taskDurationField" hidden><label data-i18n="duration"></label><input class="text-input" id="taskDurationInput" type="number" inputmode="numeric" min="5" max="180" step="1" value="25"></div><button class="primary" data-action="save-task" data-i18n="add"></button></div></div></div>
@@ -87,6 +114,7 @@
 <!-- HBT:DATA_SAFETY_JS -->
 <!-- HBT:CORE_JS -->
 <!-- HBT:POLISH_CSS -->
+<!-- HBT:REDESIGN_CSS -->
 
 <div class="focus-alarm" id="focusAlarm" role="alert" aria-live="assertive">
   <div class="focus-alarm-icon">⏰</div>
@@ -95,6 +123,7 @@
 </div>
 
 <!-- HBT:POLISH_JS -->
+<!-- HBT:REDESIGN_JS -->
 
 </body>
 </html>
