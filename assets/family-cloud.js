@@ -215,7 +215,7 @@ function subscribe(){
  clearInterval(tick);tick=setInterval(()=>{if(document.visibilityState==="visible")queueReload(50);},25000);
 }
 function status(text){
- const x=document.getElementById("sync-indicator");if(x){x.textContent=activeHousehold?text:"Güvenli aile hesabı gerekiyor";x.dataset.state=/hata|başarısız/i.test(text)?"error":/Kaydediliyor|Bağlanıyor/i.test(text)?"saving":"ready";}
+ const x=document.getElementById("sync-indicator");if(x){x.textContent=activeHousehold?text:"Güvenli aile hesabı gerekiyor";if(x.dataset)x.dataset.state=/hata|başarısız/i.test(text)?"error":/Kaydediliyor|Bağlanıyor/i.test(text)?"saving":"ready";}
  const b=document.getElementById("cloud-account");if(b)b.textContent=auth?(activeHousehold?"☁ Ailem":"Aile seç"):"Kayıt ol";
 }
 async function useHousehold(id){
