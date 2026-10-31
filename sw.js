@@ -2,7 +2,7 @@
 const CACHE="habitopia-aile-shell-v3";
 const SHELL=["./","./index.html","./assets/family.css","./assets/family-flow.css",
  "./assets/family-mobile-polish.css","./assets/family-push-ui.css",
- "./assets/family-cloud.js","./assets/family-push.js","./assets/family.js",
+ "./assets/family-cloud.js","./assets/family-push.js","./assets/family-mobile.js","./assets/family.js",
  "./assets/habitopia-logo-transparent.png","./manifest.webmanifest"];
 self.addEventListener("install",e=>{
  e.waitUntil(caches.open(CACHE).then(async c=>{
