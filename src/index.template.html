@@ -15,12 +15,21 @@
 <body>
 
 <div class="app" id="app">
+  <nav class="world-switchbar" aria-label="Uygulamalar arasında geçiş">
+    <a class="world-switch-home" href="index.html" aria-label="Dünya seçimine dön"><span class="world-switch-symbol" aria-hidden="true">▦</span><span>İKİ DÜNYA</span></a>
+    <div class="world-switch-links"><span class="world-switch-current" aria-current="page">Habitopia</span><a class="world-switch-other" href="hayat-borsan.html">Hayat Borsan <span aria-hidden="true">↗</span></a></div>
+  </nav>
   <header class="topbar"><div class="top-row"><div class="brand-orb" id="brandIcon"></div><div class="head-copy"><div class="eyebrow"><span class="date-dot"></span><span id="dateLabel"></span></div><div class="greeting" id="greeting"></div></div><button type="button" class="top-avatar" data-action="go-account" aria-label="Profilim"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 21a7.5 7.5 0 0 1 15 0"/></svg></button><button class="coin" data-action="rewards" aria-label="Puan mağazasını aç"><span class="coin-dot">P</span><span class="coin-value" id="coinCount">0</span><span class="coin-copy" id="coinCopy">Puan</span></button></div><div class="progress-card"><span class="level-label" id="levelLabel"></span><span class="xp-value" id="xpValue">0 / 50 XP</span><div class="xp-track"><div class="xp-fill" id="xpFill"></div></div></div></header>
   <main class="main" id="main">
     <section class="view active" id="view-today">
       <div class="page-head"><div><h1 data-i18n="today"></h1><p id="todaySubtitle"></p></div><button class="icon-btn" data-action="gift" id="giftButton"></button></div>
       <section class="hbt-today-summary" id="hbtTodaySummary" aria-label="Günlük ilerleme"><div class="hbt-summary-top"><span class="hbt-eyebrow" id="hbtDailyGreeting">GÜNLÜK PLAN</span><span id="hbtSummaryWeek">Bugün</span></div><div class="hbt-summary-main"><div><strong class="hbt-summary-title" id="hbtSummaryTitle">Kendi yolunda ilerle.</strong><p id="hbtSummaryCopy">Küçük adımlar birikir.</p></div><div class="hbt-progress-circle" id="hbtProgressCircle" style="--progress:0"><div><strong id="hbtProgressPercent">0%</strong><span id="hbtPercentLabel">tamamlandı</span></div></div></div><div class="hbt-summary-bottom"><span id="hbtSummaryCount">0 / 0 adım</span><button type="button" data-action="open-task" id="hbtQuickTask">+ Görev ekle</button></div></section>
-      <div class="card hero"><div class="hero-kicker" data-i18n="dailyOverview"></div><div class="hero-line" id="heroLine"></div><div class="pill-row" id="heroPills"></div></div><div id="growthDashboard" class="growth-board"></div>
+      <div class="card hero"><div class="hero-kicker" data-i18n="dailyOverview"></div><div class="hero-line" id="heroLine"></div><div class="pill-row" id="heroPills"></div></div><section class="world-action-tiles" aria-label="Hızlı başlangıç">
+  <button type="button" data-action="add-habit" class="world-action-card"><span class="action-icon" aria-hidden="true">◎</span><strong>Alışkanlık oluştur</strong><small>Bugün yeni bir adım at</small><span class="action-arrow" aria-hidden="true">↗</span></button>
+  <button type="button" data-action="open-focus" class="world-action-card"><span class="action-icon" aria-hidden="true">◷</span><strong>Odaklan</strong><small>Dikkatini kendine ayır</small><span class="action-arrow" aria-hidden="true">↗</span></button>
+  <button type="button" data-action="go-plan" class="world-action-card"><span class="action-icon" aria-hidden="true">▦</span><strong>Planına bak</strong><small>Bugün ve yarın</small><span class="action-arrow" aria-hidden="true">↗</span></button>
+</section>
+<div id="growthDashboard" class="growth-board"></div>
       <div class="quick-add"><input class="text-input" id="quickTask" maxlength="90" data-i18n-placeholder="quickTask"><button class="primary" data-action="quick-task">+</button></div>
       <div class="section-head"><h2 data-i18n="tasks"></h2><span id="taskSummary"></span></div><div class="task-list" id="taskList"></div>
       <div class="section-head"><h2 data-i18n="dailyBalance"></h2><span data-i18n="health"></span></div>
@@ -116,6 +125,7 @@
 <!-- HBT:POLISH_CSS -->
 <!-- HBT:REDESIGN_CSS -->
 <!-- HBT:MIDNIGHT_CSS -->
+<!-- HBT:UNIVERSE_CSS -->
 
 <div class="focus-alarm" id="focusAlarm" role="alert" aria-live="assertive">
   <div class="focus-alarm-icon">⏰</div>

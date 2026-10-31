@@ -11,6 +11,7 @@ const parts=[
   ["POLISH_CSS","src/styles/polish.css",c=>`<style id="habitopia-v3-polish">${c}</style>`],
   ["REDESIGN_CSS","src/styles/redesign.css",c=>`<style id="habitopia-redesign">${c}</style>`],
   ["MIDNIGHT_CSS","src/styles/midnight.css",c=>`<style id="habitopia-midnight">${c}</style>`],
+  ["UNIVERSE_CSS","src/styles/universe.css",c=>`<style id="habitopia-universe">${c}</style>`],
   ["POLISH_JS","src/scripts/polish.js",c=>`<script id="habitopia-v3-behavior">${c}</script>`],
   ["REDESIGN_JS","src/scripts/redesign.js",c=>`<script id="habitopia-redesign-behavior">${c}</script>`]
 ];
@@ -21,12 +22,20 @@ for(const [key,path,wrap] of parts){
   output=output.replace(token,wrap(await readFile(resolve(root,path),"utf8")));
 }
 if(output.includes("<!-- HBT:"))throw Error("Unfilled template token");
-const target=resolve(root,"index.html");
-if(process.argv.includes("--check")){
-  const existing=await readFile(target,"utf8");
-  if(existing!==output){console.error("index.html is out of date; run node scripts/build.mjs");process.exitCode=1}
-  else console.log("PASS: generated index.html matches src/");
-}else{
-  await writeFile(target,output,"utf8");
-  console.log("Updated index.html from src/");
+// The new root is the launcher. The complete Habitopia app is built as a separate page.
+const files=[
+  ["habitopia.html",output],
+  ["index.html",await readFile(resolve(root,"src/launcher.html"),"utf8")],
+  ["hayat-borsan.html",await readFile(resolve(root,"src/hayat-borsan.html"),"utf8")]
+];
+for(const [name,contents] of files){
+  const destination=resolve(root,name);
+  if(process.argv.includes("--check")){
+    const current=await readFile(destination,"utf8");
+    if(current!==contents){console.error(name+" is out of date; run node scripts/build.mjs");process.exitCode=1}
+    else console.log("PASS: "+name+" matches src/");
+  }else{
+    await writeFile(destination,contents,"utf8");
+    console.log("Updated "+name);
+  }
 }

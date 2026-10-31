@@ -1,0 +1,120 @@
+
+/* Habitopia — Two Worlds interface: architectural redesign, not merely a palette */
+html.habitopia-midnight{
+  --night-bg:#0c1015!important;
+  --night-panel:#191f27!important;
+  --night-panel-2:#252c35!important;
+  --night-panel-3:#2b3540!important;
+  --night-border:#37434d!important;
+  --night-text:#f7f6f1!important;
+  --night-subtext:#afb8bf!important;
+  --night-accent:#8ac7fa!important;
+  --night-accent-strong:#bee3fe!important;
+  --night-accent-soft:#243a4b!important;
+  --hbt-canvas:#0c1015!important;
+  --hbt-panel:#191f27!important;
+  --hbt-subtle:#252c35!important;
+  --hbt-green:#8ac7fa!important;
+  --hbt-mint:#4b6e88!important;
+  --primary:#8ac7fa!important;
+  --primary-2:#c4e7ff!important;
+  --primary-soft:#223849!important;
+  --v21-green:#8ac7fa!important;
+}
+html.habitopia-midnight body .app{border-color:#2d3640!important;background:#0c1015!important}
+html.habitopia-midnight .world-switchbar{
+  display:flex;align-items:center;justify-content:space-between;flex:0 0 53px;
+  padding:7px 14px;gap:10px;background:#10151b;color:#fff;z-index:50;
+  border-bottom:1px solid #35404b;position:relative;
+}
+.world-switch-home{display:flex;align-items:center;gap:8px;font-size:10px;font-weight:850;
+ letter-spacing:.11em;color:#e8edf3!important;text-decoration:none;white-space:nowrap}
+.world-switch-symbol{font-size:22px;line-height:1;color:#a6d8fa!important}
+.world-switch-links{display:flex;align-items:center;gap:7px;min-width:0}
+.world-switch-current,.world-switch-other{font-size:10px;font-weight:780;padding:9px 11px;min-height:35px;border-radius:11px;white-space:nowrap}
+.world-switch-current{background:#293e50;border:1px solid #496782;color:#c2e7ff}
+.world-switch-other{background:#252c35;border:1px solid #404e58;color:#f3f5f7!important;text-decoration:none}
+.world-switch-other:hover{border-color:#86c5f2}
+html.habitopia-midnight body .topbar{background:#141b23!important;border-bottom:1px solid #35404a!important;height:calc(82px + env(safe-area-inset-top))!important;flex-basis:calc(82px + env(safe-area-inset-top))!important}
+html.habitopia-midnight .topbar:before,html.habitopia-midnight .topbar:after{display:none!important}
+html.habitopia-midnight .top-avatar{background:#263542!important;border-color:#3e5363!important}
+html.habitopia-midnight body .main{padding-top:22px!important}
+html.habitopia-midnight .page-head{margin:0 0 22px!important}
+html.habitopia-midnight .page-head h1{font-size:clamp(26px,3vw,34px)!important;font-weight:850!important;letter-spacing:-.06em!important}
+html.habitopia-midnight .page-head p{font-size:13px!important;line-height:1.5!important}
+html.habitopia-midnight .hbt-today-summary{
+  background:linear-gradient(130deg,#253643 0%,#18242e 73%,#17232b 100%)!important;
+  border:1px solid #49677b!important;border-radius:25px!important;padding:25px!important;
+  box-shadow:0 16px 32px #0006!important;margin-bottom:16px!important;
+}
+html.habitopia-midnight .hbt-today-summary:after{width:220px;height:220px;right:-70px;top:-160px;border:1px solid #a8dfff27}
+html.habitopia-midnight .hbt-summary-main{margin:18px 0 24px}
+html.habitopia-midnight .hbt-summary-title{font-weight:850;font-size:clamp(24px,3vw,32px);letter-spacing:-.06em;max-width:340px}
+html.habitopia-midnight .hbt-summary-main p{font-size:12px;color:#c1ced7!important}
+html.habitopia-midnight .hbt-progress-circle{background:conic-gradient(#9dd7ff calc(var(--progress)*1%),#b1c7d322 0)!important}
+html.habitopia-midnight .hbt-progress-circle>div{background:#243a49!important}
+html.habitopia-midnight .hbt-summary-bottom button{background:#d1efff!important;border-radius:12px;color:#0d1b25!important}
+html.habitopia-midnight .world-action-tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:20px}
+html.habitopia-midnight .world-action-card{
+  display:flex;align-items:flex-start;flex-direction:column;gap:5px;min-width:0;min-height:124px;
+  padding:15px 13px;border-radius:19px;background:#1b232d!important;
+  border:1px solid #364754;color:#f4f6f9!important;text-align:left;position:relative;
+  box-shadow:0 9px 24px #0003;transition:transform .16s,border-color .16s;
+}
+.world-action-card:hover{transform:translateY(-2px);border-color:#8ac7fa!important}
+.world-action-card .action-icon{font-size:23px;line-height:1.2;color:#9cceef!important;margin-bottom:5px}
+.world-action-card strong{font-size:12px;line-height:1.28;font-weight:850;color:#f5f7f9}
+.world-action-card small{font-size:10px;line-height:1.4;color:#b4c0c9!important;max-width:160px}
+.world-action-card .action-arrow{position:absolute;right:13px;top:13px;font-size:15px;color:#82a8bf!important}
+html.habitopia-midnight .nav{
+  background:#151d25!important;border-color:#3a4855!important;border-radius:21px!important;
+  box-shadow:0 9px 30px #0008!important;
+}
+html.habitopia-midnight .nav .nav-btn.active{background:#2e4658!important;color:#c6eaff!important}
+html.habitopia-midnight .nav .nav-btn{color:#bac6d0!important}
+html.habitopia-midnight .hbt-insight-summary{background:linear-gradient(120deg,#1d3745,#172935)!important;border-color:#3f6579!important}
+html.habitopia-midnight .hbt-calendar-card,
+html.habitopia-midnight .hbt-shortcuts button,
+html.habitopia-midnight .hbt-account-head,
+html.habitopia-midnight .hbt-account-actions{background:#191f27!important;border-color:#394653!important}
+html.habitopia-midnight .hbt-shortcut-icon{color:#b3e1ff!important}
+html.habitopia-midnight body .card,
+html.habitopia-midnight body .task,
+html.habitopia-midnight body .tracker,
+html.habitopia-midnight body .growth-action,
+html.habitopia-midnight body .v21-score,
+html.habitopia-midnight body .v21-plan,
+html.habitopia-midnight body .v21-quick button{
+  border-radius:20px!important;border-color:#394653!important;background:#191f27!important;
+}
+html.habitopia-midnight .v21-score-ring{background:conic-gradient(#88c9f7 var(--pct),#39454f 0)!important}
+html.habitopia-midnight .v21-score-ring:after{background:#191f27!important}
+html.habitopia-midnight .hbt-account-avatar{background:linear-gradient(135deg,#3a5d75,#243c52)!important}
+html.habitopia-midnight .habit-row,.habitopia-midnight .habit-head{background:#191f27!important}
+html.habitopia-midnight body .hero{background:#1c232b!important;border:1px solid #364651!important}
+html.habitopia-midnight #view-today .hero .hero-kicker{color:#89c8ef!important}
+html.habitopia-midnight .hbt-calendar-days button.is-selected{background:#416e8b!important}
+html.habitopia-midnight button.primary,html.habitopia-midnight .primary{background:#9ad9ff!important;color:#10212c!important;border-color:#9ad9ff!important}
+html.habitopia-midnight button.primary:hover{background:#bde8ff!important}
+html.habitopia-midnight .hbt-insight-summary strong{color:#f6f9fc!important}
+@media(max-width:370px){
+  .world-switchbar{padding-left:9px!important;padding-right:9px!important}
+  .world-switch-home{font-size:9px;gap:5px}
+  .world-switch-current{display:none}
+  .world-switch-other{padding:8px!important;font-size:9px}
+  html.habitopia-midnight .world-action-tiles{gap:6px}
+  html.habitopia-midnight .world-action-card{padding:11px 9px;min-height:112px}
+  html.habitopia-midnight .world-action-card strong{font-size:10px}
+  html.habitopia-midnight .world-action-card small{font-size:9px}
+  html.habitopia-midnight .hbt-today-summary{padding:17px!important}
+}
+@media(min-width:900px){
+  html.habitopia-midnight body .app{width:min(100%,1200px)!important;max-width:1200px!important}
+  html.habitopia-midnight body .main{margin-left:205px}
+  html.habitopia-midnight body .nav{top:178px!important}
+  html.habitopia-midnight .world-action-card{min-height:142px;padding:20px}
+  html.habitopia-midnight .world-action-card strong{font-size:14px}
+  html.habitopia-midnight .world-action-card small{font-size:11px}
+  html.habitopia-midnight .hbt-today-summary{padding:29px!important}
+}
+@media(prefers-reduced-motion:reduce){.world-action-card{transition:none!important}}

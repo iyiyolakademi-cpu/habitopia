@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="tr" style="color-scheme:dark">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0d1015"><meta name="color-scheme" content="dark"><link rel="icon" href="worlds-icon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="manifest" href="manifest.webmanifest"><title>Hayat Borsan | İki Dünya</title>
+<style>
+:root{--bg:#f4f7fc;--card:#fff;--ink:#17213a;--muted:#75839b;--line:#e5eaf3;--blue:#4169ef;--green:#00a878;--red:#e74f6b;--shadow:0 6px 24px #1b34520b}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);font:14px system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink)}
+button,input,select,textarea{font:inherit}button{cursor:pointer;border:0;border-radius:10px;padding:11px 14px;background:var(--blue);color:white;font-weight:650}button:hover{filter:brightness(.96)}button.ghost{background:#edf2ff;color:#3655b7}button.danger{background:#fff0f3;color:#bd3550}
+button.active{background:var(--blue);color:white}button:focus-visible,input:focus-visible{outline:2px solid var(--blue)}
+input,select,textarea{width:100%;border:1px solid #dbe2ed;background:#fff;border-radius:10px;padding:11px;color:var(--ink)}
+textarea{min-height:76px;resize:vertical}label{display:block;font-size:12px;font-weight:650;color:#63718b;margin-bottom:6px}
+.shell{max-width:1320px;margin:auto;padding:20px 16px 70px}
+.top{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:20px}
+.logo{font-size:23px;font-weight:850;letter-spacing:-.6px}.logo span{color:var(--blue)}.sub{color:var(--muted);font-size:12px;margin-top:3px}
+.tag{background:#e9f7f2;color:#078962;border-radius:100px;padding:7px 12px;font-size:12px;font-weight:750}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}.card{background:var(--card);border:1px solid var(--line);border-radius:17px;padding:18px;box-shadow:var(--shadow);min-width:0}
+.metric-label{font-size:12px;color:var(--muted);font-weight:650}.metric{font-size:27px;font-weight:800;margin:8px 0 5px;letter-spacing:-.5px}.hint{color:var(--muted);font-size:12px}
+.up{color:var(--green)!important}.down{color:var(--red)!important}
+.layout{display:grid;grid-template-columns:minmax(0,1.9fr) minmax(285px,1fr);gap:14px;margin-top:14px}
+h2{font-size:16px;margin:0 0 14px}h3{font-size:14px;margin:0 0 10px}.head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.ranges{display:flex;gap:5px;flex-wrap:wrap}.ranges button{padding:7px 10px;font-size:12px}
+.chart-wrap{height:310px;position:relative;margin-top:15px;background:linear-gradient(#fff,#fcfdff);border-radius:12px}
+#graph{width:100%;height:100%;display:block;overflow:visible;touch-action:pan-y}.chart-note{font-size:12px;color:var(--muted);margin-top:10px}
+.cols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}.field{margin-bottom:11px}
+.section{margin-top:14px}.stock{display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid var(--line)}.stock:last-child{border:0}
+.stock-icon{height:37px;width:37px;display:grid;place-items:center;border-radius:12px;background:#eff3ff;font-size:19px}
+.stock-main{flex:1;min-width:0}.stock-name{font-weight:750}.stock-sub{font-size:11px;color:var(--muted);margin-top:3px}
+.stock-value{text-align:right;font-weight:800}.small{font-size:11px;font-weight:650}
+table{width:100%;border-collapse:collapse;min-width:590px}th,td{padding:11px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:middle}th{color:var(--muted);font-size:12px}td{font-size:12px}
+.scroll{overflow-x:auto}.actions{display:flex;gap:8px;flex-wrap:wrap}.empty{padding:25px 0;text-align:center;color:var(--muted)}
+.rule{height:1px;background:var(--line);margin:16px 0}.progress{height:8px;background:#edf1f7;border-radius:99px;overflow:hidden;margin:7px 0}.progress>div{height:100%;background:var(--blue);border-radius:99px}
+footer{display:none;font-size:12px;color:var(--muted);line-height:1.7;margin-top:22px}
+@media(max-width:900px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.layout{grid-template-columns:1fr}}
+@media(max-width:520px){.shell{padding:13px 10px 50px}.logo{font-size:19px}.grid{gap:8px}.card{padding:13px}.metric{font-size:22px}.cols{grid-template-columns:1fr}.chart-wrap{height:260px}.tag{font-size:10px}}
+
+/* Mobile-first refinement */
+html{scroll-behavior:smooth}body{padding-bottom:env(safe-area-inset-bottom)}
+button,input,select,textarea{min-height:44px}input,select,textarea{font-size:16px}
+.mobile-nav{display:grid;grid-template-columns:repeat(4,1fr);position:fixed;bottom:0;left:0;right:0;z-index:50;background:#fff;border-top:1px solid var(--line);padding:8px 7px calc(8px + env(safe-area-inset-bottom));box-shadow:0 -5px 22px #19253d13}
+.chart-wrap{min-height:255px}
+#graph{touch-action:pan-y}
+@media(max-width:640px){
+ .shell{padding:14px 12px 95px}
+ .top{align-items:flex-start}.top .tag{display:none}
+ .logo{font-size:19px;line-height:1.5}.sub{line-height:1.5}
+ .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+ .card{padding:14px;border-radius:15px}
+ .metric{font-size:clamp(20px,5.5vw,28px);overflow-wrap:anywhere}
+ .metric-label{font-size:11px}.hint{font-size:11px}
+ .layout{gap:10px;margin-top:10px}
+ .chart-wrap{height:290px;margin:10px -8px 0}
+ .ranges{width:100%;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:3px}
+ .ranges button{padding:9px 2px;font-size:11px;min-width:0}
+ .cols{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .stock{padding:12px 0}
+ .mobile-nav{display:grid;grid-template-columns:repeat(4,1fr);position:fixed;bottom:0;left:0;right:0;z-index:50;background:#fff;border-top:1px solid var(--line);padding:8px 7px calc(8px + env(safe-area-inset-bottom));box-shadow:0 -5px 22px #19253d13}
+ .mobile-nav a{display:flex;flex-direction:column;align-items:center;gap:3px;color:#65738b;text-decoration:none;font-size:10px;font-weight:750;padding:4px 0}
+ .mobile-nav a b{font-size:20px}
+ .mobile-nav a:focus,.mobile-nav a:hover{color:var(--blue)}
+ .scroll{overflow:visible}
+ #recordsTable{min-width:0}
+ #recordsTable thead{display:none}
+ #recordsTable tbody{display:grid;gap:8px}
+ #recordsTable tr{display:grid;grid-template-columns:1fr auto;gap:5px;background:#f7f9fd;border:1px solid var(--line);border-radius:12px;padding:10px}
+ #recordsTable td{border:0;padding:2px 4px}
+ #recordsTable td:nth-child(1){grid-column:1;font-size:11px;color:var(--muted)}
+ #recordsTable td:nth-child(2){grid-column:2;grid-row:1;font-weight:800;text-align:right}
+ #recordsTable td:nth-child(3){grid-column:1;font-weight:650;overflow-wrap:anywhere}
+ #recordsTable td:nth-child(4){grid-column:2;grid-row:2;text-align:right;font-size:15px;font-weight:800}
+ #recordsTable td:nth-child(5){grid-column:1;font-size:11px;color:var(--muted)}
+ #recordsTable td:nth-child(6){grid-column:2;grid-row:3;text-align:right}
+ #recordsTable td:nth-child(6) button{padding:7px 12px;min-height:36px}
+}
+
+.stock[data-sector]{cursor:pointer;border-radius:10px;padding-left:8px;padding-right:8px}
+.stock[data-sector]:hover,.stock[data-sector].selected{background:#f0f5ff}
+.quick-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.quick-grid button{background:#eff4ff;color:#2d4fb4;text-align:left;min-height:56px;font-size:12px}
+.calendar-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px;margin-top:13px}
+.calendar-day{border-radius:8px;min-height:43px;background:#f0f2f6;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:2px;font-size:12px}
+.calendar-day.positive{background:#d9f7e9;color:#057650}.calendar-day.negative{background:#ffe2e8;color:#bd3550}
+.calendar-day .delta{font-size:9px;font-weight:700}
+.calendar-weekday{text-align:center;color:#7b89a0;font-size:10px;font-weight:700}
+@media(max-width:640px){.quick-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.calendar-day{min-height:39px;font-size:11px}}
+
+.screen-page[hidden]{display:none!important}
+.screen-page{max-width:1000px;margin:12px auto 0}
+.screen-page>.card{margin-top:12px}
+.screen-page>.grid{margin-bottom:12px}
+.mobile-nav a{display:flex;flex-direction:column;align-items:center;gap:3px;color:#65738b;text-decoration:none;font-size:11px;font-weight:750;padding:4px 0}
+.mobile-nav a b{font-size:20px}
+.mobile-nav a.nav-selected{color:#4169ef;background:#eff3ff;border-radius:10px}
+.limit-note{background:#f1f5ff;color:#3657a8;border-radius:10px;padding:10px;font-size:12px;line-height:1.5}
+body{padding-bottom:88px}
+@media(min-width:641px){.mobile-nav{max-width:640px;left:50%;transform:translateX(-50%);border:1px solid var(--line);border-radius:15px 15px 0 0}}
+
+.fund-card{background:#f7f9fd;color:var(--ink);border:1px solid #e3eaf5;display:flex;flex-direction:column;align-items:flex-start;gap:6px;text-align:left;padding:13px;min-height:92px}
+.fund-card.chosen{border-color:#4169ef;background:#eff4ff}
+.fund-title{font-size:12px;font-weight:800}.fund-card strong{font-size:19px}
+#fundCards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.fund-detail{margin-top:12px;padding:12px;border:1px solid #e3eaf5;border-radius:12px}
+@media(max-width:390px){#fundCards{grid-template-columns:1fr}}
+.market-trade{margin:14px 0;background:#f6f9ff;border:1px solid #b9cbfa;border-radius:14px;padding:15px;scroll-margin-top:15px}
+.market-trade[hidden]{display:none}
+.market-buttons{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.market-positive{background:#079b72}.market-negative{background:#d94c69}
+#stocks .stock{cursor:pointer}
+#stocks .stock:active{transform:scale(.995)}
+@media(max-width:440px){.market-trade .cols{grid-template-columns:1fr}.market-buttons button{padding:12px 5px}}
+ 
+.status-chip{font-weight:800;border-radius:20px;padding:7px 11px;background:#f0f4f8;font-size:12px}
+.weight-line{display:grid;grid-template-columns:minmax(0,1fr) 76px 53px;align-items:center;gap:9px;margin:8px 0;font-size:12px}
+.weight-line input{min-width:0;padding:9px}
+.weight-line span{text-align:right;color:#697990}
+.goal-item{border-bottom:1px solid #e5eaf2;padding:12px 0}
+.goal-item .progress{height:7px;background:#e9eef8;border-radius:8px;overflow:hidden;margin-top:8px}
+.goal-item .progress>div{height:100%;background:#4169ef;border-radius:8px}
+
+.v12-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:10px 0}.v12-metrics>div{padding:12px 7px;background:#f3f6fc;border-radius:10px;display:flex;flex-direction:column;gap:5px}.v12-metrics small{color:#73839b;font-size:11px}.v12-metrics b{font-size:17px}.v12-feed{border-bottom:1px solid var(--line);padding:10px 0}.v12-feed small{color:#74839b}.v12-feed p{margin:6px 0;overflow-wrap:anywhere}@media(max-width:380px){.v12-metrics b{font-size:14px}}
+.news-feed{display:grid;gap:9px;margin-top:13px}
+.news-card{border:1px solid #e2e9f4;background:linear-gradient(135deg,#f8fbff,#fff);border-radius:14px;padding:12px;box-shadow:0 5px 16px #17213a08}
+.news-card-header{display:flex;justify-content:space-between;align-items:flex-start;gap:9px;margin-bottom:7px}
+.news-pill{display:inline-flex;align-items:center;gap:5px;border-radius:999px;background:#edf3ff;color:#3155b4;padding:6px 9px;font-size:11px;font-weight:850;max-width:100%;overflow-wrap:anywhere}
+.news-card time{font-size:11px;color:#79869a;white-space:nowrap}.news-card p{margin:8px 0 10px;line-height:1.45;overflow-wrap:anywhere}
+.news-card button{min-height:34px;padding:7px 10px;font-size:12px}
+.dividend-upcoming{border-color:#c8d9ff;background:linear-gradient(135deg,#f4f7ff,#fff)}
+.dividend-date{font-weight:850;color:#264aa5}
+.stock-extra{margin-top:7px;display:grid;gap:5px}
+.stock-extra-line{font-size:11px;color:#596985;background:#f5f8fd;border:1px solid #e4ebf5;border-radius:9px;padding:6px 8px;line-height:1.35}
+.people-score-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:12px 0}
+.people-score-card{background:#f6f9ff;border:1px solid #dfe8f7;border-radius:13px;padding:12px;min-width:0}
+.people-score-card.active{border-color:#4169ef;background:#edf3ff;box-shadow:0 6px 18px #4169ef18}
+.people-score-card small{display:block;color:#708099;font-weight:750;margin-bottom:5px}
+.people-score-card b{font-size:20px}
+.people-step{display:flex;justify-content:space-between;gap:10px;align-items:center;background:#f7f9fd;border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin:8px 0}
+.people-step.done{background:#e9f8f1;border-color:#c6eedc}
+.people-step.current{background:#edf3ff;border-color:#b9ccff}
+.people-step strong{font-size:13px}.people-step span{font-size:12px;color:#6f7d93}
+.people-history{display:grid;gap:8px;margin-top:10px}
+@media(max-width:640px){.people-score-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.people-step{align-items:flex-start;flex-direction:column}}
+/* V11: initial stock prices are the baseline; trade deltas are changes thereafter. */
+#authCover{position:fixed;inset:0;z-index:199;background:#f4f7fc;display:grid;place-items:center;padding:20px}#authCover .card{max-width:460px;text-align:center}#authCover[hidden]{display:none}
+/* V14: Bulut kontrolleri üstte yer kaplamak yerine küçük bir hesap menüsündedir. */
+.header-right{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.firebase-menu{position:relative;z-index:180}
+.firebase-menu summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:7px;background:#eef3ff;border:1px solid #d7e2ff;border-radius:999px;color:#274b9d;padding:9px 12px;font-size:12px;font-weight:800;user-select:none;white-space:nowrap}
+.firebase-menu summary::-webkit-details-marker{display:none}
+.firebase-menu summary:focus-visible{outline:3px solid #7099ff;outline-offset:2px}
+.cloud-icon{font-size:17px}.cloud-dot{height:7px;width:7px;border-radius:50%;background:#f59e0b;display:inline-block}
+.firebase-popover{position:absolute;right:0;top:calc(100% + 9px);width:min(320px,calc(100vw - 32px));background:#fff;color:#18233b;box-shadow:0 14px 38px #14234a35;border:1px solid #dfe7f3;border-radius:15px;padding:17px;z-index:250}
+.firebase-popover strong{font-size:14px}.firebase-popover #syncState{font-size:12px;color:#4262a2;margin:10px 0 6px;overflow-wrap:anywhere}
+.cloud-note{font-size:12px;line-height:1.5;color:#6d7a91;margin:0 0 14px}
+.cloud-actions{display:flex;gap:8px}.cloud-actions button{flex:1;min-height:39px;padding:9px 8px;font-size:12px}
+@media(max-width:640px){.header-right .tag{display:none}.header-right{margin-left:auto}.firebase-menu summary{padding:9px 11px}.cloud-label{display:none}.firebase-popover{right:0}}
+
+/* V15: günlük değişim tablosu */
+.neutral-movers-wrap{margin-top:18px;padding-top:14px;border-top:1px solid var(--line)}
+.neutral-movers-wrap h3{font-size:15px;margin:0 0 9px}
+.muted-label{font-size:12px;color:#7a879b;font-weight:500}
+.neutral-movers-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+.neutral-movers-grid .stock{margin:0;min-width:0;padding:10px}
+.neutral-movers-grid .stock-main{min-width:0}
+.neutral-delta{color:#78869a;font-weight:800}
+@media(max-width:640px){.neutral-movers-grid{grid-template-columns:1fr}}
+.mover-click{cursor:pointer;transition:background .15s,transform .15s}
+.mover-click:hover,.mover-click:focus-visible{background:#eef4ff;outline:2px solid #92b4fa;outline-offset:1px}
+.mover-click:active{transform:scale(.99)}
+.mover-more{width:100%;margin-top:9px;background:#edf2ff;color:#3655b7}
+.index-switch-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.index-switch-card{background:#f7f9fd;color:var(--ink);border:1px solid #e1e8f3;border-radius:15px;padding:15px;text-align:left;display:flex;flex-direction:column;gap:6px}
+.index-switch-card.chosen{border-color:#4169ef;background:#edf3ff;box-shadow:0 8px 22px #4169ef18}
+.index-switch-card small{color:#6f7e96;font-weight:800}.index-switch-card strong{font-size:24px}.index-switch-card span{font-size:12px}
+.market-index-panel[hidden]{display:none!important}
+#peopleNeutral{grid-template-columns:1fr}
+/* V21: Puanlama penceresi sayfayı kaydırmadan açılır */
+.mover-modal-backdrop{position:fixed;inset:0;background:rgba(5,9,20,.76);z-index:9998}
+#marketTrade.mover-modal{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:min(92vw,480px);max-height:88dvh;overflow-y:auto;z-index:9999;background:#151c2d;border:1px solid #48536a;border-radius:18px;padding:18px;box-shadow:0 24px 80px #0009}
+body.mover-modal-open{overflow:hidden}
+</style>
+<style id="two-world-market-style">
+/* İki Dünya / Hayat Borsan — redesigned interface, original logic preserved */
+:root{
+ color-scheme:dark;
+ --bg:#0d1015;--card:#191e26;--ink:#f6f6f5;--muted:#b2bbc6;
+ --line:#363f4b;--blue:#efa982;--green:#83d7b6;--red:#ff9ba3;
+ --shadow:0 14px 36px rgba(0,0,0,.27)
+}
+html,body{background:#0d1015!important;color:var(--ink)!important}
+body{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.5}
+.shell{max-width:1280px;padding-top:30px}
+.top{background:#1b2029;border:1px solid #37414e;border-radius:24px;padding:20px 23px;margin-bottom:20px;box-shadow:var(--shadow)}
+.top .logo{font-size:clamp(20px,2.7vw,28px);font-weight:850;letter-spacing:-.045em;color:#f5f6f8}
+.top .logo span{color:#f3b18c!important}
+.sub,.hint,.metric-label,.chart-note,.stock-sub,.small,th{color:#b0bac5!important}
+.tag{background:#373029!important;color:#ffd1b3!important;border:1px solid #674935}
+.card{background:#191e26!important;color:var(--ink)!important;border:1px solid #35404c!important;border-radius:22px!important;box-shadow:var(--shadow)!important}
+.card h2,.card h3,.card strong,.card .metric,.stock-name,.stock-value{color:#f6f6f5!important}
+button:not(.ghost):not(.mobile-nav a){background:#efa982;color:#171b21;border-radius:12px}
+button.ghost,.ranges button,.actions button.ghost{background:#282f3b!important;color:#eef1f6!important;border:1px solid #414b58!important}
+button.active,.ranges button.active{background:#f0b28e!important;color:#161a20!important}
+button.danger{background:#50313a!important;color:#ffc9cd!important}
+input,select,textarea{background:#232a34!important;color:#f3f4f7!important;border:1px solid #46505e!important;border-radius:13px!important}
+input::placeholder,textarea::placeholder{color:#a4b0c0!important;opacity:1}
+input:focus,select:focus,textarea:focus{outline:2px solid #f6bc99!important;outline-offset:2px}
+label{color:#bec8d6!important}
+.chart-wrap{background:#151b22!important;border:1px solid #303a45!important;border-radius:17px!important}
+.chart-wrap canvas,.chart-wrap svg{background:transparent!important}
+.stock{border-color:#35404b!important}
+.stock-icon{background:#302b2a!important}
+th,td{border-color:#36404d!important}
+td{color:#ecf0f4!important}
+.progress{background:#343c48!important}
+.progress>div{background:#efa982!important}
+.neutral-movers-wrap{border-color:#35404b!important}
+.mobile-nav{background:#171c24!important;border-top:1px solid #343e4a!important;box-shadow:0 -10px 28px #0006!important}
+.mobile-nav a{color:#bcc5d2!important}
+.mobile-nav a.active{color:#ffd1b3!important}
+.firebase-menu summary{background:#2b3240!important;border-color:#464f62!important;color:#f2f3fa!important}
+.firebase-popover{background:#222936!important;border:1px solid #4b5363!important;color:#f3f4f7!important}
+.firebase-popover strong{color:#fff!important}
+.firebase-popover .cloud-note,.firebase-popover #syncState{color:#bbc6d8!important}
+#authCover{background:rgba(8,11,16,.97)!important;backdrop-filter:blur(16px)}
+#authCover>.card{width:min(450px,calc(100vw - 34px));border:1px solid #495261!important;border-radius:26px!important;background:linear-gradient(150deg,#20232b,#151a21)!important;padding:28px!important;box-shadow:0 30px 90px #0009!important}
+#authCover h2{font-size:27px;line-height:1.18;letter-spacing:-.045em;margin-bottom:13px}
+#authCover p{line-height:1.7}
+#authCover #googleLogin{background:#f4b590!important;color:#1b1b20!important;width:100%;margin:11px 0}
+#authCover .return-worlds{display:block;color:#c2cbd6;font-size:13px;text-align:center;margin-top:16px;text-decoration:underline;text-underline-offset:4px}
+.duo-topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;max-width:1280px;margin:auto;padding:15px 16px 0;font-size:12px;font-weight:730;color:#bbc4d1}
+.duo-topbar .duo-logo{display:flex;gap:8px;align-items:center;color:#fff;font-size:11px;letter-spacing:.14em}
+.duo-topbar .duo-logo i{display:inline-block;width:13px;height:13px;border:2px solid #f6bc99;border-radius:4px;transform:rotate(-10deg)}
+.duo-topbar .duo-links{display:flex;gap:8px;flex-wrap:wrap}
+.duo-topbar a{display:inline-flex;align-items:center;gap:5px;padding:10px 12px;background:#242a34;border:1px solid #3f4854;border-radius:12px;color:#f0f1f5;text-decoration:none}
+.duo-topbar a:hover{border-color:#efa982;background:#30313a}
+.duo-topbar a[aria-current=page]{background:#403126;color:#ffd0b3;border-color:#6b4a36}
+table{border-color:#404858}
+.auth-link{color:#e3bc9d}
+:focus-visible{outline:3px solid #f6bc99!important;outline-offset:3px!important}
+@media(max-width:640px){
+ .duo-topbar{padding:10px 10px 0;gap:7px;align-items:flex-start}
+ .duo-topbar .duo-logo{font-size:9px;white-space:nowrap}
+ .duo-topbar .duo-links{gap:5px;justify-content:flex-end}
+ .duo-topbar a{padding:9px 10px;font-size:10px}
+ .shell{padding-top:14px}
+ .top{padding:15px;border-radius:18px}
+ #authCover>.card{padding:24px!important}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto!important}*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<div class="duo-topbar" role="navigation" aria-label="Uygulamalar arası geçiş">
+  <div class="duo-logo"><i aria-hidden="true"></i> İKİ DÜNYA</div>
+  <div class="duo-links"><a href="index.html">⌂ Seçim ekranı</a><a href="habitopia.html">Habitopia'ya geç ↗</a><a aria-current="page" href="hayat-borsan.html">Hayat Borsan</a></div>
+</div>
+
+<div id="authCover"><div class="card"><h2>📈 Hayat Borsam V20</h2><p>31 hissen ve günlük işlemlerin Firebase'de güvenle saklanacak.</p><p id="authMessage" class="hint">Google hesabınla giriş yap.</p><button id="googleLogin" type="button">Google ile giriş yap</button><p class="hint">Yalnızca sana ait Google hesabını kullan. İlk girişte mevcut tarayıcı kayıtlarını aktarabilirsin.</p><a class="return-worlds" href="index.html">← Dünya seçimine dön</a></div></div><main class="shell">
+<header class="top"><div><div class="logo">HAYAT<span>BORSAM</span> <span style="font-size:13px;color:#7383a1;font-weight:750;letter-spacing:0">| BEKO GÜCÜ</span></div><div class="sub">Kişisel gelişim endeksin</div></div><div class="header-right"><div class="tag">● KİŞİSEL PİYASA</div><details id="firebaseMenu" class="firebase-menu"><summary title="Bulut hesabı ve eşitleme" aria-label="Bulut hesabı ve eşitleme"><span class="cloud-icon">☁️</span><span class="cloud-label">Hesap</span><span class="cloud-dot" id="cloudDot"></span></summary><div class="firebase-popover"><strong>☁️ Firebase hesabım</strong><p id="syncState" role="status" aria-live="polite">Bağlantı bekleniyor…</p><p class="cloud-note">İşlemler otomatik kaydedilir. Gerekirse manuel eşitleyebilirsin.</p><div class="cloud-actions"><button type="button" id="syncNow">↻ Eşitle</button><button type="button" id="signOutBtn" class="ghost">Çıkış yap</button></div></div></details></div></header>
+<section class="card section" id="marketStatus"><div class="head"><h2>📊 Piyasa Durumu</h2><span id="marketMood" class="status-chip">Yatay Piyasa</span></div><p id="marketMoodText" class="chart-note"></p></section>
+<section class="grid" id="overview">
+<div class="card"><div class="metric-label">HBX • Hayat Endeksi</div><div class="metric" id="total">100,00</div><div class="hint" id="baseText">Başlangıç: 100,00</div></div>
+<div class="card"><div class="metric-label">Toplam getiri</div><div class="metric" id="gain">+0,00</div><div class="hint" id="gainPct">%0,00</div></div>
+<div class="card"><div class="metric-label">Bugünkü değişim</div><div class="metric" id="todayGain">+0,00</div><div class="hint" id="todayCount">0 işlem</div></div>
+<div class="card"><div class="metric-label">Tüm zamanların zirvesi</div><div class="metric" id="peak">100,00</div><div class="hint" id="streak">Rekor takibi</div></div>
+</section>
+<div class="layout">
+<div>
+<section class="card" id="performance">
+<div class="head"><h2>HBX / Performans Grafiği</h2><div class="ranges" id="ranges"><button class="ghost" data-days="1">1G</button><button class="ghost" data-days="7">1H</button><button class="ghost active" data-days="30">1A</button><button class="ghost" data-days="90">3A</button><button class="ghost" data-days="365">1Y</button><button class="ghost" data-days="0">Tümü</button></div></div>
+<div class="chart-wrap"><svg id="graph" viewBox="0 0 800 300" preserveAspectRatio="none" role="img" aria-label="Hayat puanı zaman grafiği"><text x="30" y="150" fill="#74839b">Grafik hazırlanıyor...</text></svg></div>
+<div class="chart-note" id="chartInfo">Başlangıç değeri ve puan değişimlerinden otomatik oluşturulur.</div>
+</section>
+<section class="card section" id="portfolio"><div class="head"><h2>Portföyüm • Gelişim Alanları</h2><span class="hint">Kategori bazlı puan performansı</span></div><div class="field"><label for="groupFilter">Kategori seç</label><select id="groupFilter"><option value="">Tüm Kategoriler</option></select></div><div class="field"><label for="sectorSearch">Hisse ara</label><input id="sectorSearch" placeholder="Hisse adı veya kodu ara..."></div><p class="chart-note" id="stockCount"></p><div id="stocks"></div>
+<div id="marketTrade" class="market-trade" hidden>
+  <div class="head"><h3 id="marketTradeTitle">Hisseyi Puanla</h3><button type="button" class="ghost" id="closeMarketTrade">Kapat ×</button></div>
+  <p class="chart-note" id="marketTradeLimit"></p>
+  <div id="marketTradeDividend"></div>
+  <form id="marketTradeForm">
+    <div class="cols"><div class="field"><label for="marketDate">Tarih ve saat</label><input type="datetime-local" id="marketDate" required></div><div class="field"><label for="marketAmount">Puan (en fazla 10)</label><input type="number" id="marketAmount" min="0.01" max="10" step="0.01" value="5" required></div></div>
+    <div class="field"><label for="marketDescription">Ne yaptın? (isteğe bağlı)</label><input id="marketDescription" maxlength="160" placeholder="İstersen açıklama yaz"></div>
+    <div class="market-buttons"><button type="submit" data-direction="1" class="market-positive">▲ Puan Ekle</button><button type="submit" data-direction="-1" class="market-negative">▼ Puan Düş</button></div>
+  </form>
+</div>
+<div class="rule"></div><div class="head"><h3 id="stockChartTitle">Hisse Grafiği</h3><div class="ranges" id="stockRanges"><button class="ghost" data-stock-days="7">1H</button><button class="ghost active" data-stock-days="30">1A</button><button class="ghost" data-stock-days="365">1Y</button><button class="ghost" data-stock-days="0">Tümü</button></div></div>
+<div class="chart-wrap" style="height:215px"><svg id="stockGraph" viewBox="0 0 800 220" preserveAspectRatio="none" aria-label="Seçilen hisse puan grafiği"></svg></div>
+<p class="chart-note">Bir hisseye dokunarak o hissenin performansını incele.</p>
+</section>
+<section class="card section" id="journal"><div class="head"><h2>İşlem Defteri</h2><span class="hint" id="recordCount"></span></div><div class="scroll"><table id="recordsTable"><thead><tr><th>Tarih / Saat</th><th>Hisse</th><th>İşlem</th><th>Değişim</th><th>Endeks</th><th></th></tr></thead><tbody id="records"></tbody></table></div></section>
+</div>
+<div>
+<section class="card" id="newTrade"><h2>+ Yeni Hayat İşlemi</h2><form id="tradeForm">
+<div class="field"><label for="time">Tarih ve saat</label><input type="datetime-local" id="time" required></div>
+<div class="field"><label for="sector">Gelişim hissesi</label><select id="sector"></select></div>
+<div class="field"><label for="description">Ne yaptın? (isteğe bağlı)</label><input id="description" maxlength="160" placeholder="İstersen açıklama yaz"></div>
+<div class="cols"><div class="field"><label for="side">İşlem yönü</label><select id="side"><option value="1">▲ Artış</option><option value="-1">▼ Düşüş</option></select></div><div class="field"><label for="amount">Puan miktarı</label><input id="amount" type="number" min=".01" max="1000000" step=".01" value="5" required></div></div>
+<div class="field"><div id="limitInfo" class="limit-note">Günlük hisse limiti: +10 / -10 puan</div></div>
+<div class="field"><label for="detail">Günlük not (isteğe bağlı)</label><textarea id="detail" placeholder="Bugün kendimi nasıl hissettim?"></textarea></div>
+<button type="submit" style="width:100%">İşlemi Kaydet ve Grafiği Güncelle</button>
+</form><p class="chart-note">Örnek: Spor +5, iş görüşmesi +10, gereksiz sosyal medya -3. Puanları sen belirlersin.</p></section>
+<section class="card section"><h2>Gelişim Hissesi Oluştur</h2>
+<div class="field"><label for="newSector">Hisse adı (ör. İyi Yol Akademi)</label><input id="newSector" maxlength="45" placeholder="Yeni proje veya alışkanlık"></div>
+<div class="field"><label for="newGroup">Kategori / Fon</label><select id="newGroup"></select></div><div class="cols"><div class="field"><label for="newTicker">Kısa kod</label><input id="newTicker" maxlength="8" placeholder="IYA"></div><div class="field"><label for="newIcon">Simge</label><input id="newIcon" maxlength="4" value="📈"></div></div>
+<div class="field"><label for="newInitialPrice">Başlangıç fiyatı</label><input id="newInitialPrice" type="number" min="0" max="1000" step="0.01" value="50" placeholder="Örn. 50"></div>
+<button id="addSector" type="button">Yeni Hisse Ekle</button>
+<div class="chart-note">Eklediğin hisseler işlem ekranında ve portföyünde görünür. Kayıtlarınla birlikte saklanır.</div>
+<div id="customSectors"></div>
+</section>
+<section class="card section" id="funds"><div class="head"><h2>💼 Fon Piyasası</h2><span class="hint">Otomatik hesaplanır</span></div><p class="chart-note">Fonlara ayrı puan girilmez. Fon puanı, içindeki hisselerin güncel değerlerinden otomatik hesaplanır. Ağırlıkları değiştirebilirsin.</p><div id="fundCards"></div><div id="fundDetail"></div><div class="rule"></div><h3>⚖️ Fon Ağırlıkları</h3><p class="chart-note">Varsayılan olarak fon içindeki hisseler eşit ağırlıktadır. Ağırlıkları değiştirdiğinde fon performansı ağırlıklı ortalama ile hesaplanır. Ana hayat endeksi değişmez.</p><div id="weightEditor"></div><button type="button" class="ghost" id="resetWeights">Bu Fonun Ağırlıklarını Eşitle</button></section>
+<section class="card section" id="candleSection"><div class="head"><h2>🕯️ Günlük Mum Grafiği</h2><span class="hint">Son 30 gün</span></div><div class="chart-wrap"><svg id="candleGraph" viewBox="0 0 800 250" preserveAspectRatio="none" role="img" aria-label="Günlük açılış kapanış mum grafiği"></svg></div><p class="chart-note">Yeşil mum yükselişi, kırmızı mum düşüşü gösterir. İşlem yapılmayan günlerde fiyat sabit kalır.</p></section><section class="card section" id="stockAlerts"><h2>🚨 Hisse Alarmları</h2><p class="chart-note">30 puanın altındaki hisseler otomatik olarak burada görünür.</p><div id="alertView"></div></section><section class="card section" id="stockGoals"><div class="head"><h2>🎯 Hisse Hedefleri</h2></div><p class="chart-note">Her hissenin ulaşmasını istediğin toplam puanı belirle. Puanlama yaptıkça hedef ilerlemesi otomatik güncellenir.</p><div class="cols"><div class="field"><label for="goalSector">Hisse</label><select id="goalSector"></select></div><div class="field"><label for="goalAmount">Hedef puan</label><input type="number" id="goalAmount" step="0.01" min="0.01" value="30"></div></div><button id="setStockGoal" type="button">Hisse Hedefini Kaydet</button><div id="goalList"></div></section>
+<section class="card section" id="movers"><h2>📊 Günün Hisse Hareketleri</h2><p class="chart-note" id="moversDateNote">Her gün 00.00 itibarıyla günlük değişimler sıfırdan başlar. Toplam hisse puanları ve geçmiş kayıtlar korunur.</p><div class="cols"><div><h3 class="up">▲ En Çok Artanlar</h3><div id="risers"></div></div><div><h3 class="down">▼ En Çok Düşenler</h3><div id="fallers"></div></div></div><div class="neutral-movers-wrap"><h3>➖ Bugün Değişmeyen Hisseler <span class="muted-label">(0 puan)</span></h3><div id="neutralMovers" class="neutral-movers-grid"></div></div></section>
+<section class="card section" id="lifeNews"><h2>📰 Hayat Borsası Haberleri</h2><p class="chart-note">Haberleri tek hisseye ya da direkt HBX • Hayat Endeksi'ne bağlayabilirsin.</p><div class="field"><label for="newsStock">Haber başlığı / ilgili alan</label><select id="newsStock"></select></div><div class="field"><label for="newsText">Gelişme / haber</label><textarea id="newsText" maxlength="300" placeholder="Örneğin: HBX bugün güçlü kapandı veya OynaBak için yeni görüşme yaptım..."></textarea></div><button type="button" id="addNews">Haberi Kaydet</button><div id="newsFeed" class="news-feed"></div><p class="chart-note">Haber kaydı puanı otomatik değiştirmez; puanlamak istersen hisse işlemi yap.</p></section><section class="card section" id="dividends"><h2>🎁 Temettü • Kendime Ödül</h2><p class="chart-note">Hangi hissenin ne zaman temettü vereceğini ve sana ne ödül kazandıracağını kaydet. Hisseye basınca temettü bilgisi kartta görünür.</p><div class="field"><label for="dividendStock">Temettü verecek hisse</label><select id="dividendStock"></select></div><div class="cols"><div class="field"><label for="dividendDate">Temettü tarihi</label><input type="date" id="dividendDate"></div><div class="field"><label for="dividendText">Ne verecek?</label><input id="dividendText" maxlength="120" placeholder="Örn. kahve, yemek, küçük alışveriş"></div></div><div class="field"><label for="dividendReason">Neden verecek?</label><input id="dividendReason" maxlength="160" placeholder="Örn. hedef tamamlandı, satış görüşmesi yapıldı, düzenli spor sürdü"></div><button type="button" id="addDividend">Temettü Kaydet</button><div id="dividendFeed" class="news-feed"></div></section><section class="card section" id="quickActions"><h2>Hızlı İşlemler</h2><p class="chart-note">Tek dokunuşla puan ekle. Her işlem otomatik kaydedilir.</p><div class="quick-grid" id="quickButtons"></div></section>
+<section class="card section" id="marketIndexSelector"><div class="head"><h2>Endeks Seçimi</h2><span class="hint">Piyasa ekranında iki ayrı endeks</span></div><div class="index-switch-grid" id="indexSwitchCards"></div></section>
+<section class="card section" id="peopleIndex"><div class="head"><h2>👥 İnsan Endeksi</h2><span class="hint" id="peopleIndexHint">Ayrı sosyal piyasa</span></div><div class="v12-metrics" id="peopleMetrics"></div></section>
+<section class="card section" id="peoplePerformance"><div class="head"><h2>İnsan Endeksi / Performans Grafiği</h2><div class="ranges" id="peopleRanges"><button class="ghost" data-people-days="1">1G</button><button class="ghost" data-people-days="7">1H</button><button class="ghost active" data-people-days="30">1A</button><button class="ghost" data-people-days="90">3A</button><button class="ghost" data-people-days="365">1Y</button><button class="ghost" data-people-days="0">Tümü</button></div></div><div class="chart-wrap"><svg id="peopleGraph" viewBox="0 0 800 300" preserveAspectRatio="none" role="img" aria-label="İnsan Endeksi zaman grafiği"><text x="30" y="150" fill="#74839b">Grafik hazırlanıyor...</text></svg></div><div class="chart-note" id="peopleChartInfo">Başlangıç kişi puanları ve insan işlemlerinden otomatik oluşturulur.</div></section>
+<section class="card section" id="peopleMovers"><h2>📊 Günün İnsan Hareketleri</h2><p class="chart-note" id="peopleMoversDateNote">İnsan Endeksi hareketleri de günlük olarak ayrı takip edilir.</p><div class="cols"><div><h3 class="up">▲ En Çok Artanlar</h3><div id="peopleRisers"></div></div><div><h3 class="down">▼ En Çok Düşenler</h3><div id="peopleFallers"></div></div></div><div class="neutral-movers-wrap"><h3>➖ Bugün Değişmeyenler <span class="muted-label">(0 puan)</span></h3><div id="peopleNeutral" class="neutral-movers-grid"></div></div></section>
+<section class="card section" id="peoplePortfolio"><div class="head"><h2>Portföyüm • İnsan Alanları</h2><span class="hint">Kişi bazlı puan performansı</span></div><p class="chart-note">Kişiye basınca düzenleme ve yükseliş/düşüş ekranı açılır.</p><div id="peopleStocks"></div><div id="peopleTradeBox" class="market-trade" hidden><div class="head"><h3 id="peopleTradeTitle">Kişiyi Puanla</h3><button type="button" class="ghost" id="closePeopleTrade">Kapat ×</button></div><form id="peopleTradeForm"><div class="cols"><div class="field"><label for="peopleDate">Tarih ve saat</label><input type="datetime-local" id="peopleDate" required></div><div class="field"><label for="peoplePerson">Kişi</label><select id="peoplePerson"></select></div></div><div class="cols"><div class="field"><label for="peopleSide">İşlem yönü</label><select id="peopleSide"><option value="1">▲ Yükseliş</option><option value="-1">▼ Düşüş</option></select></div><div class="field"><label for="peopleAmount">Puan miktarı</label><input type="number" id="peopleAmount" min="0.01" max="100" step="0.01" value="5" required></div></div><div class="field"><label for="peopleNote">Sebep / not</label><input id="peopleNote" maxlength="160" placeholder="Örn. destek oldu, moralimi düşürdü, güzel konuşma geçti"></div><button type="submit" style="width:100%" id="savePeopleScore">İnsan İşlemini Kaydet</button></form></div><div class="rule"></div><h3>Başlangıç Puanları</h3><div id="peopleBaseEditor"></div><button type="button" class="ghost" id="savePeopleBase">Başlangıç Puanlarını Kaydet</button></section>
+<section class="card section" id="peopleHistoryCard"><div class="head"><h2>İnsan İşlem Geçmişi</h2><button type="button" class="ghost" id="resetPeopleRound">İnsan Endeksini Sıfırla</button></div><div id="peopleHistory" class="people-history"></div></section>
+<section class="card section"><h2>Piyasa Özeti</h2><div id="insights"></div></section>
+<section class="card section" id="dailyClose"><h2>Günlük Kapanışlar</h2><p class="chart-note">Kapanış değeri gün sonunda, o tarihe kadar kaydedilmiş işlemlerden hesaplanır. Geçmişe işlem eklersen kapanış yeniden hesaplanır.</p><div id="closes"></div></section>
+<section class="card section" id="calendarSection"><h2>Performans Takvimi</h2><div class="head"><button class="ghost" id="prevMonth" type="button">‹ Önceki</button><b id="monthTitle"></b><button class="ghost" id="nextMonth" type="button">Sonraki ›</button></div><div id="calendar" class="calendar-grid"></div><p class="chart-note">Yeşil: puan artışı, kırmızı: düşüş, gri: işlem yok veya sıfır değişim.</p></section>
+<section class="card section" id="openingClosing"><h2>🔔 Borsa Açılış / Kapanış</h2><div id="openCloseView"></div><button type="button" id="closeDay">Bugünün Kapanışını Kaydet</button><p class="chart-note">Açılış önceki günün kapanışıdır. Kaydettiğin kapanış notu sonradan yaptığın işlemleri engellemez.</p></section><section class="card section" id="monthlyReport"><h2>📆 Aylık Hayat Raporu</h2><div id="monthlyView"></div></section><section class="card section" id="weeklyReport"><h2>Haftalık Gelişim Raporu</h2><div id="report"></div></section>
+<section class="card section"><h2>Hedef Endeksi</h2><div class="field"><label for="target">Ulaşmak istediğin puan</label><input id="target" type="number" step=".01" min="0"></div><button class="ghost" id="saveTarget" type="button">Hedefi Kaydet</button><div class="progress"><div id="targetBar"></div></div><div class="hint" id="targetText"></div></section>
+<section class="card section"><h2>Başlangıç & Veri Kasası</h2><div class="field"><label for="initial">Başlangıç puanın</label><input type="number" step=".01" id="initial"></div><button class="ghost" id="saveInitial" type="button">Başlangıcı Güncelle</button><div class="rule"></div>
+<div class="actions"><button type="button" class="ghost" id="backup">JSON Yedeği İndir</button><button type="button" class="ghost" id="csv">CSV İndir</button></div>
+<div class="field" style="margin-top:12px"><label for="restore">Yedekten Geri Yükle (.json)</label><input type="file" id="restore" accept=".json,application/json"></div>
+<button type="button" class="danger" id="reset">Tüm Verileri Sil</button>
+</section>
+</div>
+</div>
+<div id="screen-home" class="screen-page"></div>
+<div id="screen-market" class="screen-page" hidden></div>
+<div id="screen-trade" class="screen-page" hidden></div>
+<div id="screen-history" class="screen-page" hidden></div>
+<footer>Hayat Borsası bir kişisel alışkanlık ve motivasyon aracıdır; puanlar kişisel değerini ölçmez. Giriş yapıldığında kayıtlar Firebase Firestore ile eşitlenir; ayrıca bu tarayıcıda yerel yedek tutulur. Düzenli JSON yedeği al.</footer>
+<nav class="mobile-nav" aria-label="Mobil gezinme">
+<a href="#screen-home" data-screen="home"><b>⌂</b>Ana Sayfa</a><a href="#screen-market" data-screen="market"><b>⌁</b>Piyasa</a>
+<a href="#screen-trade" data-screen="trade"><b>＋</b>İşlem</a><a href="#screen-history" data-screen="history"><b>▤</b>Geçmiş</a>
+</nav></main>
+<script>
+"use strict";
+const KEY="hayatborsasi_terminal_v2";
+const defaultSectors=[{"id":"iya","name":"İyi Yol Akademi","ticker":"IYA","icon":"🎓","group":"Projeler & Girişimler"},{"id":"oynabak","name":"OynaBak","ticker":"OYN","icon":"🎮","group":"Projeler & Girişimler"},{"id":"habitopia","name":"Habitopia","ticker":"HBT","icon":"🌱","group":"Projeler & Girişimler"},{"id":"robot","name":"Sen V1 Robot","ticker":"SV1","icon":"🤖","group":"Projeler & Girişimler"},{"id":"familyshop","name":"Aile İşletmesi","ticker":"AIL","icon":"🏪","group":"Projeler & Girişimler"},{"id":"income","name":"Günlük Kazanç","ticker":"KAZ","icon":"💰","group":"İş & Finans"},{"id":"sales","name":"Satış Görüşmeleri","ticker":"STS","icon":"🤝","group":"İş & Finans"},{"id":"network","name":"İş Bağlantıları","ticker":"NET","icon":"🔗","group":"İş & Finans"},{"id":"company","name":"Şirketleşme","ticker":"SRK","icon":"🏢","group":"İş & Finans"},{"id":"reading","name":"Kitap Okuma","ticker":"OKU","icon":"📚","group":"Kişisel Gelişim"},{"id":"confidence","name":"Özgüven","ticker":"OZG","icon":"🦁","group":"Kişisel Gelişim"},{"id":"focus","name":"Odaklanma","ticker":"ODK","icon":"🎯","group":"Kişisel Gelişim"},{"id":"discipline","name":"Disiplin","ticker":"DSP","icon":"⏱️","group":"Kişisel Gelişim"},{"id":"knowledge","name":"Yeni Bilgiler Öğrenme","ticker":"BIL","icon":"💡","group":"Kişisel Gelişim"},{"id":"fitness","name":"Spor","ticker":"SPR","icon":"🏋️","group":"Sağlık & Bakım"},{"id":"walk","name":"Yürüyüş","ticker":"YRY","icon":"🚶","group":"Sağlık & Bakım"},{"id":"grooming","name":"Kişisel Bakım","ticker":"BKM","icon":"✨","group":"Sağlık & Bakım"},{"id":"sleep","name":"Uyku Düzeni","ticker":"UYK","icon":"🌙","group":"Sağlık & Bakım"},{"id":"nutrition","name":"Sağlıklı Beslenme","ticker":"BSL","icon":"🥗","group":"Sağlık & Bakım"},{"id":"clothing","name":"Giyim & Tarz","ticker":"TRZ","icon":"👔","group":"Sağlık & Bakım"},{"id":"friends","name":"Arkadaşlar","ticker":"ARK","icon":"👥","group":"Sosyal & Özel Hayat"},{"id":"family","name":"Aile","ticker":"AIE","icon":"🏡","group":"Sosyal & Özel Hayat"},{"id":"newpeople","name":"Yeni İnsanlarla Tanışma","ticker":"YIT","icon":"🙋","group":"Sosyal & Özel Hayat"},{"id":"sociallife","name":"Sosyal Aktiviteler","ticker":"SOS","icon":"🎉","group":"Sosyal & Özel Hayat"},{"id":"love","name":"Aşk","ticker":"ASK","icon":"💗","group":"Sosyal & Özel Hayat"},{"id":"writing","name":"Yazarlık","ticker":"YZR","icon":"✍️","group":"Üretim & Eğitim"},{"id":"socialmedia","name":"Sosyal Medya","ticker":"SMY","icon":"📱","group":"Üretim & Eğitim"},{"id":"vlog","name":"Video & Vlog","ticker":"VLG","icon":"🎥","group":"Üretim & Eğitim"},{"id":"conference","name":"Konferanslar","ticker":"KNF","icon":"🎤","group":"Üretim & Eğitim"},{"id":"wellbeing","name":"Duygusal İyilik Hali","ticker":"DYI","icon":"🧘","group":"Duygusal Denge"},{"id":"happiness","name":"Mutluluk","ticker":"MTL","icon":"😊","group":"Duygusal Denge"}];
+const $=id=>document.getElementById(id);
+const num=n=>Number(n).toLocaleString("tr-TR",{minimumFractionDigits:2,maximumFractionDigits:2});
+const signed=n=>(n>=0?"+":"")+num(n);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const START_PRICES={"iya":93,"oynabak":80,"habitopia":35,"robot":48,"familyshop":60,"income":35,"sales":40,"network":40,"company":30,"reading":40,"confidence":80,"focus":45,"discipline":80,"knowledge":50,"fitness":49,"walk":65,"grooming":60,"sleep":40,"nutrition":46,"clothing":60,"friends":66,"family":74,"newpeople":70,"sociallife":60,"love":24,"writing":55,"socialmedia":56,"vlog":52,"conference":52,"wellbeing":33,"happiness":42};
+const START_AVERAGE=53.5483870968;
+const PEOPLE_ORDER=[
+{id:"ayberk",name:"Ayberk",icon:"A"},
+{id:"eren",name:"Eren",icon:"E"},
+{id:"annem",name:"Annem",icon:"AN"},
+{id:"babam",name:"Babam",icon:"BA"},
+{id:"ablam",name:"Ablam",icon:"AB"},
+{id:"ben",name:"Ben",icon:"B"}
+];
+function defaultPeopleBase(){return Object.fromEntries(PEOPLE_ORDER.map(p=>[p.id,50]))}
+function defaultData(){return {base:START_AVERAGE,target:80,trades:[],customSectors:[],initialPrices:{...START_PRICES},initialVersion:11,peopleBase:defaultPeopleBase(),peopleTrades:[]}}
+let data;
+try{data=JSON.parse(localStorage.getItem(KEY))||defaultData()}catch{data=defaultData()}
+function valid(d){return d&&Number.isFinite(d.base)&&Number.isFinite(d.target)&&Array.isArray(d.trades)&&d.trades.every(t=>typeof t.id==="string"&&typeof t.sector==="string"&&typeof t.description==="string"&&typeof t.time==="string"&&Number.isFinite(Date.parse(t.time))&&Number.isFinite(t.delta))}
+if(!valid(data))data=defaultData();
+if(!Array.isArray(data.customSectors))data.customSectors=[];
+if(!data.peopleBase)data.peopleBase=defaultPeopleBase();
+if(!Array.isArray(data.peopleTrades))data.peopleTrades=[];
+if(Array.isArray(data.peopleRatings)&&data.peopleRatings.length&&!data.peopleTrades.length){
+ const latest={};for(const item of data.peopleRatings)if(PEOPLE_ORDER.some(p=>p.id===item.person))latest[item.person]=Number(item.score);
+ for(const p of PEOPLE_ORDER)if(Number.isFinite(latest[p.id]))data.peopleBase[p.id]=latest[p.id];
+}
+// V11 migration: seed all 31 stocks while retaining existing transaction history.
+if(!data.initialPrices||data.initialVersion!==11){data.initialPrices={...START_PRICES,...(data.initialPrices||{})};data.initialVersion=11}
+for(const [id,v] of Object.entries(START_PRICES))if(!Number.isFinite(Number(data.initialPrices[id])))data.initialPrices[id]=v;
+data.base=START_AVERAGE;
+function initialOf(id){return Number(data.initialPrices?.[id]??0)}
+function currentOf(id){return initialOf(id)+data.trades.filter(t=>t.sector===id&&Date.parse(t.time)<=Date.now()).reduce((a,t)=>a+t.delta,0)}
+function indexDelta(t){return t.delta/sectorsList().length}
+function sectorsList(){return [...defaultSectors,...data.customSectors]}
+function marketEntity(id){
+ if(id==="__hbx")return {id:"__hbx",name:"HBX • Hayat Endeksi",ticker:"HBX",icon:"📈",group:"Genel Endeks"};
+ return sectorsList().find(s=>s.id===id)||{id,name:"Hisse",ticker:"DGR",icon:"📌",group:"Özel"};
+}
+function dividendDateValue(item){return item.payDate||item.date||""}
+function dividendReward(item){return item.reward||item.text||""}
+function dividendReason(item){return item.reason||""}
+function dividendSummary(item){
+ const reason=dividendReason(item);
+ return `${esc(dividendReward(item))}${reason?`<br><span class="hint">Neden: ${esc(reason)}</span>`:""}`;
+}
+function dividendsForSector(id){
+ return (data.dividends||[]).filter(d=>(d.sector||"")===id).sort((a,b)=>String(dividendDateValue(a)).localeCompare(String(dividendDateValue(b))));
+}
+function formatDividendDate(value){
+ if(!value)return "Tarih yok";
+ const d=new Date(value+"T00:00:00");
+ return Number.isNaN(d.getTime())?value:d.toLocaleDateString("tr-TR",{day:"numeric",month:"long",year:"numeric"});
+}
+let days=30,stockDays=30,peopleDays=30,selectedSector="iya",selectedPerson="ayberk",selectedFund="Projeler & Girişimler",selectedMarketIndex="hbx",calendarMonth=new Date(new Date().getFullYear(),new Date().getMonth(),1);
+let moversExpanded={risers:false,fallers:false};
+const quickTemplates=[
+{label:"📚 Kitap okudum +5",sector:"reading",delta:5},
+{label:"💪 Spor yaptım +10",sector:"fitness",delta:10},
+{label:"🚀 Projede çalıştım +10",sector:"iya",delta:10},
+{label:"🧠 Profil kontrolü yapmadım +5",sector:"wellbeing",delta:5},
+{label:"✨ Kişisel bakım +5",sector:"grooming",delta:5},
+{label:"📱 Gereksiz ekran süresi -3",sector:"wellbeing",delta:-3}
+];
+function localInputDate(d=new Date()){let z=x=>String(x).padStart(2,"0");return `${d.getFullYear()}-${z(d.getMonth()+1)}-${z(d.getDate())}T${z(d.getHours())}:${z(d.getMinutes())}`}
+$("time").value=localInputDate();
+$("sector").innerHTML=sectorsList().map(s=>`<option value="${s.id}">${s.icon} ${s.name} (${s.ticker})</option>`).join("");
+function timeline(){let total=data.base;return [...data.trades].sort((a,b)=>Date.parse(a.time)-Date.parse(b.time)||a.id.localeCompare(b.id)).map(t=>({...t,level:(total+=indexDelta(t))}))}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(data))}catch(e){alert("Tarayıcıya kaydedilemedi. Depolama alanını kontrol et.");return false}render();if(window.firebaseQueueSave)window.firebaseQueueSave();return true}
+function paint(id,v){$(id).textContent=v}
+function colorize(id,v){$(id).classList.remove("up","down");$(id).classList.add(v>=0?"up":"down")}
+function chart(rows){
+ const svg=$("graph");let now=Date.now(),start=days?now-days*86400000:null;
+ let prior=data.base;for(const t of rows){if(start!==null&&Date.parse(t.time)<start)prior=t.level}
+ let pts=[];
+ if(start!==null)pts.push({x:start,y:prior});
+ else pts.push({x:rows.length?Math.min(Date.parse(rows[0].time)-3600000,now-3600000):now-86400000,y:data.base});
+ for(const t of rows){let x=Date.parse(t.time);if(x<=now&&(start===null||x>=start))pts.push({x,y:t.level})}
+ const current=rows.length?rows[rows.length-1].level:data.base;
+ pts.push({x:now,y:current});
+ // Future-dated trades are included in total, but not drawn until their date.
+ let past=rows.filter(t=>Date.parse(t.time)<=now),currentNow=past.length?past[past.length-1].level:data.base;
+ pts=pts.filter(p=>p.x<=now);
+ pts[pts.length-1]={x:now,y:currentNow};
+ let minX=Math.min(...pts.map(p=>p.x)),maxX=Math.max(now,minX+3600000);
+ let minY=Math.min(...pts.map(p=>p.y)),maxY=Math.max(...pts.map(p=>p.y));
+ let margin=Math.max((maxY-minY)*.15,2);minY-=margin;maxY+=margin;
+ let X=x=>62+(x-minX)/(maxX-minX)*710,Y=y=>250-(y-minY)/(maxY-minY)*216;
+ let grid="",path="";
+ for(let i=0;i<5;i++){let y=34+i*54,v=maxY-(maxY-minY)*i/4;grid+=`<line x1="62" x2="775" y1="${y}" y2="${y}" stroke="#e7edf5" stroke-dasharray="4 5"/><text x="55" y="${y+4}" font-size="12" text-anchor="end" fill="#7a879c">${esc(num(v))}</text>`}
+ pts.forEach((p,i)=>{path+=(i?" L":"M")+X(p.x).toFixed(2)+" "+Y(p.y).toFixed(2)});
+ let rising=currentNow>=data.base,col=rising?"#00a878":"#e74f6b",last=pts[pts.length-1];
+ let area=path+` L ${X(last.x).toFixed(2)} 250 L ${X(pts[0].x).toFixed(2)} 250 Z`;
+ svg.innerHTML=`<defs><linearGradient id="shade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${col}" stop-opacity=".2"/><stop offset="1" stop-color="${col}" stop-opacity="0"/></linearGradient></defs>${grid}<path d="${area}" fill="url(#shade)"/><path d="${path}" fill="none" stroke="${col}" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/><circle cx="${X(last.x)}" cy="${Y(last.y)}" r="5" fill="${col}" stroke="white" stroke-width="2"/><text x="62" y="284" fill="#7a879c" font-size="12">${new Date(minX).toLocaleDateString("tr-TR")}</text><text x="775" y="284" fill="#7a879c" font-size="12" text-anchor="end">${new Date(now).toLocaleDateString("tr-TR")}</text>`;
+ // Invisible wide touch targets allow point inspection on phones and desktop.
+ const marks=pts.map((p,i)=>`<circle class="chart-hit" data-index="${i}" cx="${X(p.x)}" cy="${Y(p.y)}" r="14" fill="transparent" stroke="none" style="cursor:crosshair"/>`).join("");
+ svg.insertAdjacentHTML("beforeend",marks);
+ svg.onpointermove=ev=>{
+   const rect=svg.getBoundingClientRect();
+   const px=(ev.clientX-rect.left)/rect.width*800;
+   let nearest=pts[0],dist=Infinity;
+   for(const p of pts){let d=Math.abs(X(p.x)-px);if(d<dist){dist=d;nearest=p}}
+   const x=X(nearest.x),y=Y(nearest.y);
+   const date=new Date(nearest.x).toLocaleString("tr-TR",{day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"});
+   const label=`${date} • ${num(nearest.y)} puan`;
+   let tooltip=svg.querySelector("#point-tooltip");if(tooltip)tooltip.remove();
+   const tx=Math.max(90,Math.min(710,x));
+   svg.insertAdjacentHTML("beforeend",`<g id="point-tooltip" pointer-events="none"><line x1="${x}" y1="25" x2="${x}" y2="250" stroke="#8295b6" stroke-dasharray="4 4"/><circle cx="${x}" cy="${y}" r="6" fill="${col}" stroke="white" stroke-width="2"/><rect x="${tx-89}" y="3" width="178" height="28" rx="8" fill="#17213a"/><text x="${tx}" y="22" fill="white" font-size="12" text-anchor="middle">${esc(label)}</text></g>`);
+   paint("chartInfo",`Seçilen nokta: ${label}`);
+ };
+ svg.onpointerleave=()=>{let tip=svg.querySelector("#point-tooltip");if(tip)tip.remove()};
+ svg.onpointerdown=svg.onpointermove;
+ svg.onclick=svg.onpointermove;
+ paint("chartInfo",`${days?days+" günlük":"Tüm zamanların"} görünüm • Grafiğe dokunarak puanları incele • Güncel: ${num(currentNow)}`);
+}
+function dateKey(d){let z=n=>String(n).padStart(2,"0");return `${d.getFullYear()}-${z(d.getMonth()+1)}-${z(d.getDate())}`}
+function drawStock(rows){
+ let stock=sectorsList().find(t=>t.id===selectedSector)||sectorsList()[0];selectedSector=stock.id;
+ paint("stockChartTitle",`${stock.icon} ${stock.name} • ${stock.ticker}`);
+ let relevant=rows.filter(t=>t.sector===selectedSector),now=Date.now(),cutoff=stockDays?now-stockDays*86400000:-Infinity;
+ let points=[{x:stockDays?cutoff:(relevant.length?Date.parse(relevant[0].time)-3600000:now-86400000),y:initialOf(selectedSector)}],value=initialOf(selectedSector);
+ for(const t of relevant){let x=Date.parse(t.time);if(x>now)continue;value+=t.delta;if(x<cutoff)points[0].y=value;else points.push({x,y:value})}
+ points.push({x:now,y:value});
+ let low=Math.min(...points.map(p=>p.y))-2,high=Math.max(...points.map(p=>p.y))+2;
+ let minX=Math.min(...points.map(p=>p.x)),maxX=Math.max(now,minX+3600000);
+ let X=x=>55+(x-minX)/(maxX-minX)*720,Y=y=>184-(y-low)/(high-low)*155;
+ let path=points.map((p,i)=>(i?"L":"M")+X(p.x).toFixed(1)+" "+Y(p.y).toFixed(1)).join(" ");
+ let color=value>=0?"#00a878":"#e74f6b",svg=$("stockGraph");
+ svg.innerHTML=`<line x1="55" x2="775" y1="${Y(0)}" y2="${Y(0)}" stroke="#e4eaf4" stroke-dasharray="5 5"/><path d="${path}" stroke="${color}" stroke-width="3" fill="none" stroke-linejoin="round"/><circle cx="${X(now)}" cy="${Y(value)}" r="5" fill="${color}"/><text x="55" y="211" fill="#7a879c" font-size="12">${new Date(minX).toLocaleDateString("tr-TR")}</text><text x="775" y="211" text-anchor="end" fill="#7a879c" font-size="12">${num(value)} puan</text>`;
+ svg.onpointermove=e=>{let rect=svg.getBoundingClientRect(),px=(e.clientX-rect.left)/rect.width*800,nearest=points.reduce((a,b)=>Math.abs(X(a.x)-px)<Math.abs(X(b.x)-px)?a:b);paint("stockChartTitle",`${stock.icon} ${stock.name}: ${num(nearest.y)} puan • ${new Date(nearest.x).toLocaleString("tr-TR")}`)};
+}
+
+function fundSummaries(){
+ const now=Date.now(),weekStart=now-7*86400000;
+ const list=sectorsList(),names=[...new Set(list.map(s=>s.group||"Özel"))];
+ return names.map(name=>{
+  const ids=new Set(list.filter(s=>(s.group||"Özel")===name).map(s=>s.id));
+  const trades=data.trades.filter(t=>ids.has(t.sector)&&Date.parse(t.time)<=now);
+  const total=[...ids].reduce((a,id)=>a+initialOf(id),0)+trades.reduce((a,t)=>a+t.delta,0);
+  const weekly=trades.filter(t=>Date.parse(t.time)>=weekStart).reduce((a,t)=>a+t.delta,0);
+  const today=localInputDate().slice(0,10);
+  const daily=trades.filter(t=>t.time.slice(0,10)===today).reduce((a,t)=>a+t.delta,0);
+  return {name,ids,total,weekly,daily,count:ids.size};
+ });
+}
+function weightFor(s){const v=Number(data.weights?.[s.id]);return Number.isFinite(v)&&v>=0?v:1}
+function weightedFund(fund){
+ const members=sectorsList().filter(s=>(s.group||"Özel")===fund);
+ const denom=members.reduce((a,s)=>a+weightFor(s),0);
+ if(!denom)return 0;
+ return members.reduce((a,s)=>a+currentOf(s.id)*weightFor(s),0)/denom;
+}
+function renderWeightEditor(){
+ const members=sectorsList().filter(s=>(s.group||"Özel")===selectedFund);
+ const denom=members.reduce((a,s)=>a+weightFor(s),0);
+ $("weightEditor").innerHTML=members.map(s=>`<div class="weight-line"><label>${esc(s.icon)} ${esc(s.name)}</label><input aria-label="${esc(s.name)} ağırlığı" type="number" min="0" max="100" step="1" data-weight="${esc(s.id)}" value="${weightFor(s)}"><span>${denom?(weightFor(s)/denom*100).toFixed(1):"0"}%</span></div>`).join("");
+}
+$("weightEditor").addEventListener("change",e=>{
+ const el=e.target.closest("[data-weight]");if(!el)return;
+ const n=Number(el.value);if(!Number.isFinite(n)||n<0||n>100){alert("Ağırlık 0-100 arasında olmalı.");renderWeightEditor();return}
+ data.weights??={};data.weights[el.dataset.weight]=n;save();
+});
+$("resetWeights").onclick=()=>{
+ data.weights??={};for(const t of sectorsList().filter(s=>(s.group||"Özel")===selectedFund))delete data.weights[t.id];save()
+};
+function renderFunds(){
+ const funds=fundSummaries();
+ if(!funds.some(f=>f.name===selectedFund))selectedFund=funds[0]?.name||"";
+ $("fundCards").innerHTML=funds.map(f=>`<button class="fund-card ${f.name===selectedFund?"chosen":""}" data-fund="${esc(f.name)}" type="button"><span class="fund-title">${esc(f.name)}</span><strong class="${f.total>=0?"up":"down"}">${num(weightedFund(f.name))}</strong><span class="hint">${f.count} hisse · Haftalık <b class="${f.weekly>=0?"up":"down"}">${signed(f.weekly)}</b></span></button>`).join("");
+ const fund=funds.find(f=>f.name===selectedFund);
+ if(!fund){$("fundDetail").innerHTML="";return}
+ const members=sectorsList().filter(s=>(s.group||"Özel")===fund.name);
+ const lines=members.map(s=>{
+ const sum=currentOf(s.id);
+ return `<div class="stock"><div class="stock-main">${esc(s.icon)} ${esc(s.name)}</div><b class="${sum>=0?"up":"down"}">${signed(sum)}</b></div>`}).join("");
+ $("fundDetail").innerHTML=`<div class="fund-detail"><h3>${esc(fund.name)} Fonu</h3><p class="chart-note">Ağırlıklı fon puanı: <b>${num(weightedFund(fund.name))}</b> · Hisselerin toplamı: ${num(fund.total)} · Bugün ${signed(fund.daily)} · Son 7 gün ${signed(fund.weekly)}</p>${lines}</div>`;renderWeightEditor();
+}
+$("fundCards").addEventListener("click",e=>{const btn=e.target.closest("[data-fund]");if(btn){selectedFund=btn.dataset.fund;renderFunds()}});
+$("groupFilter").addEventListener("change",()=>render());
+function refreshGroups(){
+ const select=$("groupFilter"),current=select.value;
+ const groups=[...new Set(sectorsList().map(s=>s.group||"Özel"))];
+ select.innerHTML='<option value="">Tüm Kategoriler</option>'+groups.map(g=>`<option value="${esc(g)}">${esc(g)}</option>`).join("");
+ select.value=groups.includes(current)?current:"";
+ const newGroup=$("newGroup");if(newGroup){const old=newGroup.value;newGroup.innerHTML=groups.map(g=>`<option value="${esc(g)}">${esc(g)}</option>`).join("");newGroup.value=groups.includes(old)?old:groups[0]}
+}
+function extraSections(rows){
+ drawStock(rows);
+ const daily={};for(const t of rows){let k=dateKey(new Date(t.time));daily[k]=(daily[k]||0)+indexDelta(t)}
+ const now=new Date(),recent=[];
+ for(let i=0;i<7;i++){let d=new Date(now.getFullYear(),now.getMonth(),now.getDate()-i),key=dateKey(d),end=new Date(d.getFullYear(),d.getMonth(),d.getDate()+1).getTime(),last=data.base;
+ for(const t of rows){if(Date.parse(t.time)<end)last=t.level}
+ recent.push({date:key,delta:daily[key]||0,close:last})}
+ $("closes").innerHTML=recent.map((d,i)=>`<div class="stock"><div class="stock-main"><div class="stock-name">${i===0?"Bugün (şu ana kadar)":d.date}</div><div class="stock-sub">Kapanış / güncel değer</div></div><div class="stock-value">${num(d.close)}<div class="small ${d.delta>=0?"up":"down"}">${signed(d.delta)}</div></div></div>`).join("");
+ let year=calendarMonth.getFullYear(),month=calendarMonth.getMonth(),first=new Date(year,month,1).getDay(),offset=(first+6)%7,lastDay=new Date(year,month+1,0).getDate();
+ paint("monthTitle",calendarMonth.toLocaleDateString("tr-TR",{month:"long",year:"numeric"}));
+ let cal=["Pt","Sa","Ça","Pe","Cu","Ct","Pa"].map(x=>`<div class="calendar-weekday">${x}</div>`).join("");
+ for(let i=0;i<offset;i++)cal+='<div></div>';
+ for(let d=1;d<=lastDay;d++){let key=dateKey(new Date(year,month,d)),v=daily[key]||0,cls=v>0?"positive":v<0?"negative":"";cal+=`<div class="calendar-day ${cls}" title="${key}: ${signed(v)} puan"><span>${d}</span><span class="delta">${v?signed(v):"·"}</span></div>`}
+ $("calendar").innerHTML=cal;
+ let start=new Date(now.getFullYear(),now.getMonth(),now.getDate()-6),week=rows.filter(t=>new Date(t.time)>=start&&new Date(t.time)<=now);
+ let sum=week.reduce((a,t)=>a+indexDelta(t),0),bestDay=recent.reduce((a,b)=>b.delta>a.delta?b:a);
+ let categories={};for(const t of week)categories[t.sector]=(categories[t.sector]||0)+t.delta;
+ let bestSector=Object.entries(categories).sort((a,b)=>b[1]-a[1])[0],sector=bestSector&&sectorsList().find(s=>s.id===bestSector[0]);
+ $("report").innerHTML=`<div class="stock"><div class="stock-main">Son 7 günün puan değişimi</div><b class="${sum>=0?"up":"down"}">${signed(sum)}</b></div><div class="stock"><div class="stock-main">İşlem sayısı</div><b>${week.length}</b></div><div class="stock"><div class="stock-main">En yüksek günlük artış</div><b>${bestDay.delta>0?`${bestDay.date} (${signed(bestDay.delta)})`:"Henüz yok"}</b></div><div class="stock"><div class="stock-main">En çok gelişen hisse</div><b>${bestSector&&bestSector[1]>0?esc(sector?.name||bestSector[0]):"Henüz yok"}</b></div><p class="chart-note">${sum>0?"Bu hafta pozitif ilerledin. Sürdürebildiğin küçük adımlara devam et.":sum<0?"Zor bir hafta olabilir. Gelecek hafta tek bir kolay alışkanlığa odaklan.":"Bu hafta küçük bir adımla başlamak için iyi bir fırsat."}</p>`;
+ $("quickButtons").innerHTML=quickTemplates.map((t,i)=>`<button type="button" data-quick="${i}">${esc(t.label)}</button>`).join("");
+}
+function renderMood(todayDelta){
+ const label=todayDelta>0?"🐂 Boğa Piyasası":todayDelta<0?"🐻 Ayı Piyasası":"➖ Yatay Piyasa";
+ paint("marketMood",label);
+ paint("marketMoodText",todayDelta>0?`Bugün endeksin ${signed(todayDelta)} puan yükseldi.`:todayDelta<0?`Bugün endeksin ${signed(todayDelta)} puan değişti.`:"Bugün henüz net bir puan değişimi yok.");
+ $("marketMood").className="status-chip "+(todayDelta>0?"up":todayDelta<0?"down":"");
+}
+function renderGoals(){
+ data.stockGoals??={};
+ const selected=$("goalSector").value;
+ $("goalSector").innerHTML=sectorsList().map(t=>`<option value="${esc(t.id)}">${esc(t.icon)} ${esc(t.name)}</option>`).join("");
+ if(sectorsList().some(s=>s.id===selected))$("goalSector").value=selected;
+ const entries=Object.entries(data.stockGoals).filter(([id,goal])=>sectorsList().some(s=>s.id===id)&&Number(goal)>0);
+ $("goalList").innerHTML=entries.length?entries.map(([id,goal])=>{
+ const s=sectorsList().find(s=>s.id===id),score=currentOf(id);
+ const pct=Math.max(0,Math.min(100,score/goal*100));
+ return `<div class="goal-item"><div class="head"><b>${esc(s.icon)} ${esc(s.name)}</b><button class="ghost" type="button" data-goal-remove="${esc(id)}">Sil</button></div><div class="hint">${signed(score)} / ${num(goal)} puan · %${num(pct)}</div><div class="progress"><div style="width:${pct}%"></div></div></div>`}).join(""):'<p class="hint">Henüz hisse hedefi belirlemedin.</p>';
+}
+$("setStockGoal").onclick=()=>{
+ const id=$("goalSector").value,amount=Number($("goalAmount").value);
+ if(!id||!Number.isFinite(amount)||amount<=0){alert("Pozitif hedef puanı gir.");return}
+ data.stockGoals??={};data.stockGoals[id]=amount;save();
+};
+$("goalList").addEventListener("click",e=>{const b=e.target.closest("[data-goal-remove]");if(!b)return;delete data.stockGoals[b.dataset.goalRemove];save()});
+function peopleBaseOf(id){return Number(data.peopleBase?.[id]??50)}
+function peopleCurrentOf(id){
+ return peopleBaseOf(id)+(data.peopleTrades||[]).filter(t=>t.person===id&&Date.parse(t.time)<=Date.now()).reduce((a,t)=>a+t.delta,0);
+}
+function peopleIndexBase(){return PEOPLE_ORDER.reduce((a,p)=>a+peopleBaseOf(p.id),0)/PEOPLE_ORDER.length}
+function peopleIndexNow(){return PEOPLE_ORDER.reduce((a,p)=>a+peopleCurrentOf(p.id),0)/PEOPLE_ORDER.length}
+function peopleTodayDelta(){
+ const today=dateKey(new Date());
+ return (data.peopleTrades||[]).filter(t=>dateKey(new Date(t.time))===today&&Date.parse(t.time)<=Date.now()).reduce((a,t)=>a+t.delta,0)/PEOPLE_ORDER.length;
+}
+function peopleTimeline(){
+ let total=peopleIndexBase();
+ return [...(data.peopleTrades||[])].sort((a,b)=>Date.parse(a.time)-Date.parse(b.time)||a.id.localeCompare(b.id)).map(t=>({...t,level:(total+=t.delta/PEOPLE_ORDER.length)}));
+}
+function peopleChart(){
+ const rows=peopleTimeline(),svg=$("peopleGraph");
+ if(!svg)return;
+ const base=peopleIndexBase(),now=Date.now(),start=peopleDays?now-peopleDays*86400000:null;
+ let prior=base;for(const t of rows){if(start!==null&&Date.parse(t.time)<start)prior=t.level}
+ let pts=[];
+ if(start!==null)pts.push({x:start,y:prior});
+ else pts.push({x:rows.length?Math.min(Date.parse(rows[0].time)-3600000,now-3600000):now-86400000,y:base});
+ for(const t of rows){const x=Date.parse(t.time);if(x<=now&&(start===null||x>=start))pts.push({x,y:t.level})}
+ const past=rows.filter(t=>Date.parse(t.time)<=now),currentNow=past.length?past[past.length-1].level:base;
+ pts.push({x:now,y:currentNow});
+ pts=pts.filter(p=>p.x<=now);
+ pts[pts.length-1]={x:now,y:currentNow};
+ const minX=Math.min(...pts.map(p=>p.x)),maxX=Math.max(now,minX+3600000);
+ let minY=Math.min(...pts.map(p=>p.y)),maxY=Math.max(...pts.map(p=>p.y));
+ const margin=Math.max((maxY-minY)*.15,2);minY-=margin;maxY+=margin;
+ const X=x=>62+(x-minX)/(maxX-minX)*710,Y=y=>250-(y-minY)/(maxY-minY)*216;
+ let grid="",path="";
+ for(let i=0;i<5;i++){const y=34+i*54,v=maxY-(maxY-minY)*i/4;grid+=`<line x1="62" x2="775" y1="${y}" y2="${y}" stroke="#e7edf5" stroke-dasharray="4 5"/><text x="55" y="${y+4}" font-size="12" text-anchor="end" fill="#7a879c">${esc(num(v))}</text>`}
+ pts.forEach((p,i)=>{path+=(i?" L":"M")+X(p.x).toFixed(2)+" "+Y(p.y).toFixed(2)});
+ const rising=currentNow>=base,col=rising?"#00a878":"#e74f6b",last=pts[pts.length-1],area=path+` L ${X(last.x).toFixed(2)} 250 L ${X(pts[0].x).toFixed(2)} 250 Z`;
+ svg.innerHTML=`<defs><linearGradient id="peopleShade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${col}" stop-opacity=".2"/><stop offset="1" stop-color="${col}" stop-opacity="0"/></linearGradient></defs>${grid}<path d="${area}" fill="url(#peopleShade)"/><path d="${path}" fill="none" stroke="${col}" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/><circle cx="${X(last.x)}" cy="${Y(last.y)}" r="5" fill="${col}" stroke="white" stroke-width="2"/><text x="62" y="284" fill="#7a879c" font-size="12">${new Date(minX).toLocaleDateString("tr-TR")}</text><text x="775" y="284" fill="#7a879c" font-size="12" text-anchor="end">${new Date(now).toLocaleDateString("tr-TR")}</text>`;
+ svg.onpointermove=ev=>{
+  const rect=svg.getBoundingClientRect(),px=(ev.clientX-rect.left)/rect.width*800;
+  let nearest=pts[0],dist=Infinity;
+  for(const p of pts){const d=Math.abs(X(p.x)-px);if(d<dist){dist=d;nearest=p}}
+  const x=X(nearest.x),y=Y(nearest.y),date=new Date(nearest.x).toLocaleString("tr-TR",{day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"}),label=`${date} • ${num(nearest.y)} puan`;
+  svg.querySelector("#people-point-tooltip")?.remove();
+  const tx=Math.max(90,Math.min(710,x));
+  svg.insertAdjacentHTML("beforeend",`<g id="people-point-tooltip" pointer-events="none"><line x1="${x}" y1="25" x2="${x}" y2="250" stroke="#8295b6" stroke-dasharray="4 4"/><circle cx="${x}" cy="${y}" r="6" fill="${col}" stroke="white" stroke-width="2"/><rect x="${tx-89}" y="3" width="178" height="28" rx="8" fill="#17213a"/><text x="${tx}" y="22" fill="white" font-size="12" text-anchor="middle">${esc(label)}</text></g>`);
+  paint("peopleChartInfo",`Seçilen nokta: ${label}`);
+ };
+ svg.onpointerleave=()=>{svg.querySelector("#people-point-tooltip")?.remove()};
+ svg.onpointerdown=svg.onpointermove;
+ svg.onclick=svg.onpointermove;
+ paint("peopleChartInfo",`${peopleDays?peopleDays+" günlük":"Tüm zamanların"} görünüm • Grafiğe dokunarak kişi endeksini incele • Güncel: ${num(currentNow)}`);
+ document.querySelectorAll("#peopleRanges button").forEach(b=>b.classList.toggle("active",Number(b.dataset.peopleDays)===peopleDays));
+}
+function peopleTodayByPerson(){
+ const today=dateKey(new Date());
+ return Object.fromEntries(PEOPLE_ORDER.map(p=>[p.id,(data.peopleTrades||[]).filter(t=>t.person===p.id&&dateKey(new Date(t.time))===today&&Date.parse(t.time)<=Date.now()).reduce((a,t)=>a+t.delta,0)]));
+}
+function renderPeopleIndex(){
+ const base=peopleIndexBase(),now=peopleIndexNow(),change=now-base,today=peopleTodayDelta();
+ $("peopleIndexHint").textContent=`İnsan Endeksi: ${num(now)} • ${signed(change)} toplam değişim`;
+ $("peopleMetrics").innerHTML=`<div><small>İnsan Endeksi</small><b>${num(now)}</b></div><div><small>Toplam değişim</small><b class="${change>=0?"up":"down"}">${signed(change)}</b></div><div><small>Bugün</small><b class="${today>=0?"up":"down"}">${signed(today)}</b></div>`;
+ peopleChart();
+ const todayMap=peopleTodayByPerson();
+ const line=p=>{const current=peopleCurrentOf(p.id),delta=current-peopleBaseOf(p.id),today=todayMap[p.id]||0;return `<div class="stock mover-click ${selectedPerson===p.id?"selected":""}" data-person-sector="${esc(p.id)}" role="button" tabindex="0"><div class="stock-icon">👤</div><div class="stock-main"><div class="stock-name">${esc(p.name)}</div><div class="stock-sub">${esc(p.icon)} • Bugün ${signed(today)}</div></div><div class="stock-value ${delta>=0?"up":"down"}">${num(current)}<div class="small ${delta>=0?"up":"down"}">${signed(delta)} değişim</div></div></div>`};
+ $("peopleStocks").innerHTML=PEOPLE_ORDER.map(line).join("");
+ const gain=PEOPLE_ORDER.map(p=>({...p,delta:todayMap[p.id]||0})).filter(p=>p.delta>0).sort((a,b)=>b.delta-a.delta);
+ const loss=PEOPLE_ORDER.map(p=>({...p,delta:todayMap[p.id]||0})).filter(p=>p.delta<0).sort((a,b)=>a.delta-b.delta);
+ const neutral=PEOPLE_ORDER.map(p=>({...p,delta:todayMap[p.id]||0})).filter(p=>p.delta===0);
+ const moveLine=p=>`<div class="stock mover-click" data-person-sector="${esc(p.id)}" role="button" tabindex="0"><div class="stock-main"><b>👤 ${esc(p.name)}</b><div class="stock-sub">${esc(p.icon)} · Bugünkü insan hareketi</div></div><b class="${p.delta>0?"up":p.delta<0?"down":"neutral-delta"}">${signed(p.delta)}</b></div>`;
+ $("peopleRisers").innerHTML=gain.length?gain.map(moveLine).join(""):'<p class="hint">Bugün yükselen kişi yok.</p>';
+ $("peopleFallers").innerHTML=loss.length?loss.map(moveLine).join(""):'<p class="hint">Bugün düşen kişi yok.</p>';
+ $("peopleNeutral").innerHTML=neutral.length?neutral.map(moveLine).join(""):'<p class="hint">Bugün herkes hareketli.</p>';
+ $("peopleMoversDateNote").textContent=`${new Date().toLocaleDateString('tr-TR',{day:'numeric',month:'long',year:'numeric'})} · İnsan Endeksi günlük hareketleri`;
+ $("peopleBaseEditor").innerHTML=PEOPLE_ORDER.map(p=>`<div class="weight-line"><label>${esc(p.name)}</label><input type="number" min="0" max="100" step="0.01" data-people-base="${esc(p.id)}" value="${num(peopleBaseOf(p.id)).replace(".","").replace(",",".")}"><span>Başlangıç</span></div>`).join("");
+ const oldPerson=$("peoplePerson").value;
+ $("peoplePerson").innerHTML=PEOPLE_ORDER.map(p=>`<option value="${esc(p.id)}">${esc(p.name)}</option>`).join("");
+ $("peoplePerson").value=PEOPLE_ORDER.some(p=>p.id===oldPerson)?oldPerson:selectedPerson;
+ updatePeopleTrade();
+ const history=[...(data.peopleTrades||[])].slice().reverse().slice(0,12);
+ $("peopleHistory").innerHTML=history.length?history.map(item=>{
+  const p=PEOPLE_ORDER.find(x=>x.id===item.person)||{name:"Kişi",icon:"?"};
+  return `<div class="news-card"><div class="news-card-header"><span class="news-pill">👥 ${esc(p.name)}</span><time>${new Date(item.time).toLocaleString("tr-TR")}</time></div><p><b class="${item.delta>=0?"up":"down"}">${signed(item.delta)}</b>${item.note?`<br>${esc(item.note)}`:""}</p><button class="ghost" type="button" data-delete-person-score="${esc(item.id)}">Sil</button></div>`;
+ }).join(""):'<p class="hint">Henüz insan işlemi eklenmedi.</p>';
+}
+function updatePeopleTrade(){
+ const person=PEOPLE_ORDER.find(p=>p.id===selectedPerson)||PEOPLE_ORDER[0];
+ if(!$("peopleTradeTitle"))return;
+ $("peopleTradeTitle").textContent=`👤 ${person.name} • ${num(peopleCurrentOf(person.id))} puan`;
+ if($("peoplePerson"))$("peoplePerson").value=person.id;
+}
+function openPeopleTrade(id){
+ if(!PEOPLE_ORDER.some(p=>p.id===id))return;
+ selectedPerson=id;
+ $("peopleTradeBox").hidden=false;
+ $("peopleDate").value=localInputDate();
+ updatePeopleTrade();
+ $("peopleTradeBox").scrollIntoView({behavior:"smooth",block:"center"});
+}
+function renderMarketIndexSelector(total,change){
+ const pNow=peopleIndexNow(),pChange=pNow-peopleIndexBase();
+ $("indexSwitchCards").innerHTML=[
+  {id:"hbx",title:"HBX • Hayat Endeksi",value:total,change,sub:"Gelişim hisseleri ve piyasa sonuçları"},
+  {id:"people",title:"İnsan Endeksi",value:pNow,change:pChange,sub:"Ayberk, Eren, annem, babam, ablam, ben"}
+ ].map(x=>`<button type="button" class="index-switch-card ${selectedMarketIndex===x.id?"chosen":""}" data-index-view="${x.id}"><small>${esc(x.title)}</small><strong>${num(x.value)}</strong><span class="${x.change>=0?"up":"down"}">${signed(x.change)} • ${esc(x.sub)}</span></button>`).join("");
+ document.querySelectorAll(".market-index-panel").forEach(el=>{el.hidden=el.dataset.indexPanel!==selectedMarketIndex});
+}
+function render(){
+ const rows=timeline(),total=rows.length?rows[rows.length-1].level:data.base,change=total-data.base;
+ const today=new Date().toDateString(),todayRows=rows.filter(t=>new Date(t.time).toDateString()===today),dayDelta=todayRows.reduce((s,t)=>s+t.delta,0);
+ paint("total",num(total));paint("baseText","31 hissenin başlangıç ortalaması: "+num(data.base));
+ paint("gain",signed(change));colorize("gain",change);
+ paint("gainPct",data.base===0?"Başlangıç sıfır: yüzde hesaplanmaz":signed(change/data.base*100)+"%");
+ renderMood(dayDelta/sectorsList().length);renderGoals();renderPeopleIndex();renderMarketIndexSelector(total,change);renderV12(rows);paint("todayGain",signed(dayDelta/sectorsList().length));colorize("todayGain",dayDelta);
+ paint("todayCount",todayRows.length+" işlem bugün");
+ paint("peak",num(Math.max(data.base,...rows.map(t=>t.level))));
+ paint("streak",total>=Math.max(data.base,...rows.map(t=>t.level))?"🏆 Zirve seviyesi":"Zirveye "+num(Math.max(data.base,...rows.map(t=>t.level))-total)+" puan kaldı");
+ chart(rows);extraSections(rows);renderMovers();renderFunds();if(!$("marketTrade").hidden)updateMarketTrade();
+ let bySector=Object.fromEntries(sectorsList().map(s=>[s.id,{sum:0,count:0}]));
+ for(const t of rows)if(bySector[t.sector]){bySector[t.sector].sum+=t.delta;bySector[t.sector].count++}
+ paint("stockCount",sectorsList().length+" hisse • "+new Set(sectorsList().map(s=>s.group||"Özel")).size+" kategori • Fon puanları otomatik hesaplanır");
+ $("stocks").innerHTML=sectorsList().filter(s=>(!$("groupFilter").value||(s.group||"Özel")===$("groupFilter").value)&&((s.name+" "+s.ticker).toLocaleLowerCase("tr-TR").includes(($("sectorSearch")?.value||"").toLocaleLowerCase("tr-TR")))).map(s=>{let d=bySector[s.id];const price=currentOf(s.id),dividends=dividendsForSector(s.id);const dividendHtml=dividends.length?`<div class="stock-extra">${dividends.slice(0,2).map(x=>`<div class="stock-extra-line">🎁 ${esc(formatDividendDate(dividendDateValue(x)))}: ${dividendSummary(x)}</div>`).join("")}${dividends.length>2?`<div class="stock-extra-line">+${dividends.length-2} temettü daha</div>`:""}</div>`:"";return `<div class="stock ${selectedSector===s.id?"selected":""}" data-sector="${esc(s.id)}" tabindex="0" role="button" aria-label="${esc(s.name)} hissesini puanla"><div class="stock-icon">${s.icon}</div><div class="stock-main"><div class="stock-name">${s.name}</div><div class="stock-sub">${esc(s.group||"Özel")} · ${s.ticker} • ${d.count} işlem</div>${dividendHtml}</div><div class="stock-value ${d.sum>=0?"up":"down"}">${num(price)}<div class="small ${d.sum>=0?"up":"down"}">${signed(d.sum)} değişim</div></div></div>`}).join("");
+ $("records").innerHTML=rows.length?rows.slice().reverse().map(t=>{let s=sectorsList().find(x=>x.id===t.sector);return `<tr><td>${new Date(t.time).toLocaleString("tr-TR")}</td><td>${s?esc(s.ticker):"DGR"}</td><td title="${esc(t.detail||"")}">${esc(t.description)}</td><td class="${t.delta>=0?"up":"down"}">${signed(t.delta)}</td><td>${num(t.level)}</td><td><button class="danger" data-remove="${esc(t.id)}">Sil</button></td></tr>`}).join(""):`<tr><td colspan="6" class="empty">Henüz işlem yok. İlk işlemini eklediğinde grafik hareket edecek.</td></tr>`;
+ paint("recordCount",rows.length+" kayıt");
+ $("customSectors").innerHTML=data.customSectors.map(t=>`<div class="stock"><div class="stock-main"><b>${esc(t.icon)} ${esc(t.name)}</b><div class="stock-sub">${esc(t.ticker)} · Başlangıç ${num(initialOf(t.id))}</div></div><button type="button" class="danger" data-sector-remove="${esc(t.id)}">Sil</button></div>`).join("");
+ $("sector").innerHTML=sectorsList().map(t=>`<option value="${esc(t.id)}">${esc(t.icon)} ${esc(t.name)} (${esc(t.ticker)})</option>`).join("");
+ const gains=rows.filter(t=>t.delta>0),losses=rows.filter(t=>t.delta<0),best=rows.length?rows.reduce((a,b)=>a.delta>b.delta?a:b):null;
+ $("insights").innerHTML=`<div class="stock"><div class="stock-main">Pozitif işlemler</div><b class="up">${gains.length}</b></div><div class="stock"><div class="stock-main">Negatif işlemler</div><b class="down">${losses.length}</b></div><div class="stock"><div class="stock-main">En yüksek tek artış</div><b>${best&&best.delta>0?signed(best.delta):"—"}</b></div><div class="stock"><div class="stock-main">İşlem başına ortalama</div><b>${rows.length?signed(change/rows.length):"—"}</b></div>`;
+ $("initial").value=data.base;$("initial").disabled=true;$("saveInitial").disabled=true;$("target").value=data.target;
+ let progress=data.target>0?Math.max(0,Math.min(100,total/data.target*100)):0;
+ $("targetBar").style.width=progress+"%";
+ paint("targetText",`${num(total)} / ${num(data.target)} puan • ${num(progress)}% tamamlandı`);
+ document.querySelectorAll("#ranges button").forEach(b=>b.classList.toggle("active",Number(b.dataset.days)===days));
+}
+function updateMarketTrade(){
+ const sector=sectorsList().find(t=>t.id===selectedSector);
+ if(!sector)return;
+ paint("marketTradeTitle",`${sector.icon} ${sector.name} • ${num(currentOf(sector.id))} puan`);
+ const date=$("marketDate").value.slice(0,10),used=daySectorSum(selectedSector,date);
+ paint("marketTradeLimit",`${date}: ${signed(used)} puan • Günlük tavan +10 / taban −10 • Artış hakkı ${num(Math.max(0,10-used))} • Düşüş hakkı ${num(Math.max(0,10+used))}`);
+ const dividends=dividendsForSector(sector.id);
+ $("marketTradeDividend").innerHTML=dividends.length?`<div class="stock-extra">${dividends.map(x=>`<div class="stock-extra-line">🎁 <b>${esc(formatDividendDate(dividendDateValue(x)))}</b>: ${dividendSummary(x)}</div>`).join("")}</div>`:'<p class="hint">Bu hisse için temettü kaydı yok.</p>';
+}
+$("stocks").addEventListener("click",e=>{let el=e.target.closest("[data-sector]");if(el){selectedSector=el.dataset.sector;if($("dividendStock"))$("dividendStock").value=selectedSector;$("marketTrade").hidden=false;$("marketDate").value=localInputDate();render();updateMarketTrade();$("marketTrade").scrollIntoView({behavior:"smooth",block:"center"})}});
+$("stocks").addEventListener("keydown",e=>{if((e.key==="Enter"||e.key===" ")&&e.target.matches("[data-sector]")){e.preventDefault();e.target.click()}});
+$("closeMarketTrade").onclick=()=>{$("marketTrade").hidden=true};
+$("marketDate").addEventListener("change",updateMarketTrade);
+$("marketTradeForm").addEventListener("submit",e=>{
+ e.preventDefault();const button=e.submitter;const sign=Number(button?.dataset.direction||1);
+ const amount=Number($("marketAmount").value),time=$("marketDate").value,description=$("marketDescription").value.trim();
+ if(!Number.isFinite(amount)||amount<=0||amount>10||!Number.isFinite(Date.parse(time))){alert("Geçerli bir tarih ve 0-10 arasında puan gir.");return}
+ if(Date.parse(time)>Date.now()+60000){alert("Gelecek tarihe işlem girilemez.");return}
+ const requested=amount*sign,allowed=remainingDelta(selectedSector,time.slice(0,10),requested);
+ if(Math.abs(allowed-requested)>0.000001){alert("Günlük ±10 sınırı aşılıyor. Kullanılabilir puan: "+signed(allowed));return}
+ data.trades.push({id:"market_"+Date.now()+"_"+Math.random().toString(36).slice(2),time,sector:selectedSector,description:description||"Puan işlemi",detail:"Piyasadan hızlı puanlama",delta:requested});
+ if(save()){$("marketDescription").value="";$("marketDate").value=localInputDate();updateMarketTrade();showLimit()}
+});
+$("stockRanges").addEventListener("click",e=>{let b=e.target.closest("[data-stock-days]");if(!b)return;stockDays=Number(b.dataset.stockDays);document.querySelectorAll("[data-stock-days]").forEach(x=>x.classList.toggle("active",x===b));render()});
+$("prevMonth").onclick=()=>{calendarMonth=new Date(calendarMonth.getFullYear(),calendarMonth.getMonth()-1,1);render()};
+$("nextMonth").onclick=()=>{calendarMonth=new Date(calendarMonth.getFullYear(),calendarMonth.getMonth()+1,1);render()};
+$("quickButtons").addEventListener("click",e=>{let b=e.target.closest("[data-quick]");if(!b)return;let t=quickTemplates[Number(b.dataset.quick)];if(!t)return;const allowed=remainingDelta(t.sector,localInputDate().slice(0,10),t.delta);
+if(Math.abs(allowed-t.delta)>0.000001){alert("Günlük ±10 puan limiti nedeniyle bu hızlı işlem eklenemiyor. Kalan: "+signed(allowed));return}
+data.trades.push({id:"quick_"+Date.now()+"_"+Math.random().toString(36).slice(2),time:localInputDate(),sector:t.sector,description:t.label,detail:"Hızlı işlem",delta:t.delta});save();showLimit()});
+$("peopleDate").value=localInputDate();
+$("peoplePortfolio").addEventListener("click",e=>{const item=e.target.closest("[data-person-sector]");if(item)openPeopleTrade(item.dataset.personSector)});
+$("peopleMovers").addEventListener("click",e=>{const item=e.target.closest("[data-person-sector]");if(item)openPeopleTrade(item.dataset.personSector)});
+$("peoplePortfolio").addEventListener("keydown",e=>{if((e.key==="Enter"||e.key===" ")&&e.target.closest("[data-person-sector]")){e.preventDefault();e.target.closest("[data-person-sector]").click()}});
+$("peopleMovers").addEventListener("keydown",e=>{if((e.key==="Enter"||e.key===" ")&&e.target.closest("[data-person-sector]")){e.preventDefault();e.target.closest("[data-person-sector]").click()}});
+$("closePeopleTrade").onclick=()=>{$("peopleTradeBox").hidden=true};
+$("peoplePerson").addEventListener("change",()=>{selectedPerson=$("peoplePerson").value;updatePeopleTrade()});
+$("peopleTradeForm").addEventListener("submit",e=>{
+ e.preventDefault();
+ const person=$("peoplePerson").value,amount=Number($("peopleAmount").value),date=$("peopleDate").value,note=$("peopleNote").value.trim(),sign=Number($("peopleSide").value);
+ if(!PEOPLE_ORDER.some(p=>p.id===person)){alert("Kişi seç.");return}
+ if(!Number.isFinite(amount)||amount<=0){alert("Pozitif puan gir.");return}
+ if(!date||!Number.isFinite(Date.parse(date))){alert("Geçerli tarih ve saat gir.");return}
+ if(Date.parse(date)>Date.now()+60000){alert("Gelecek tarihe işlem girilemez.");return}
+ data.peopleTrades??=[];
+ data.peopleTrades.push({id:"person_"+Date.now()+"_"+Math.random().toString(36).slice(2),person,delta:amount*sign,time:date,note});
+ selectedPerson=person;
+ $("peopleNote").value="";
+ $("peopleAmount").value=5;
+ $("peopleDate").value=localInputDate();
+ save();
+});
+$("savePeopleBase").onclick=()=>{
+ data.peopleBase??=defaultPeopleBase();
+ for(const input of document.querySelectorAll("[data-people-base]")){
+  const value=Number(input.value);
+  if(!Number.isFinite(value)||value<0||value>100){alert("Başlangıç puanları 0-100 arasında olmalı.");return}
+  data.peopleBase[input.dataset.peopleBase]=value;
+ }
+ save();
+};
+$("resetPeopleRound").onclick=()=>{if(confirm("İnsan Endeksi işlemleri silinsin mi? Başlangıç puanları korunur.")){data.peopleTrades=[];save()}};
+$("peopleHistory").addEventListener("click",e=>{const b=e.target.closest("[data-delete-person-score]");if(b&&confirm("Bu insan işlemi silinsin mi?")){data.peopleTrades=data.peopleTrades.filter(x=>x.id!==b.dataset.deletePersonScore);save()}});
+$("addSector").onclick=()=>{
+ const name=$("newSector").value.trim(),ticker=$("newTicker").value.trim().toUpperCase(),icon=$("newIcon").value.trim()||"📈",initial=Number($("newInitialPrice").value);
+ if(!name||!ticker){alert("Hisse adı ve kısa kod gir.");return}
+ if(!Number.isFinite(initial)||initial<0||initial>1000){alert("Başlangıç fiyatı 0-1000 arasında olmalı.");return}
+ if(sectorsList().some(s=>s.ticker.toUpperCase()===ticker)){alert("Bu kısa kod zaten kullanılıyor.");return}
+ const id="custom_"+Date.now()+"_"+Math.random().toString(36).slice(2);
+ data.customSectors.push({group:$("newGroup").value||"Özel",id,name,ticker,icon});
+ data.initialPrices??={};data.initialPrices[id]=initial;
+ if(save()){$("newSector").value="";$("newTicker").value="";$("newInitialPrice").value="50";refreshGroups()}
+};
+$("customSectors").addEventListener("click",e=>{
+ const b=e.target.closest("[data-sector-remove]");if(!b)return;
+ if(data.trades.some(t=>t.sector===b.dataset.sectorRemove)){alert("Bu hissede kayıtlı işlem var. Önce ilgili işlemleri sil.");return}
+ if(confirm("Bu gelişim hissesi silinsin mi?")){data.customSectors=data.customSectors.filter(s=>s.id!==b.dataset.sectorRemove);if(data.initialPrices)delete data.initialPrices[b.dataset.sectorRemove];save();showLimit()}
+});
+$("tradeForm").addEventListener("submit",e=>{e.preventDefault();let a=Number($("amount").value),date=$("time").value,desc=$("description").value.trim();if(!Number.isFinite(a)||a<=0||!date||!Number.isFinite(Date.parse(date))){alert("Lütfen geçerli tarih ve pozitif puan gir.");return}
+if(Date.parse(date)>Date.now()+60000){alert("Gelecek tarihe işlem girilemez. Bugünü veya geçmiş bir günü seç.");return;}
+const requested=a*Number($("side").value),available=remainingDelta($("sector").value,date.slice(0,10),requested);
+if(Math.abs(available-requested)>0.000001){alert("Bu hissenin günlük tavan/taban sınırı ±10 puandır. Bu işlem limiti aşar. Kalan uygun miktar: "+signed(available));return}
+data.trades.push({id:((typeof crypto!=="undefined"&&crypto.randomUUID)?crypto.randomUUID():Date.now()+"_"+Math.random()),time:date,sector:$("sector").value,description:desc||"Puan işlemi",detail:$("detail").value.trim(),delta:requested});
+if(save()){showLimit();$("description").value="";$("detail").value="";$("time").value=localInputDate()}
+});
+$("records").addEventListener("click",e=>{let b=e.target.closest("[data-remove]");if(b&&confirm("Bu işlemi silmek istiyor musun?")){data.trades=data.trades.filter(t=>t.id!==b.dataset.remove);save();showLimit()}});
+$("ranges").addEventListener("click",e=>{let b=e.target.closest("[data-days]");if(b){days=Number(b.dataset.days);render()}});
+$("peopleRanges").addEventListener("click",e=>{let b=e.target.closest("[data-people-days]");if(b){peopleDays=Number(b.dataset.peopleDays);render()}});
+$("saveInitial").onclick=()=>alert("Başlangıç endeksi 31 hissenin ortalamasından otomatik hesaplanır.");
+$("saveTarget").onclick=()=>{let n=Number($("target").value);if(!Number.isFinite(n)||n<=0){alert("Pozitif hedef gir.");return}data.target=n;save()};
+function download(name,content,type){let blob=new Blob([content],{type}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500)}
+$("backup").onclick=()=>download("hayat-borsasi-yedek.json",JSON.stringify(data,null,2),"application/json");
+$("csv").onclick=()=>{let lines=[["Tarih","Kategori","Aciklama","Not","Degisim","Endeks"],...timeline().map(t=>[t.time,t.sector,t.description,t.detail||"",t.delta,t.level])];download("hayat-borsasi-islemler.csv","\ufeff"+lines.map(row=>row.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(";")).join("\r\n"),"text/csv;charset=utf-8")};
+$("restore").onchange=async e=>{let file=e.target.files[0];if(!file)return;try{let incoming=JSON.parse(await file.text());if(!valid(incoming))throw Error("Dosya biçimi geçersiz");if(confirm("Mevcut kayıtların üzerine yedek yüklensin mi?")){data=incoming;data.initialPrices={...START_PRICES,...(incoming.initialPrices||{})};data.initialVersion=11;data.base=START_AVERAGE;if(!data.peopleBase)data.peopleBase=defaultPeopleBase();if(!Array.isArray(data.peopleTrades))data.peopleTrades=[];save()}}catch(err){alert("Yedek yüklenemedi: "+err.message)}e.target.value=""};
+$("reset").onclick=()=>{if(confirm("TÜM işlemler ve ayarlar silinecek. Emin misin?")){data=defaultData();save()}};
+render();
+
+// Independent screens: only the selected tab's contents remain visible.
+function setupScreens(){
+ const home=$("screen-home"),market=$("screen-market"),trade=$("screen-trade"),history=$("screen-history");
+ const metric=$("overview"),layout=document.querySelector(".layout");
+ const performance=$("performance"),portfolio=$("portfolio"),movers=$("movers");
+ const journal=$("journal"),form=$("newTrade");
+ const extra=[...document.querySelectorAll(".card.section")];
+ const move=(id,target)=>{let el=$(id);if(el)target.appendChild(el)};
+ const hbxPanel=document.createElement("div"),peoplePanel=document.createElement("div");
+ hbxPanel.className="market-index-panel";hbxPanel.dataset.indexPanel="hbx";
+ peoplePanel.className="market-index-panel";peoplePanel.dataset.indexPanel="people";
+ home.appendChild(metric);move("marketStatus",home);
+ move("dailyClose",home);move("openingClosing",home);move("monthlyReport",home);move("calendarSection",home);move("weeklyReport",home);
+ move("marketIndexSelector",market);market.appendChild(hbxPanel);market.appendChild(peoplePanel);
+ hbxPanel.appendChild(performance);move("candleSection",hbxPanel);move("funds",hbxPanel);move("stockAlerts",hbxPanel);move("stockGoals",hbxPanel);hbxPanel.appendChild(movers);hbxPanel.appendChild(portfolio);
+ move("peopleIndex",peoplePanel);move("peoplePerformance",peoplePanel);move("peopleMovers",peoplePanel);move("peoplePortfolio",peoplePanel);move("peopleHistoryCard",peoplePanel);
+ trade.appendChild(form);move("quickActions",trade);move("lifeNews",trade);move("dividends",trade);
+ for(const el of [...document.querySelectorAll(".card.section")]){
+   if(!el.closest(".screen-page")&&el.id!=="journal")trade.appendChild(el);
+ }
+ history.appendChild(journal);
+ layout.remove();
+ const nav=document.querySelector(".mobile-nav");
+ function show(name){
+   for(const n of ["home","market","trade","history"]){
+     const el=$("screen-"+n);el.hidden=n!==name;
+   }
+   nav.querySelectorAll("[data-screen]").forEach(a=>{
+     const active=a.dataset.screen===name;a.classList.toggle("nav-selected",active);
+     if(active)a.setAttribute("aria-current","page");else a.removeAttribute("aria-current");
+   });
+   history.replaceChildren(...[journal]); // retain the single live table
+   window.scrollTo({top:0,behavior:"instant"});
+ }
+ nav.addEventListener("click",e=>{const a=e.target.closest("[data-screen]");if(!a)return;e.preventDefault();show(a.dataset.screen)});
+ $("indexSwitchCards").addEventListener("click",e=>{const b=e.target.closest("[data-index-view]");if(!b)return;selectedMarketIndex=b.dataset.indexView;render()});
+ document.querySelectorAll("[data-screen-open]").forEach(b=>b.onclick=()=>show(b.dataset.screenOpen));
+ show("home");
+}
+function daySectorSum(sector,date){
+ return data.trades.reduce((n,t)=>n+(t.sector===sector&&t.time.slice(0,10)===date?t.delta:0),0);
+}
+function remainingDelta(sector,date,wanted){
+ const used=daySectorSum(sector,date);
+ return Math.max(-10-used,Math.min(10-used,wanted));
+}
+function showLimit(){
+ const date=$("time").value.slice(0,10),used=daySectorSum($("sector").value,date);
+ paint("limitInfo",`Bu hisse için ${date||"bugün"}: ${signed(used)} puan | Tavan +10 / Taban -10 | Kalan artış: ${num(Math.max(0,10-used))} | Kalan düşüş: ${num(Math.max(0,10+used))}`);
+}
+$("time").addEventListener("change",showLimit);
+$("sector").addEventListener("change",showLimit);
+$("sectorSearch").addEventListener("input",()=>render());
+function renderMovers(){
+ const today=dateKey(new Date());
+ const dayTrades=data.trades.filter(t=>{
+   const time=new Date(t.time);
+   return !Number.isNaN(time.getTime()) && dateKey(time)===today && time.getTime()<=Date.now();
+ });
+ const totals=sectorsList().map(s=>{
+   const trades=dayTrades.filter(t=>t.sector===s.id);
+   return {...s,delta:trades.reduce((sum,t)=>sum+t.delta,0),count:trades.length};
+ });
+ const gainAll=totals.filter(t=>t.delta>0).sort((a,b)=>b.delta-a.delta);
+ const lossAll=totals.filter(t=>t.delta<0).sort((a,b)=>a.delta-b.delta);
+ const gain=moversExpanded.risers?gainAll:gainAll.slice(0,5);
+ const loss=moversExpanded.fallers?lossAll:lossAll.slice(0,5);
+ const neutral=totals.filter(t=>t.delta===0);
+ const line=t=>`<div class="stock mover-click" data-mover-sector="${esc(t.id)}" role="button" tabindex="0" aria-label="${esc(t.name)} hissesini puanla"><div class="stock-main"><b>${esc(t.icon)} ${esc(t.name)}</b><div class="stock-sub">${esc(t.ticker)} · Bugün ${t.count} işlem</div></div><b class="${t.delta>0?'up':t.delta<0?'down':'neutral-delta'}">${signed(t.delta)}</b></div>`;
+ const moreButton=(type,total,shown)=>total>5&&!moversExpanded[type]?`<button type="button" class="mover-more" data-mover-more="${type}">Devamı (${total-shown})</button>`:"";
+ $("risers").innerHTML=gain.length?gain.map(line).join("")+moreButton("risers",gainAll.length,gain.length):'<p class="hint">Bugün henüz yükselen hisse yok.</p>';
+ $("fallers").innerHTML=loss.length?loss.map(line).join("")+moreButton("fallers",lossAll.length,loss.length):'<p class="hint">Bugün henüz düşen hisse yok.</p>';
+ $("moversDateNote").textContent=`${new Date().toLocaleDateString('tr-TR',{day:'numeric',month:'long',year:'numeric'})} · Günlük değişimler 00.00’da sıfırlanır; toplam puanlar korunur.`;
+ $("neutralMovers").innerHTML=neutral.length?neutral.map(line).join(""):'<p class="hint">Bugün tüm hisselerde hareket var.</p>';
+}
+// Günlük hareket listelerindeki her hisse, mevcut puanlama formunu açar.
+const marketTradeOriginalParent=$("marketTrade").parentNode;
+const marketTradeOriginalNext=$("marketTrade").nextSibling;
+function closeMoverModal(){
+ const form=$("marketTrade");
+ if(!form.classList.contains("mover-modal"))return;
+ form.classList.remove("mover-modal");
+ form.hidden=true;
+ if(marketTradeOriginalNext&&marketTradeOriginalNext.parentNode===marketTradeOriginalParent)
+  marketTradeOriginalParent.insertBefore(form,marketTradeOriginalNext);
+ else marketTradeOriginalParent.appendChild(form);
+ document.getElementById("moverModalBackdrop")?.remove();
+ document.body.classList.remove("mover-modal-open");
+}
+function openMoverTrade(id){
+ if(!sectorsList().some(s=>s.id===id))return;
+ selectedSector=id;
+ const form=$("marketTrade");
+ if(!form.classList.contains("mover-modal")){
+  const backdrop=document.createElement("div");
+  backdrop.id="moverModalBackdrop";
+  backdrop.className="mover-modal-backdrop";
+  backdrop.addEventListener("click",closeMoverModal);
+  document.body.appendChild(backdrop);
+  document.body.appendChild(form);
+  form.classList.add("mover-modal");
+  document.body.classList.add("mover-modal-open");
+ }
+ form.hidden=false;
+ $("marketDate").value=localInputDate();
+ render();updateMarketTrade();
+}
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeMoverModal()});
+$("closeMarketTrade").addEventListener("click",closeMoverModal);
+$("movers").addEventListener("click",e=>{
+ const more=e.target.closest("[data-mover-more]");
+ if(more){moversExpanded[more.dataset.moverMore]=true;renderMovers();return}
+ const item=e.target.closest("[data-mover-sector]");
+ if(item)openMoverTrade(item.dataset.moverSector);
+});
+$("movers").addEventListener("keydown",e=>{
+ if(e.key!=="Enter"&&e.key!==" ")return;
+ const more=e.target.closest("[data-mover-more]");
+ if(more){e.preventDefault();moversExpanded[more.dataset.moverMore]=true;renderMovers();return}
+ const item=e.target.closest("[data-mover-sector]");
+ if(item){e.preventDefault();openMoverTrade(item.dataset.moverSector);}
+});
+// Sekme açık kalsa bile gece yarısı yeni güne geçildiğinde ekranı yenile.
+let lastRenderedDay=dateKey(new Date());
+setInterval(()=>{
+ const today=dateKey(new Date());
+ if(today!==lastRenderedDay){lastRenderedDay=today;render();}
+},15000);
+
+/* V12 features: candlesticks, monthly reports, alerts, news, rewards, market open/close. */
+function v12Days(rows){
+ const by={};for(const t of rows){const key=t.time.slice(0,10);(by[key]??=[]).push(t)}
+ let prev=data.base;const dates=[];let start=new Date();start.setHours(0,0,0,0);start.setDate(start.getDate()-29);
+ for(let i=0;i<30;i++){const d=new Date(start);d.setDate(start.getDate()+i);const key=dateKey(d),items=by[key]||[],open=prev;let high=open,low=open;for(const t of items){prev=t.level;high=Math.max(high,prev);low=Math.min(low,prev)}dates.push({key,open,close:prev,high,low})}return dates
+}
+function renderV12(rows){
+ const days=v12Days(rows),now=days.at(-1),previous=days.at(-2),todayKey=dateKey(new Date());
+ const open=now.open,close=now.close,change=close-open;
+ const saved=data.dayCloses?.[todayKey];
+ $("openCloseView").innerHTML=`<div class="v12-metrics"><div><small>Bugün açılış</small><b>${num(open)}</b></div><div><small>Şu an</small><b>${num(close)}</b></div><div><small>Günlük fark</small><b class="${change>=0?'up':'down'}">${signed(change)}</b></div></div><p class="hint">${saved?'🔒 Kapanış kaydı: '+num(saved.value)+' ('+new Date(saved.savedAt).toLocaleTimeString('tr-TR')+')':'Bugünün kapanışı henüz kaydedilmedi.'}</p>`;
+ const low=Math.min(...days.map(d=>d.low))-1,high=Math.max(...days.map(d=>d.high))+1,range=Math.max(1,high-low),y=v=>220-(v-low)/range*185;
+ $("candleGraph").innerHTML=days.map((d,i)=>{const x=22+i*25.3,up=d.close>=d.open,col=up?'#00a878':'#e74f6b',top=Math.min(y(d.open),y(d.close)),h=Math.max(2,Math.abs(y(d.open)-y(d.close)));return `<g><title>${d.key}: ${num(d.open)} → ${num(d.close)}</title><line x1="${x}" x2="${x}" y1="${y(d.high)}" y2="${y(d.low)}" stroke="${col}" stroke-width="2"/><rect x="${x-6}" y="${top}" width="12" height="${h}" fill="${col}" rx="2"/></g>`}).join('')+`<text x="12" y="16" font-size="12" fill="#75839b">${num(high)}</text><text x="12" y="240" font-size="12" fill="#75839b">${days[0].key}</text><text x="790" y="240" text-anchor="end" font-size="12" fill="#75839b">${now.key}</text>`;
+ const alerts=sectorsList().filter(s=>currentOf(s.id)<30).sort((a,b)=>currentOf(a.id)-currentOf(b.id));
+ $("alertView").innerHTML=alerts.length?alerts.map(s=>`<div class="stock"><div class="stock-main">${esc(s.icon)} <b>${esc(s.name)}</b><div class="hint">30 puan eşiğinin altında</div></div><b class="down">${num(currentOf(s.id))}</b></div>`).join(''):'<p class="hint">Şu anda kritik seviyede hisse yok.</p>';
+ const m=new Date(),prefix=`${m.getFullYear()}-${String(m.getMonth()+1).padStart(2,'0')}`,monthTrades=rows.filter(t=>t.time.slice(0,7)===prefix),startValue=monthTrades.length?monthTrades[0].level-indexDelta(monthTrades[0]):rows.filter(t=>t.time.slice(0,7)<prefix).at(-1)?.level??data.base,endValue=monthTrades.at(-1)?.level??startValue;
+ const changes=sectorsList().map(s=>({s,delta:monthTrades.filter(t=>t.sector===s.id).reduce((a,t)=>a+t.delta,0)})).sort((a,b)=>b.delta-a.delta),best=changes[0],worst=changes.at(-1);
+ $("monthlyView").innerHTML=`<div class="v12-metrics"><div><small>Ay başı</small><b>${num(startValue)}</b></div><div><small>Şimdi</small><b>${num(endValue)}</b></div><div><small>Değişim</small><b class="${endValue>=startValue?'up':'down'}">${signed(endValue-startValue)}</b></div></div><p class="hint">Bu ay ${monthTrades.length} işlem • En çok yükselen: ${best&&best.delta>0?esc(best.s.name)+' '+signed(best.delta):'Yok'} • En çok düşen: ${worst&&worst.delta<0?esc(worst.s.name)+' '+signed(worst.delta):'Yok'}</p>`;
+ const stockSelect=$("newsStock"),old=stockSelect.value;stockSelect.innerHTML=`<option value="__hbx">📈 HBX • Hayat Endeksi</option>`+sectorsList().map(s=>`<option value="${esc(s.id)}">${esc(s.icon)} ${esc(s.name)}</option>`).join('');if(old==="__hbx"||sectorsList().some(s=>s.id===old))stockSelect.value=old;
+ const divSelect=$("dividendStock"),oldDividend=divSelect.value;divSelect.innerHTML=sectorsList().map(s=>`<option value="${esc(s.id)}">${esc(s.icon)} ${esc(s.name)}</option>`).join('');if(sectorsList().some(s=>s.id===oldDividend))divSelect.value=oldDividend;else if(selectedSector)divSelect.value=selectedSector;
+ $("newsFeed").innerHTML=(data.news||[]).slice().reverse().map(n=>{const s=marketEntity(n.sector);return `<article class="news-card"><div class="news-card-header"><span class="news-pill">${esc(s.icon)} ${esc(s.name)}</span><time>${new Date(n.date).toLocaleString('tr-TR')}</time></div><p>${esc(n.text)}</p><button class="ghost" type="button" data-delete-news="${esc(n.id)}">Sil</button></article>`}).join('')||'<p class="hint">Henüz haber eklenmedi.</p>';
+ $("dividendFeed").innerHTML=(data.dividends||[]).slice().sort((a,b)=>String(dividendDateValue(a)).localeCompare(String(dividendDateValue(b)))).map(n=>{const s=marketEntity(n.sector);return `<article class="news-card dividend-upcoming"><div class="news-card-header"><span class="news-pill">${esc(s.icon)} ${esc(s.name)}</span><time class="dividend-date">${esc(formatDividendDate(dividendDateValue(n)))}</time></div><p>🎁 ${dividendSummary(n)}</p><button class="ghost" type="button" data-delete-dividend="${esc(n.id)}">Sil</button></article>`}).join('')||'<p class="hint">Henüz temettü kaydı yok.</p>';
+}
+$("closeDay").onclick=()=>{data.dayCloses??={};const rows=timeline(),total=rows.at(-1)?.level??data.base;data.dayCloses[dateKey(new Date())]={value:total,savedAt:new Date().toISOString()};save()};
+$("addNews").onclick=()=>{const v=$("newsText").value.trim();if(!v)return alert('Haber metni gir.');data.news??=[];data.news.push({id:crypto.randomUUID(),date:new Date().toISOString(),sector:$("newsStock").value,text:v});$("newsText").value='';save()};
+$("addDividend").onclick=()=>{const v=$("dividendText").value.trim(),reason=$("dividendReason").value.trim(),payDate=$("dividendDate").value,sector=$("dividendStock").value;if(!sector)return alert('Temettü verecek hisse seç.');if(!payDate)return alert('Temettü tarihi seç.');if(!v)return alert('Temettünün ne vereceğini yaz.');if(!reason)return alert('Temettünün neden verileceğini yaz.');data.dividends??=[];data.dividends.push({id:crypto.randomUUID(),date:new Date().toISOString(),payDate,sector,reward:v,reason});$("dividendText").value='';$("dividendReason").value='';$("dividendDate").value='';save()};
+$("newsFeed").onclick=e=>{const b=e.target.closest('[data-delete-news]');if(b&&confirm('Haberi sil?')){data.news=data.news.filter(n=>n.id!==b.dataset.deleteNews);save()}};
+$("dividendFeed").onclick=e=>{const b=e.target.closest('[data-delete-dividend]');if(b&&confirm('Ödül kaydını sil?')){data.dividends=data.dividends.filter(n=>n.id!==b.dataset.deleteDividend);save()}};
+
+refreshGroups();
+setupScreens();
+showLimit();
+
+</script>
+<script type="module">
+import {initializeApp} from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js';
+import {getAuth,GoogleAuthProvider,signInWithPopup,signOut,onAuthStateChanged,setPersistence,browserLocalPersistence} from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js';
+import {getFirestore,doc,getDoc,setDoc} from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
+const firebaseConfig={apiKey:'AIzaSyA4LCrNmHpO0JWs4rIYN_SjdC-YvX6bKmY',authDomain:'hayat-borsam.firebaseapp.com',projectId:'hayat-borsam',storageBucket:'hayat-borsam.firebasestorage.app',messagingSenderId:'462672167238',appId:'1:462672167238:web:7ffbe44eb8740df8b32547',measurementId:'G-T4STJQ0HP2'};
+const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app);
+const status=document.getElementById('syncState'),cover=document.getElementById('authCover'),msg=document.getElementById('authMessage');
+authMessageStartup();function authMessageStartup(){const e=document.getElementById('authMessage');if(e)e.textContent='Önceki oturum kontrol ediliyor…'}
+let user=null,ready=false,timer=null,busy=false,queued=false;
+const setStatus=t=>{status.textContent=t;const dot=document.getElementById('cloudDot');if(dot)dot.style.background=t.includes('✓')?'#0eae7b':t.includes('⚠')||t.includes('başarısız')?'#e45b64':'#f59e0b'};
+const authMessage=t=>msg.textContent=t;
+const hasLocal=()=>{try{const d=JSON.parse(localStorage.getItem(KEY));return d&&((d.trades?.length||0)+(d.peopleTrades?.length||0)+(d.news?.length||0)+(d.dividends?.length||0)+(d.customSectors?.length||0)>0)}catch{return false}};
+const ref=()=>doc(db,'users',user.uid,'state','main');
+async function push(){if(!ready||!user)return; if(busy){queued=true;return}busy=true;setStatus('Kaydediliyor…');try{await setDoc(ref(),{payload:JSON.parse(JSON.stringify(data)),updatedAt:new Date().toISOString()});setStatus('✓ Firebase’e kaydedildi')}catch(e){console.error(e);setStatus('⚠️ Buluta kaydedilemedi; yerel kayıt korundu')}finally{busy=false;if(queued){queued=false;queueSave()}}}
+function queueSave(){if(!ready)return;clearTimeout(timer);setStatus('Kaydedilmeyi bekliyor…');timer=setTimeout(push,900)}
+window.firebaseQueueSave=queueSave;
+async function loadAccount(u){ready=false;user=u;setStatus('Bulut kayıtları okunuyor…');try{
+const snap=await getDoc(ref());
+if(snap.exists()){
+ const cloud=snap.data().payload;
+ if(!valid(cloud))throw Error('Buluttaki kayıt biçimi geçersiz');
+ if(hasLocal() && !localStorage.getItem('hb_v17_cloud_initialized_'+u.uid) && JSON.stringify(cloud)!==localStorage.getItem(KEY)){
+  const useLocal=confirm('Bu tarayıcıda farklı kayıtlar bulundu. TAMAM: Bu tarayıcıdaki kayıtları Firebase üzerine yükle. İPTAL: Firebase kayıtlarını bu tarayıcıya getir.\n\nEmin değilsen İPTAL seç ve önce JSON yedeği al.');
+  if(useLocal){ready=true;await push();}else{data=cloud;localStorage.setItem(KEY,JSON.stringify(data))}
+ }else{data=cloud;localStorage.setItem(KEY,JSON.stringify(data))}
+}else{
+ if(hasLocal()){
+  if(confirm('Firebase hesabın boş. Bu tarayıcıdaki mevcut işlemleri ve kayıtları buluta aktarmak ister misin?')){ready=true;await push()}
+  else {data=defaultData();localStorage.setItem(KEY,JSON.stringify(data));ready=true;await push()}
+ }else{ready=true;await push()}
+}
+ready=true;localStorage.setItem('hb_v17_cloud_initialized_'+u.uid,'1');render();cover.hidden=true;setStatus('✓ Bağlandı');
+}catch(e){console.error(e);ready=true;cover.hidden=true;render();setStatus('⚠️ Bulut bağlantısı kurulamadı; yerel kayıt açık.');}}
+document.getElementById('googleLogin').onclick=async()=>{try{authMessage('Oturum kalıcı olarak ayarlanıyor…');try{await setPersistence(auth,browserLocalPersistence)}catch(err){console.warn('Kalıcı oturum ayarlanamadı:',err)}authMessage('Google giriş penceresi açılıyor…');await signInWithPopup(auth,new GoogleAuthProvider())}catch(e){authMessage('Giriş başarısız: '+e.message+' (HTML dosyasını file:// yerine HTTPS üzerinden aç.)')}};
+document.getElementById('signOutBtn').onclick=async()=>{clearTimeout(timer);if(ready)await push();await signOut(auth)};
+document.getElementById('syncNow').onclick=()=>{clearTimeout(timer);push()};
+document.addEventListener('click',e=>{const m=document.getElementById('firebaseMenu');if(m?.open&&!m.contains(e.target))m.open=false});
+// Oturum durumu yalnızca Firebase başlangıç denetiminden sonra değerlendirilir.
+(async()=>{
+ try{await setPersistence(auth,browserLocalPersistence)}catch(e){console.warn('Safari oturum kalıcılığı:',e)}
+ onAuthStateChanged(auth,u=>{
+  if(u){authMessage('Kaydedilmiş oturum bulundu. Veriler yükleniyor…');loadAccount(u)}
+  else{user=null;ready=false;cover.hidden=false;authMessage('Oturum bulunamadı. Google ile bir kez giriş yap. Safari özel gezinme modunda olmadığından emin ol.');setStatus('Oturum kapalı')}
+ },e=>{console.error(e);cover.hidden=true;render();setStatus('⚠ Oturum kontrolü başarısız; yerel kayıt açık')});
+})();
+</script>
+</body></html>

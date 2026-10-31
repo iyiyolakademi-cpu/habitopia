@@ -47,3 +47,6 @@ Bu aşama mobil / görsel tasarım katmanıdır. Bulut/Flutter bağlantısı, ge
 
 ## Midnight: varsayılan ve tek görünüm
 Tüm ekranlar `src/styles/midnight.css` dosyasındaki koyu renk sistemiyle gösterilir. Açık tema seçimi kaldırıldı. Eski kullanıcıların dark:false ayarı güvenle dark:true olarak normalize edilir; görev, not ve takip kayıtları korunur. Otomatik testler: `tests/midnight.test.cjs`.
+
+## İki Dünya platformu
+Habitopia ve Hayat Borsan artık aynı depoda iki ayrı işlevsel uygulama olarak yer alır; ana sayfa `index.html` büyük kutucuklu seçim menüsüdür. Ayrıntılar için `docs/TWO-WORLDS.md`.
