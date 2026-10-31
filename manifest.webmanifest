@@ -1,23 +1,17 @@
 {
-  "name": "Habitopia — Hayat Borsası ve Habitopia Dünyası",
-  "short_name": "Habitopia",
-  "description": "Habitopia giriş ekranından Hayat Borsası veya Habitopia Dünyası'na geç.",
+  "name": "Habitopia Aile — Birlikte Daha Kolay",
+  "short_name": "Habitopia Aile",
+  "description": "Aile görevleri, ortak alışveriş, Radar ve aile takvimi",
   "lang": "tr",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#000000",
-  "theme_color": "#000000",
+  "background_color": "#f4f7f3",
+  "theme_color": "#eef4ee",
   "icons": [
     {
-      "src": "apple-touch-icon.png",
-      "sizes": "180x180",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "worlds-icon.svg",
-      "sizes": "192x192",
+      "src": "family-icon.svg",
+      "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any maskable"
     }

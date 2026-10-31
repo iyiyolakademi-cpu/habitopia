@@ -1,184 +1,60 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="tr">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#000000">
-  <meta name="color-scheme" content="dark">
-  <meta name="description" content="Habitopia: Hayat Borsası veya Habitopia Dünyası. Dünyanı seç.">
-  <title>Habitopia — Dünyanı Seç</title>
-  <link rel="icon" href="assets/habitopia-logo.jpg" type="image/jpeg">
-  <link rel="apple-touch-icon" href="apple-touch-icon.png">
-  <link rel="manifest" href="manifest.webmanifest">
-  <style>
-    :root {
-      color-scheme: dark;
-      --black: #000000;
-      --white: #f9f9f7;
-      --muted: #a7abaa;
-      --cream: #f2dfbc;
-      --cream-text: #19261f;
-      --green: #214d42;
-      --green-border: #477264;
-      --green-text: #f0f7f3;
-    }
-    *, *::before, *::after { box-sizing: border-box; }
-    html { min-height: 100%; background: var(--black); }
-    body {
-      margin: 0;
-      min-height: 100dvh;
-      background: var(--black);
-      color: var(--white);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
-      -webkit-font-smoothing: antialiased;
-    }
-    .portal {
-      width: min(100%, 540px);
-      min-height: 100dvh;
-      margin: 0 auto;
-      padding: max(28px, env(safe-area-inset-top)) 23px max(30px, env(safe-area-inset-bottom));
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
-    .brand {
-      display: block;
-      width: clamp(218px, 68vw, 298px);
-      height: clamp(218px, 68vw, 298px);
-      flex-shrink: 0;
-      margin: 0 auto 2px;
-      overflow: hidden;
-      background: #000;
-    }
-    .brand img {
-      width: 100%;
-      height: 100%;
-      display: block;
-      object-fit: cover;
-      object-position: center center;
-    }
-    .intro { text-align: center; max-width: 440px; margin: 0 0 31px; }
-    .intro h1 {
-      font-size: clamp(29px, 7.9vw, 45px);
-      font-weight: 830;
-      line-height: 1.12;
-      letter-spacing: -0.055em;
-      margin: 0 0 10px;
-    }
-    .intro p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.65;
-      letter-spacing: -.012em;
-    }
-    .world-grid {
-      display: grid;
-      width: 100%;
-      grid-template-columns: 1fr;
-      gap: 14px;
-    }
-    .world {
-      width: 100%;
-      min-height: 88px;
-      border-radius: 22px;
-      padding: 15px 21px;
-      border: 1.5px solid transparent;
-      display: grid;
-      grid-template-columns: 54px minmax(0, 1fr) 22px;
-      align-items: center;
-      gap: 13px;
-      color: inherit;
-      text-decoration: none;
-      -webkit-tap-highlight-color: transparent;
-      transition: transform .16s ease, filter .16s ease, border-color .16s ease;
-    }
-    .world:hover { transform: translateY(-2px); filter: brightness(1.04); }
-    .world:active { transform: scale(.987); }
-    .world:focus-visible { outline: 3px solid #f4f5f1; outline-offset: 4px; }
-    .world.market {
-      background: var(--cream);
-      color: var(--cream-text);
-      box-shadow: 0 8px 22px rgba(242, 223, 188, .09);
-    }
-    .world.habit {
-      background: var(--green);
-      border-color: var(--green-border);
-      color: var(--green-text);
-      box-shadow: 0 8px 22px rgba(33, 77, 66, .17);
-    }
-    .world-icon {
-      width: 54px;
-      height: 54px;
-      border-radius: 50%;
-      display: grid;
-      place-items: center;
-      flex-shrink: 0;
-    }
-    .market .world-icon { background: #204b3e; color: #fbf5e7; }
-    .habit .world-icon { background: #397261; color: #f4faf5; }
-    .world-icon svg {
-      width: 25px;
-      height: 25px;
-      stroke: currentColor;
-      stroke-width: 2;
-      fill: none;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-    }
-    .world strong {
-      display: block;
-      font-size: clamp(16px, 4.8vw, 19px);
-      font-weight: 800;
-      line-height: 1.22;
-      letter-spacing: -.04em;
-      text-align: center;
-    }
-    .world-arrow { font-size: 29px; line-height: 1; text-align: right; font-weight: 350; }
-    @media (max-height: 720px) {
-      .portal { justify-content: flex-start; padding-top: max(12px, env(safe-area-inset-top)); }
-      .brand { width: clamp(174px, 51vw, 228px); height: clamp(174px, 51vw, 228px); }
-      .intro { margin-bottom: 19px; }
-      .world { min-height: 76px; }
-    }
-    @media (max-width: 360px) {
-      .portal { padding-left: 13px; padding-right: 13px; }
-      .world { grid-template-columns: 46px minmax(0, 1fr) 19px; padding: 12px 13px; gap: 7px; border-radius: 18px; }
-      .world-icon { width: 46px; height: 46px; }
-      .world-icon svg { width: 22px; height: 22px; }
-      .world strong { font-size: 16px; }
-    }
-    @media (prefers-reduced-motion: reduce) {
-      .world { transition: none; }
-    }
-  </style>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#eef4ee">
+  <meta name="description" content="Habitopia Aile: görevler, ortak alışveriş, akıllı hatırlatmalar ve aile takvimi.">
+  <meta name="color-scheme" content="light">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <title>Habitopia Aile — Birlikte daha kolay</title>
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" href="./family-icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./assets/family.css">
+  <script defer src="./assets/family.js"></script>
 </head>
 <body>
-  <main class="portal">
-    <div class="brand">
-      <img src="assets/habitopia-logo.jpg" alt="Habitopia" width="298" height="298" decoding="async">
-    </div>
-    <div class="intro">
-      <h1>Dünyanı Seç</h1>
-      <p>Devam etmek istediğin dünyaya dokun.</p>
-    </div>
-    <nav class="world-grid" aria-label="Habitopia dünya seçimi">
-      <a class="world market" href="hayat-borsan.html" aria-label="Hayat Borsası'na geç">
-        <span class="world-icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24"><path d="M3 20h18M5 17l5-5 4 2 5-8"/><path d="M15 6h4v4"/></svg>
-        </span>
-        <strong>Hayat Borsası</strong>
-        <span class="world-arrow" aria-hidden="true">›</span>
+  <div class="app-layout" id="app-layout">
+    <aside class="sidebar" id="sidebar" aria-label="Ana gezinme">
+      <a class="brand" href="#home" data-page="home" aria-label="Habitopia Aile ana sayfa">
+        <span class="brand-symbol" aria-hidden="true"><svg viewBox="0 0 40 40" fill="none"><path d="M10 19 20 10l10 9v12H10V19Z" stroke="currentColor" stroke-width="2.7" stroke-linejoin="round"/><path d="M17 31V22h6v9" stroke="currentColor" stroke-width="2.7" stroke-linejoin="round"/></svg></span>
+        <span><strong>habitopia</strong><small>AİLE</small></span>
       </a>
-      <a class="world habit" href="habitopia.html" aria-label="Habitopia Dünyası'na geç">
-        <span class="world-icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24"><path d="M12 21v-9M12 16C6 16 4 12 4 7c5 0 8 2 8 7M12 13c0-5 3-7 8-7 0 5-2 9-8 9"/></svg>
-        </span>
-        <strong>Habitopia Dünyası</strong>
-        <span class="world-arrow" aria-hidden="true">›</span>
-      </a>
-    </nav>
-  </main>
+      <div class="family-chip"><span class="family-chip-mark">⌂</span><div><span>YAŞAM ALANI</span><strong id="sidebar-family">Ailem</strong></div></div>
+      <span class="nav-label">MENÜ</span>
+      <nav class="nav-list" id="primary-nav">
+        <button type="button" data-page="home" class="nav-link active"><span class="nav-icon">⌂</span> Genel Bakış <span class="nav-chevron">›</span></button>
+        <button type="button" data-page="tasks" class="nav-link"><span class="nav-icon">☑</span> Aile Görevleri <span class="nav-chevron">›</span></button>
+        <button type="button" data-page="shopping" class="nav-link"><span class="nav-icon">▤</span> Alışveriş <span class="nav-chevron">›</span></button>
+        <button type="button" data-page="radar" class="nav-link"><span class="nav-icon">◉</span> Aile Radarı <span class="nav-chevron">›</span></button>
+        <button type="button" data-page="calendar" class="nav-link"><span class="nav-icon">▦</span> Aile Takvimi <span class="nav-chevron">›</span></button>
+        <button type="button" data-page="family" class="nav-link"><span class="nav-icon">♧</span> Ailem <span class="nav-chevron">›</span></button>
+      </nav>
+      <div class="sidebar-bottom"><div class="side-tip"><span class="side-tip-icon">✦</span><strong>Birlikte daha kolay.</strong><p>Planlar aynı yerde, aile hep haberdar.</p></div><button type="button" class="nav-settings" data-page="settings">⚙ &nbsp; Ayarlar ve veriler</button></div>
+    </aside>
+    <div class="mobile-shade" id="mobile-shade" hidden></div>
+    <div class="app-content">
+      <header class="topbar">
+        <button type="button" class="icon-button menu-button" id="menu-toggle" aria-label="Menüyü aç" aria-expanded="false">☰</button>
+        <div class="topbar-title"><span class="eyebrow" id="topbar-eyebrow">AİLENİN DİJİTAL ALANI</span><strong id="topbar-heading">Genel Bakış</strong></div>
+        <div class="topbar-actions">
+          <span class="today-small" id="today-small"></span>
+          <button type="button" id="notification-open" class="icon-button bell-button" aria-label="Bildirimleri göster">♧<span class="notification-dot" id="notification-dot" hidden></span></button>
+          <button type="button" class="user-bubble" id="user-switch" title="Aktif aile üyesini değiştir" aria-label="Aktif aile üyesini değiştir"><span id="current-initial">S</span></button>
+        </div>
+      </header>
+      <div class="content-wrap">
+        <div id="demo-banner" class="demo-banner" hidden>
+          <span class="demo-dot">i</span>
+          <p><strong>Örnek aileyi inceliyorsun.</strong> Veriler yalnızca bu tarayıcıda. Gerçek aile alanını oluşturarak başlayabilirsin.</p>
+          <button id="start-family" type="button">Ailemi oluştur <span aria-hidden="true">↗</span></button>
+        </div>
+        <main id="page-content" tabindex="-1"></main>
+      </div>
+      <footer class="footer"><span>Habitopia Aile · Birlikte daha kolay</span><span id="sync-indicator">Bu cihazda saklanır · Önizleme</span></footer>
+    </div>
+  </div>
+  <div class="overlay" id="overlay" hidden><div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title"></div></div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
 </body>
 </html>

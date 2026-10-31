@@ -13,8 +13,8 @@ for(const key of ["BASE_CSS","DATA_SAFETY_JS","CORE_JS","POLISH_CSS","POLISH_JS"
 if(!html.includes("HabitopiaDataSafety"))throw Error("Data safety helper not bundled");
 if(!html.includes("journeyScene") || !html.includes("journeyWorkbench"))throw Error("Legacy task layout missing");
 if(!html.includes("class=\"island-gates\"")||!html.includes("view-world")||!html.includes("view-tasks"))throw Error("Four-choice island layout missing");
-if(!landing.includes('href="habitopia.html"')||!landing.includes('href="hayat-borsan.html"'))throw Error("Launcher links are missing");
+if(!landing.includes("Habitopia Aile")||!landing.includes("assets/family.js")||!landing.includes("assets/family.css"))throw Error("Habitopia Aile root entry is missing");
 if(!html.includes('href="index.html"')||!html.includes('href="hayat-borsan.html"'))throw Error("Habitopia world switch is missing");
 if(!market.includes('href="habitopia.html"')||!market.includes('href="index.html"'))throw Error("Market world switch is missing");
 if(!market.includes("firebase-app.js")||!market.includes('const KEY="hayatborsasi_terminal_v2"'))throw Error("Market state or Firebase integration is missing");
-console.log("PASS: 3 app pages, original Firebase integration, Habitopia scripts and routes");
+console.log("PASS: Habitopia Aile root and archived Habitopia/Hayat Borsan pages");

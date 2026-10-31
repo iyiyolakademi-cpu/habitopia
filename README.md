@@ -1,66 +1,59 @@
-# Habitopia — kaynak kod ve güvenlik altyapısı
+# Habitopia Aile — Birlikte daha kolay
 
-Bu depo Habitopia'nın **tek dosyalık, çevrimdışı/Flutter WebView uyumlu** yayın sürümünü `index.html` olarak sunar.
+**Yeni ana uygulama:** `index.html` — mobil ve masaüstünde çalışan Habitopia Aile önizlemesi.
 
-## Kaynak düzeni
-- `src/index.template.html` — uygulama iskeleti
-- `src/styles/` — mevcut CSS katmanları (görsel düzen korunmuştur)
-- `src/scripts/core.js` — mevcut uygulama mantığı, veri şeması ve kayıt akışları
-- `src/scripts/polish.js` — önceki davranış/istatistik düzeltmeleri
-- `src/scripts/data-safety.js` — doğrulama ve yerel/bulut çakışma koruması
-- `scripts/build.mjs` — kaynaklardan **tek dosyalık** `index.html` üretir
-- `tests/` — kritik veri güvenliği senaryoları
+## Ne var?
 
-## Geliştirme
-Node.js 22+ ile:
-```bash
-node scripts/build.mjs
+- **Aile Görevleri:** Bir aile üyesi çok satırlı görev listesi hazırlar; aile üyesine atar, bitiş ve hatırlatma tarihi/saatini belirler. Sorumlu kişi tamamlandığını tek dokunuşla işaretler; onay gerekmez. Bildirim açıldığında ilgili listeye yönlendirme desteklenir.
+- **Ortak Alışveriş:** Ürün, miktar, birim, birim fiyatı, bütçe, tahmini toplam ve satın alınanlar. Listeyi aile üyesine atama ve hatırlatma tarihi.
+- **Aile Radarı:** Fatura, abonelik, araç, garanti, ev bakımı, sağlık, okul, özel hatırlatmalar kategorileri. Son tarih, hatırlatma saati, sorumlu, tamamlandı durumu. Sağlık kaydı seçilince gizlilik kutusu otomatik seçilir.
+- **Aile Takvimi:** Ay görünümü, etkinlik oluşturma, aile üyelerini davet etme ve katılıyorum/belki/katılamam yanıtları.
+- **Ailem:** Aynı cihazda farklı aile üyelerinin görünümünü deneyebilme.
+- **Ayarlar:** Aile adını değiştirme, JSON veri dışa/içe aktarma, bildirim izni, yerel sıfırlama.
+
+## Önemli: önizlemenin sınırları
+
+Bu sürüm **tek cihazda çalışan işlevsel bir prototiptir**. Veriler yalnızca `localStorage` içinde `habitopia-family-v1` anahtarıyla saklanır. Örnek aile verileri ürünün nasıl çalıştığını göstermek içindir.
+
+- **Henüz farklı aile üyelerinin telefonları eşzamanlanmaz.** Üye değiştirme sadece aynı cihazdaki simülasyondur. Gerçek davet, oturum açma, erişim kontrolü, güvenli aile paylaşımı **yoktur**.
+- Hatırlatma zamanı gelen kayıtlar uygulama açıkken bildirimler bölümünde görünür. Bildirim izni verilirse tarayıcıda, uygulama açık ve görünürken sistem bildirimi denenir. **Uygulama kapalıyken garantili bildirim gönderilmez**. Sunucu tarafı zamanlama, push altyapısı ve bildirim servis anahtarları ayrı kurulmalıdır.
+- Sağlık ve özel etkinliklerde yerel görünüm filtresi vardır; **gerçek çok hesaplı veri güvenliği yerine geçmez**. Güvenli kullanıcı kimlik doğrulaması ve sunucu erişim politikaları tamamlanmadan hassas veri için kullanılmamalıdır.
+- Eski Habitopia hesapları, bulut verileri ve görevleri **otomatik aktarılmaz**. Eski uygulamanın kodları ve veri anahtarları değiştirilmez.
+
+## Eski uygulamalar korundu
+
+- Eski Habitopia: `habitopia.html`
+- Eski Hayat Borsası: `hayat-borsan.html`
+- Değişiklik öncesi tam dal yedeği: `backup/habitopia-before-family-20261031`
+- Önceki Habitopia Nova denemesi: `feat/habitopia-rebuild-v5-20261031`
+
+`src/launcher.html` ana sayfa için kaynak dosyasıdır; `scripts/build.mjs` `index.html` içeriğini buradan üretir. `assets/family.css` ve `assets/family.js` aile uygulamasının kendi dosyalarıdır.
+
+## Çalıştırma
+
+Statik sunucuyla:
+
+```sh
+python3 -m http.server 8000
+```
+
+Tarayıcı: `http://localhost:8000/`
+
+## Test
+
+```sh
 node scripts/build.mjs --check
 node scripts/validate.mjs
 node --test tests/*.test.cjs
 ```
-`index.html` üretim dosyasıdır. **Değişiklikleri `src/` içinde yapın**, sonra derleyin. Harici JS/CSS ihtiyacı yoktur.
 
-## Veri güvenliği
-- Orijinal kaynak yedeği: `backup/habitopia-before-phase1-20261031`
-- Eski Hayat Borsam projesi: `backup-hayat-borsam-20261031` (dokunulmadı)
-- Bozuk ana kayıt için önce geçerli yerel yedek denenir; okunamayan kayıt kurtarma anahtarına korunur.
-- Hesaplara özel depolama anahtarına eski, paylaşılan tarayıcı kayıtları **otomatik** taşınmaz.
-- Flutter'dan gelen bulut verisi doğrulanır; daha yeni yerel kayıt ezilmez.
-- Geçerli kayıt üzerine yeni kayıt yazmadan önce kurtarma kopyası saklanır.
-- JSON içe aktarımı öncesinde mevcut veri ayrı kurtarma kopyasına alınır; hata varsa işlem yapılmaz.
-- Metin notları 12.000 karaktere kadar korunur; geçmiş odak seansları 365 kayıtla sınırlandırılmaz.
+GitHub Actions eski uygulamaların davranış kontrollerini ve yeni aile uygulamasının sözdizimi, gezinme, veri alanı ve ana ekran testlerini yürütür.
 
-**Sınır:** Repo yalnızca web HTML uygulamasını içerir. Firebase Authentication, Firestore güvenlik kuralları, gerçek cihazda Flutter entegrasyonu, mağaza bildirimleri ve veri silme politikasının uçtan uca doğrulanması bu depoda mümkün değildir. Canlıya alınmadan önce ayrıca sınanmalıdır.
+## Gerçek aile kullanımına açılmadan önce
 
-## Geri alma
-Ana sürümde sorun görülürse git ile eski yedek dalını karşılaştırın, gerektiğinde `backup/habitopia-before-phase1-20261031` dalından `index.html` dosyasını geri alın. Kullanıcı verileri kod deposunda değildir; cihaz/Firebase yedekleri ayrıca yönetilmelidir.
-
-## Aşama 2: Ekran yenilenmesi
-- `src/styles/redesign.css`: ortak renk/yazı/bileşen, erişilebilir odak, açık/koyu tema, mobil/masaüstü düzen.
-- `src/scripts/redesign.js`: 5 sekmeli gezinme, veri bağlantılı günlük özet, seçilebilir aylık takvim, gelişim ve kişisel profil özeti.
-- `src/index.template.html`: yeni Planım ve Profilim sayfaları, özet kartları, 5 sekmeli menü.
-- `view-challenges`: 21 günlük hedefler artık Planım > 21 günlük hedefler kısayoluyla açılır.
-- Eski ekranların eylemleri, kayıt anahtarları ve bütün kullanıcı verileri korunur.
-
-Bu aşama mobil / görsel tasarım katmanıdır. Bulut/Flutter bağlantısı, gerçek ekran boyutları ve uzun süreli kullanım hâlâ ayrıca manuel test edilmelidir.
-
-## Midnight: varsayılan ve tek görünüm
-Tüm ekranlar `src/styles/midnight.css` dosyasındaki koyu renk sistemiyle gösterilir. Açık tema seçimi kaldırıldı. Eski kullanıcıların dark:false ayarı güvenle dark:true olarak normalize edilir; görev, not ve takip kayıtları korunur. Otomatik testler: `tests/midnight.test.cjs`.
-
-## İki Dünya platformu
-Habitopia ve Hayat Borsan artık aynı depoda iki ayrı işlevsel uygulama olarak yer alır; ana sayfa `index.html` büyük kutucuklu seçim menüsüdür. Ayrıntılar için `docs/TWO-WORLDS.md`.
-
-## Yeni Habitopia Yaşam Haritası
-Giriş sonrası `habitopia.html` ana ekranı artık metrik/kart paneli değil, dört etkileşimli durağı olan çizim tabanlı gece haritasıdır. Ritim Ormanı → alışkanlıklar; Görev Yolu → açılabilir günlük defter; Sessiz Vadi → odaklanma; Ufuk Noktası → plan/takvim. Haritadaki ağaç mevcut günlük görev ve alışkanlık tamamlanmasına göre 0-4 görünüm seviyesinde canlanır; ayrı puan veya veri tablosu yaratılmaz. Eski günlük araçlar aşağıdaki `<details>` defterine taşındı. Kaynaklar: `src/styles/journey.css` ve `src/scripts/journey.js`. Geri dönüş dalı: `backup/habitopia-before-journey-20261031`.
-
-## Habitopia 4.0 — Etkileşimli Ada (mobil)
-- Kullanıcıya gösterilen Habitopia ana sayfası artık **koyu, şelaleli ve ağaç evli yüzen ada**. Grafik, kart paneli ve eski yol haritası ana ekranda görünmez.
-- **Alışkanlıklarım / Dünyam / İlerlemem / Profilim** adanın içinde dört büyük butondur. Sabit alt menü yoktur. Her biri uygulamada ayrı bir ekran açar; ekranlarda geri dönme butonu vardır.
-- Görevler, su ve odak araçları **Görevlerim** ekranında eski veriler korunarak kullanılır.
-- Alışkanlıklar için yeni günlük dokunma listesi, ilerleme için 7/30/90 gün grafikleri, Dünyam için gerçek XP'ye dayalı keşif seviyeleri eklenmiştir. Eski haftalık takip ve diğer özellikler korunmuştur.
-- Görseller telifsiz olarak depoda yer alan **orijinal SVG** çizimle oluşturulmuştur: `assets/habitopia-island.svg`.
-- Kod: `src/styles/island.css` ve `src/scripts/island.js`. Kullanıcı veri şeması değiştirilmedi.
-- Geri dönüş: `backup/habitopia-before-island-ui-20261031`.
-
-Not: Keşif bölgeleri puana bağlı görsel seviyelerdir, henüz serbest dünya dekorasyonu/satın alma sistemi değildir. Mobil Safari, Android ve Flutter WebView testleri ayrıca yapılmalıdır.
+1. Hesap oluşturma ve aile daveti (gerçek üyelik/roller).
+2. Paylaşım yetkileri, özel sağlık verisi izolasyonu, güvenlik kuralları.
+3. Gerçek zamanlı bulut senkronizasyonu ve çoklu cihaz tutarlılığı.
+4. Sunucu taraflı zamanlanmış push, cihaz token yönetimi ve bildirim tercihleri.
+5. Eski Habitopia kullanıcı verileri için kontrollü, onaylı geçiş ve geri alma.
+6. iPhone/Android manuel testleri, erişilebilirlik, veri silme ve hukuki metinler.
