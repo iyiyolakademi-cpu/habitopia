@@ -465,6 +465,39 @@ body{background:#e9eee8!important}
     <section class="ob-step" data-ob="4"><div class="ob-question-top"><button class="ob-back" data-action="ob-back" data-step="3">‹</button><div class="ob-progress-wrap"><div class="ob-step-count"><span data-i18n="personalPlan"></span><span>4 / 4</span></div><div class="ob-progress"><i style="width:100%"></i></div></div></div><div class="ob-kicker" data-i18n="firstStep"></div><h1 data-i18n="obHabitTitle"></h1><p data-i18n="obHabitCopy"></p><div class="ob-panel"><div class="field"><label data-i18n="firstHabit"></label><input class="text-input" id="obHabit" maxlength="70" data-i18n-placeholder="habitPlaceholder"><div class="habit-suggestions" id="obHabitSuggestions"></div></div><div class="field" style="margin-top:16px"><label data-i18n="dailyWaterGoal"></label><select class="select-input" id="obWaterGoal"></select></div><div class="ob-summary"><div class="ob-mini"><span data-i18n="dailyCommitment"></span><strong id="obTimeSummary"></strong></div><div class="ob-mini"><span data-i18n="selectedFocus"></span><strong id="obGoalSummary"></strong></div></div></div><div class="ob-bottom"><button class="ob-primary" data-action="finish-onboarding"><span data-i18n="createPlan"></span><span>✓</span></button></div></section>
   </div>
 </div>
+<script>/* Habitopia safety helpers. Bundled inline by scripts/build.mjs for offline/WebView compatibility. */
+(function(root){
+  "use strict";
+  const KNOWN_KEYS=["profile","settings","progress","tasks","quests","habits","challenges","water","tracking","planner","focusTimer","achievements"];
+  function isRecord(value){
+    return value!==null && typeof value==="object" && !Array.isArray(value);
+  }
+  function isPlausibleState(value){
+    return isRecord(value) && KNOWN_KEYS.some(key=>Object.prototype.hasOwnProperty.call(value,key));
+  }
+  function safeParseState(raw){
+    if(typeof raw!=="string" || !raw.trim() || raw.length>8*1024*1024)return null;
+    try{const parsed=JSON.parse(raw);return isPlausibleState(parsed)?parsed:null}catch(error){return null}
+  }
+  function updatedAt(parsed){
+    if(!isPlausibleState(parsed))return 0;
+    const raw=parsed.updatedAt || parsed.createdAt;
+    const stamp=typeof raw==="string"?Date.parse(raw):NaN;
+    return Number.isFinite(stamp)&&stamp>0?stamp:0;
+  }
+  function decideStartupState(localText,cloudText){
+    const local=safeParseState(localText);
+    const cloud=safeParseState(cloudText);
+    if(!cloud)return {source:local?"local":"none",reason:cloudText?"invalid-cloud":"no-cloud",overwrite:false};
+    if(!local)return {source:"cloud",reason:localText?"invalid-local":"no-local",overwrite:true};
+    if(updatedAt(local)>updatedAt(cloud))return {source:"local",reason:"local-newer",overwrite:false};
+    return {source:"cloud",reason:"cloud-newer-or-equal",overwrite:localText!==cloudText};
+  }
+  const api=Object.freeze({isPlausibleState,safeParseState,updatedAt,decideStartupState});
+  root.HabitopiaDataSafety=api;
+  if(typeof module==="object" && module.exports)module.exports=api;
+})(typeof globalThis==="object"?globalThis:window);
+</script>
 <script>
 "use strict";
 
@@ -484,7 +517,7 @@ function rememberOnboardingCompleted(){
 function forgetOnboardingCompleted(){
   try{localStorage.removeItem(ONBOARDING_KEY)}catch(error){}
 }
-const LEGACY_KEYS=["habitopia-state-v9","habitopia-state-v8","habitopia-state-v7","habitopia-state-v6","habitopia-state-v5","habitopia-state-v4","habitopia-state-v3","filiz-game-state-v2"];
+const LEGACY_KEYS=["habitopia-state-v14-browser","habitopia-state-v13-browser","habitopia-state-v12-browser","habitopia-state-v11-browser","habitopia-state-v10-browser","habitopia-state-v10","habitopia-state-v9","habitopia-state-v8","habitopia-state-v7","habitopia-state-v6","habitopia-state-v5","habitopia-state-v4","habitopia-state-v3","filiz-game-state-v2"];
 const CATEGORIES={mind:{color:"#557f9b"},health:{color:"#5f9967"},order:{color:"#d18a58"},social:{color:"#bd8640"}};
 const EFFORTS={small:{xp:5,coins:2,energy:4},normal:{xp:15,coins:6,energy:10},hard:{xp:35,coins:12,energy:20},epic:{xp:80,coins:25,energy:38}};
 const NOTE_COLORS=["#e9b44c","#6ca27a","#6f95ad","#a17bb2","#d97968"];
@@ -548,8 +581,8 @@ function normalizeState(raw){
   next.challenges=(Array.isArray(next.challenges)?next.challenges:[]).filter(Boolean).map(x=>({id:safeId(x.id,"challenge"),title:String(x.title||"21 Day Challenge").slice(0,70),category:CATEGORIES[x.category]?x.category:"mind",startDate:/^\d{4}-\d{2}-\d{2}$/.test(x.startDate)?x.startDate:localDateKey(),statuses:x.statuses&&typeof x.statuses==="object"?Object.fromEntries(Object.entries(x.statuses).filter(([k,v])=>Number(k)>=1&&Number(k)<=21&&["done","partial","missed"].includes(v))):{},createdAt:x.createdAt||new Date().toISOString()}));
   next.water.defaultGoal=clamp(Number(next.water.defaultGoal)||8,1,20);next.water.records=next.water.records&&typeof next.water.records==="object"?next.water.records:{};Object.keys(next.water.records).forEach(key=>{const r=next.water.records[key]||{};next.water.records[key]={count:clamp(Number(r.count)||0,0,40),goal:clamp(Number(r.goal)||next.water.defaultGoal,1,20),rewarded:!!r.rewarded}});
   next.tracking.weights=(Array.isArray(next.tracking.weights)?next.tracking.weights:[]).filter(x=>x&&Number(x.value)>=25&&Number(x.value)<=350&&/^\d{4}-\d{2}-\d{2}$/.test(x.date)).map(x=>({id:safeId(x.id,"weight"),date:x.date,value:Math.round(Number(x.value)*10)/10,createdAt:x.createdAt||new Date().toISOString()})).sort((a,b)=>a.date.localeCompare(b.date)||a.createdAt.localeCompare(b.createdAt));
-  next.tracking.focusSessions=(Array.isArray(next.tracking.focusSessions)?next.tracking.focusSessions:[]).filter(x=>x&&Number(x.minutes)>0&&x.date).slice(0,365).map(x=>({id:safeId(x.id,"focus"),date:String(x.date),minutes:clamp(Number(x.minutes),1,600),category:CATEGORIES[x.category]?x.category:"mind",completedAt:x.completedAt||new Date().toISOString()}));
-  next.tracking.notes=(Array.isArray(next.tracking.notes)?next.tracking.notes:[]).filter(Boolean).map(x=>({id:safeId(x.id,"note"),title:String(x.title||"").slice(0,60),body:String(x.body||"").slice(0,3000),color:NOTE_COLORS.includes(x.color)?x.color:NOTE_COLORS[0],pinned:!!x.pinned,createdAt:x.createdAt||new Date().toISOString(),updatedAt:x.updatedAt||x.createdAt||new Date().toISOString()}));
+  next.tracking.focusSessions=(Array.isArray(next.tracking.focusSessions)?next.tracking.focusSessions:[]).filter(x=>x&&Number(x.minutes)>0&&x.date).map(x=>({id:safeId(x.id,"focus"),date:String(x.date),minutes:clamp(Number(x.minutes),1,600),category:CATEGORIES[x.category]?x.category:"mind",completedAt:x.completedAt||new Date().toISOString()}));
+  next.tracking.notes=(Array.isArray(next.tracking.notes)?next.tracking.notes:[]).filter(Boolean).map(x=>({id:safeId(x.id,"note"),title:String(x.title||"").slice(0,60),body:String(x.body||"").slice(0,12000),color:NOTE_COLORS.includes(x.color)?x.color:NOTE_COLORS[0],pinned:!!x.pinned,createdAt:x.createdAt||new Date().toISOString(),updatedAt:x.updatedAt||x.createdAt||new Date().toISOString()}));
   next.profile.targetWeight=Number(next.profile.targetWeight)>=25&&Number(next.profile.targetWeight)<=350?Math.round(Number(next.profile.targetWeight)*10)/10:null;next.tracking.moods=next.tracking.moods&&typeof next.tracking.moods==="object"?Object.fromEntries(Object.entries(next.tracking.moods).filter(([k,v])=>/^\d{4}-\d{2}-\d{2}$/.test(k)&&Number(v)>=1&&Number(v)<=5).map(([k,v])=>[k,Number(v)])):{};
   next.focusTimer=mergeDeep(defaultState().focusTimer,next.focusTimer||{});next.focusTimer.durationSec=clamp(Number(next.focusTimer.durationSec)||1500,300,10800);next.focusTimer.remainingSec=clamp(Number(next.focusTimer.remainingSec)||next.focusTimer.durationSec,0,next.focusTimer.durationSec);next.focusTimer.running=!!next.focusTimer.running;next.focusTimer.taskId=next.focusTimer.taskId?safeId(next.focusTimer.taskId,"task"):null;next.achievements=[...new Set(Array.isArray(next.achievements)?next.achievements:[])];next.rewardLedger=next.rewardLedger&&typeof next.rewardLedger==="object"?next.rewardLedger:{};next.dailyGiftDates=[...new Set(Array.isArray(next.dailyGiftDates)?next.dailyGiftDates:[])];next.unlockedRewards=[...new Set(Array.isArray(next.unlockedRewards)?next.unlockedRewards:[])];next.inventory=next.inventory&&typeof next.inventory==="object"?next.inventory:{};["focusBoost","pointBoost","xpBoost","streakShield"].forEach(k=>next.inventory[k]=Math.max(0,Math.floor(Number(next.inventory[k])||0)));next.streakProtectedDates=[...new Set(Array.isArray(next.streakProtectedDates)?next.streakProtectedDates:[])];if(!["forest","ocean","plum","sunset"].includes(next.settings.rewardTheme))next.settings.rewardTheme="forest";next.activity=(Array.isArray(next.activity)?next.activity:[]).slice(0,80);return next
 }
@@ -559,7 +592,42 @@ const storageAdapter={
   async set(key,value){localStorage.setItem(key,value);return true},
   async remove(key){try{localStorage.removeItem(key)}catch(error){}}
 };
-async function loadState(){let raw=await storageAdapter.get(STORAGE_KEY);if(raw){try{state=normalizeState(JSON.parse(raw))}catch(error){const backup=await storageAdapter.get(BACKUP_KEY);try{state=backup?normalizeState(JSON.parse(backup)):defaultState()}catch(e){state=defaultState()}}}else{let migrated=null;for(const key of LEGACY_KEYS){const legacy=await storageAdapter.get(key);if(!legacy)continue;try{migrated=migrateLegacy(JSON.parse(legacy),key);break}catch(error){}}state=normalizeState(migrated||defaultState())}currentWater();updateStreak();applySettings(false);await persistNow()}
+async function preserveForRecovery(raw,reason){
+  if(typeof raw!=="string" || !raw)return false;
+  const safeReason=String(reason).replace(/[^a-z0-9-]/gi,"").slice(0,32);
+  const key=STORAGE_KEY+"-recovery-"+safeReason+"-"+Date.now();
+  try{await storageAdapter.set(key,raw);return true}
+  catch(error){console.warn("Habitopia recovery snapshot could not be saved",error);return false}
+}
+async function loadState(){
+  const guard=window.HabitopiaDataSafety;
+  const primary=await storageAdapter.get(STORAGE_KEY);
+  const backup=await storageAdapter.get(BACKUP_KEY);
+  let loaded=guard.safeParseState(primary);
+  if(primary && !loaded)await preserveForRecovery(primary,"corrupt-primary");
+  if(!loaded){
+    loaded=guard.safeParseState(backup);
+    if(backup && !loaded)await preserveForRecovery(backup,"corrupt-backup");
+  }
+  if(!loaded){
+    // NEVER import another user's legacy unscoped local state into an account-scoped key.
+    const browserKey=STORAGE_KEY==="habitopia-state-v10" || STORAGE_KEY.endsWith("-browser");
+    if(browserKey){
+      for(const key of LEGACY_KEYS){
+        const raw=await storageAdapter.get(key);
+        const old=guard.safeParseState(raw);
+        if(!old)continue;
+        try{loaded=migrateLegacy(old,key);break}catch(error){console.warn("Habitopia migration failed",key,error)}
+      }
+    }
+  }
+  state=normalizeState(loaded||defaultState());
+  currentWater();
+  updateStreak();
+  applySettings(false);
+  await persistNow();
+}
+
 function scheduleSave(){clearTimeout(saveTimer);saveTimer=setTimeout(persistNow,140)}
 async function persistNow(){
   state.updatedAt=new Date().toISOString();
@@ -746,7 +814,43 @@ function changeLanguage(lang){state.settings.lang=lang==="en"?"en":"tr";applyTra
 function toggleSetting(id){if(!["sound","dark","reduceMotion"].includes(id))return;state.settings[id]=!state.settings[id];applySettings();renderSettings()}
 function updateName(value){state.profile.name=String(value).slice(0,28);scheduleSave();renderHeader()}
 function exportData(){const blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download=`habitopia-backup-${localDateKey()}.json`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);showToast(t("dataExported"),"good")}
-function importData(event){const file=event.target.files?.[0];if(!file)return;const reader=new FileReader();reader.onload=()=>{try{const parsed=JSON.parse(reader.result);if(!parsed||typeof parsed!=="object")throw new Error();state=normalizeState(parsed);applySettings();applyTranslations();renderStatic();renderAll();document.getElementById("onboarding").classList.add("hidden");closeSheet("settingsSheet");persistNow();showToast(t("dataImported"),"good")}catch(error){showToast(t("invalidBackup"),"bad")}};reader.readAsText(file);event.target.value=""}
+function importData(event){
+  const file=event.target.files?.[0];
+  if(!file)return;
+  event.target.value="";
+  if(file.size>8*1024*1024){showToast(t("invalidBackup"),"bad");return}
+  const reader=new FileReader();
+  reader.onerror=()=>showToast(t("invalidBackup"),"bad");
+  reader.onload=async()=>{
+    const guard=window.HabitopiaDataSafety;
+    const parsed=guard.safeParseState(reader.result);
+    if(!parsed){showToast(t("invalidBackup"),"bad");return}
+    const previous=state;
+    try{
+      // Preserve the previous full state before importing a different snapshot.
+      if(!await preserveForRecovery(JSON.stringify(previous),"before-import")){
+        showToast(state.settings.lang==="en"?"Backup could not be created. Import cancelled.":"Yedek oluşturulamadı. İçe aktarma iptal edildi.","bad");
+        return;
+      }
+      state=normalizeState(parsed);
+      const saved=await persistNow();
+      if(!saved){
+        state=previous;
+        showToast(state.settings.lang==="en"?"Import could not be saved.":"İçe aktarılan veri kaydedilemedi.","bad");
+        return;
+      }
+      applySettings();applyTranslations();renderStatic();renderAll();
+      document.getElementById("onboarding").classList.add("hidden");
+      closeSheet("settingsSheet");
+      showToast(t("dataImported"),"good");
+    }catch(error){
+      state=previous;
+      console.warn("Habitopia import failed",error);
+      showToast(t("invalidBackup"),"bad");
+    }
+  };
+  reader.readAsText(file);
+}
 function askReset(){showDialog(`<h2>${t("confirmReset")}</h2><p>${t("resetCopy")}</p><div class="dialog-actions"><button class="danger" data-action="confirm-reset">${t("reset")}</button><button class="ghost" data-action="close-dialog">${t("cancel")}</button></div>`)}
 async function resetAll(){clearInterval(timerInterval);state=defaultState();forgetOnboardingCompleted();await storageAdapter.remove(STORAGE_KEY);await storageAdapter.remove(BACKUP_KEY);await persistNow();closeDialog(true);closeSheet("settingsSheet");applySettings();applyTranslations();renderStatic();renderAll();document.getElementById("onboarding").classList.add("hidden")}
 
@@ -1225,13 +1329,29 @@ async function startFromNative(config={}){
   BACKUP_KEY=`${requestedKey}-backup`;
   ONBOARDING_KEY=`${requestedKey}-onboarding-complete`;
 
-  // Cloud state always wins at bootstrap. Because the key contains the Firebase
-  // uid, one account can never open another account's local app state.
-  if(typeof config.initialState==="string"&&config.initialState.trim()){
-    try{
-      JSON.parse(config.initialState);
-      localStorage.setItem(STORAGE_KEY,config.initialState);
-    }catch(error){}
+  // Compare timestamps and preserve the losing valid snapshot, never silently overwrite progress.
+  // STORAGE_KEY is provided per authenticated Firebase uid by the native host.
+  if(typeof config.initialState==="string" && config.initialState.trim()){
+    const guard=window.HabitopiaDataSafety;
+    const local=await storageAdapter.get(STORAGE_KEY);
+    const choice=guard.decideStartupState(local,config.initialState);
+    if(choice.source==="cloud" && choice.overwrite){
+      if(local && guard.safeParseState(local)){
+        const saved=await preserveForRecovery(local,"local-before-cloud");
+        if(!saved){console.warn("Habitopia: cloud overwrite skipped because local backup failed")}
+        else await storageAdapter.set(STORAGE_KEY,config.initialState);
+      }else if(!local){
+        try{await storageAdapter.set(STORAGE_KEY,config.initialState)}catch(error){console.warn("Habitopia cloud bootstrap failed",error)}
+      }else{
+        // Invalid local state is retained in recovery before replacing it.
+        const saved=await preserveForRecovery(local,"corrupt-before-cloud");
+        if(saved)await storageAdapter.set(STORAGE_KEY,config.initialState);
+      }
+    }else if(choice.source==="local" && choice.reason==="local-newer"){
+      await preserveForRecovery(config.initialState,"cloud-before-local");
+    }else if(choice.reason==="invalid-cloud"){
+      console.warn("Habitopia: rejected invalid cloud state; local data retained");
+    }
   }
 
   await startHabitopia({name:String(config.profileName||"").slice(0,40)});

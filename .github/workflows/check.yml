@@ -1,0 +1,22 @@
+name: Habitopia safety checks
+on:
+  push:
+    branches: [main, 'feat/**']
+  pull_request:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node scripts/build.mjs --check
+      - run: node scripts/validate.mjs
+      - run: node --check src/scripts/data-safety.js
+      - run: node --check src/scripts/core.js
+      - run: node --check src/scripts/polish.js
+      - run: node --test tests/*.test.cjs
