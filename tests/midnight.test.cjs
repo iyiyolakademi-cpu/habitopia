@@ -2,7 +2,7 @@
 const {test}=require("node:test");
 const assert=require("node:assert/strict");
 const {readFileSync}=require("node:fs");
-const html=readFileSync("index.html","utf8");
+const html=readFileSync("habitopia.html","utf8");
 const core=readFileSync("src/scripts/core.js","utf8");
 const css=readFileSync("src/styles/midnight.css","utf8");
 
