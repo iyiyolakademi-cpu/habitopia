@@ -35,3 +35,12 @@ node --test tests/*.test.cjs
 
 ## Geri alma
 Ana sürümde sorun görülürse git ile eski yedek dalını karşılaştırın, gerektiğinde `backup/habitopia-before-phase1-20261031` dalından `index.html` dosyasını geri alın. Kullanıcı verileri kod deposunda değildir; cihaz/Firebase yedekleri ayrıca yönetilmelidir.
+
+## Aşama 2: Ekran yenilenmesi
+- `src/styles/redesign.css`: ortak renk/yazı/bileşen, erişilebilir odak, açık/koyu tema, mobil/masaüstü düzen.
+- `src/scripts/redesign.js`: 5 sekmeli gezinme, veri bağlantılı günlük özet, seçilebilir aylık takvim, gelişim ve kişisel profil özeti.
+- `src/index.template.html`: yeni Planım ve Profilim sayfaları, özet kartları, 5 sekmeli menü.
+- `view-challenges`: 21 günlük hedefler artık Planım > 21 günlük hedefler kısayoluyla açılır.
+- Eski ekranların eylemleri, kayıt anahtarları ve bütün kullanıcı verileri korunur.
+
+Bu aşama mobil / görsel tasarım katmanıdır. Bulut/Flutter bağlantısı, gerçek ekran boyutları ve uzun süreli kullanım hâlâ ayrıca manuel test edilmelidir.

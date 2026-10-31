@@ -19,4 +19,5 @@ jobs:
       - run: node --check src/scripts/data-safety.js
       - run: node --check src/scripts/core.js
       - run: node --check src/scripts/polish.js
+      - run: node --check src/scripts/redesign.js
       - run: node --test tests/*.test.cjs
