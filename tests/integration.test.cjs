@@ -7,8 +7,8 @@ const portal=fs("index.html"),habit=fs("habitopia.html"),market=fs("hayat-borsan
 test("Root is the Habitopia Aile home screen",()=>{
  assert.match(portal,/<title>Habitopia Aile/);
  assert.match(portal,/class="app-layout"/);
- assert.match(portal,/assets\\/family\\.css/);
- assert.match(portal,/assets\\/family\\.js/);
+ assert.ok(portal.includes("assets/family.css"));
+ assert.ok(portal.includes("assets/family.js"));
  assert.match(portal,/data-page="tasks"/);
  assert.match(portal,/data-page="shopping"/);
  assert.match(portal,/data-page="radar"/);
@@ -47,7 +47,7 @@ test("Both apps are accessible from each other without changing their data keys"
 
 test("Habitopia Aile replaces the old dual-app launcher but preserves both legacy pages",()=>{
  assert.match(portal,/<meta name="theme-color" content="#eef4ee">/);
- assert.match(portal,/family-icon\\.svg/);
+ assert.ok(portal.includes("family-icon.svg"));
  assert.match(portal,/id="page-content"/);
  assert.match(portal,/id="demo-banner"/);
  assert.doesNotMatch(portal,/class="world (market|habit)"/);
