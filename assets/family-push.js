@@ -49,7 +49,7 @@ async function refresh(){
        .eq("household_id",family()).eq("user_id",member()).eq("endpoint",sub.endpoint).limit(1):{data:[]};
      enabled=!result.error&&!!result.data?.length;
    }else enabled=false;
-   report(enabled?"Bu cihazda bildirimler açık. Görev ve Radar hatırlatmaları telefonuna gönderilebilir.":guidance(),enabled?"ok":"");
+   report(enabled?"Bu cihaz push almak için kayıtlı. Zamanlanmış arka plan gönderimi sunucuda henüz etkinleştirilmedi.":guidance(),enabled?"ok":"");
  }catch(e){enabled=false;report("Bildirim durumu kontrol edilemedi: "+String(e.message||e),"warn");}
  if(btn)btn.textContent=enabled?"Bildirimler açık ✓":"Telefon bildirimlerini aç";
 }
