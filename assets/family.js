@@ -211,15 +211,19 @@ function closeModal(){$("#overlay").hidden=true;$("#modal").innerHTML="";documen
 const field=(label,name,type="text",attrs="",value="",extra="")=>'<label class="field"><span>'+esc(label)+'</span><input name="'+name+'" type="'+type+'" '+attrs+' value="'+esc(value)+'">'+extra+'</label>';
 const selectField=(label,name,options,selected)=>'<label class="field"><span>'+esc(label)+'</span><select name="'+name+'">'+options.map(([value,text])=>'<option value="'+esc(value)+'" '+(selected===value?"selected":"")+'>'+esc(text)+'</option>').join("")+'</select></label>';
 const memberField=(label,name,selected=current())=>selectField(label,name,state.members.map(m=>[m.id,m.name]),selected);
+const linkedEventField=()=>state.events.length?selectField("Bağlı aile etkinliği (isteğe bağlı)","linkedEventId",[["","Bağımsız iş"],...state.events.filter(shareable).map(x=>[x.id,x.title])],""):"";
+let targetAssetId=null;
 const textareaField=(label,name,placeholder)=>'<label class="field"><span>'+esc(label)+'</span><textarea name="'+name+'" placeholder="'+esc(placeholder)+'" maxlength="3000" required></textarea></label>';
 function openForm(name){
  const rem=field("Bildirim tarihi ve saati","reminderAt","datetime-local")+'<span class="field-help">Boş bırakırsan bildirim ayarlanmaz.</span>';
  switch(name){
- case "new-task":openModal("Yeni aile görev listesi","Bir veya daha fazla görevi yaz, sorumlu kişiyi ve bildirim saatini seç.",'<div class="form-grid">'+field("Liste adı","listTitle","text",'required maxlength="90" placeholder="Örn. Akşam işleri"')+' '+memberField("Kime atanacak?","assignee")+'<div class="span-two">'+textareaField("Görevler (her satıra bir görev)","items","Çamaşırları topla\nOdayı düzenle\nÇöpü çıkar")+'</div>'+field("Tamamlanma tarihi","dueAt","datetime-local",'required',futureInput(1,20))+' '+field("Hatırlatma zamanı","reminderAt","datetime-local")+'</div>',name);break;
- case "new-shop":openModal("Alışveriş listesine ekle","Miktarı ve tahmini birim fiyatını yaz.",'<div class="form-grid">'+field("Ürün adı","title","text",'required maxlength="100" placeholder="Örn. Süt"')+' '+field("Miktar","qty","number",'required min="0.01" max="100000" step="0.01"',"1")+selectField("Birim","unit",[["adet","Adet"],["paket","Paket"],["kg","Kilogram"],["lt","Litre"],["kutu","Kutu"],["gram","Gram"]],"adet")+field("Birim fiyatı (TL)","price","number",'min="0" max="100000000" step="0.01"',"0")+'</div>',name);break;
+ case "new-asset":openModal("Evin dijital hafızasına ekle","Eşyanın garanti, satın alma ve bakım bilgilerini sakla.",'<div class="form-grid">'+field("Eşya adı","title","text",'required maxlength="150" placeholder="Örn. Çamaşır makinesi"')+selectField("Kategori","category",[["Ev eşyası","Ev eşyası"],["Elektronik","Elektronik"],["Araç","Araç"],["Diğer","Diğer"]],"Ev eşyası")+field("Marka","brand","text",'maxlength="70"')+field("Model","model","text",'maxlength="70"')+field("Seri / ürün kodu","serial","text",'maxlength="100"')+field("Satın alma tarihi","purchasedAt","date")+field("Garanti bitişi","warrantyUntil","date")+field("Garanti bildirim tarihi ve saati","reminderAt","datetime-local")+memberField("Garanti hatırlatma sorumlusu","assignee")+'<label class="field span-two"><span>Not</span><textarea name="notes" maxlength="500"></textarea></label><label class="form-check span-two"><input type="checkbox" name="private"> Bu eşya yalnızca bana özel olsun</label></div>',name);break;
+ case "asset-service":openModal("Servis ve bakım kaydı","Yapılan işlemi ve tarihi eşya geçmişine ekle.",'<div class="form-grid">'+field("Yapılan işlem","title","text",'required maxlength="100" placeholder="Örn. Yetkili servis bakımı"')+field("Tarih","date","date","required",localDay())+'<label class="field span-two"><span>Not</span><textarea name="notes" maxlength="300"></textarea></label></div>',name);break;
+ case "new-task":openModal("Yeni aile görev listesi","Bir veya daha fazla görevi yaz, sorumlu kişiyi ve bildirim saatini seç.",'<div class="form-grid">'+field("Liste adı","listTitle","text",'required maxlength="90" placeholder="Örn. Akşam işleri"')+' '+memberField("Kime atanacak?","assignee")+'<div class="span-two">'+textareaField("Görevler (her satıra bir görev)","items","Çamaşırları topla\nOdayı düzenle\nÇöpü çıkar")+'</div>'+field("Tamamlanma tarihi","dueAt","datetime-local",'required',futureInput(1,20))+' '+field("Hatırlatma zamanı","reminderAt","datetime-local")+linkedEventField()+'</div>',name);break;
+ case "new-shop":openModal("Alışveriş listesine ekle","Miktarı ve tahmini birim fiyatını yaz.",'<div class="form-grid">'+field("Ürün adı","title","text",'required maxlength="100" placeholder="Örn. Süt"')+' '+field("Miktar","qty","number",'required min="0.01" max="100000" step="0.01"',"1")+selectField("Birim","unit",[["adet","Adet"],["paket","Paket"],["kg","Kilogram"],["lt","Litre"],["kutu","Kutu"],["gram","Gram"]],"adet")+field("Birim fiyatı (TL)","price","number",'min="0" max="100000000" step="0.01"',"0")+linkedEventField()+'</div>',name);break;
  case "set-budget":openModal("Alışveriş bütçesi","Ortak listeniz için isteğe bağlı bir hedef bütçe belirleyin.",field("Bütçe (TL)","budget","number",'min="0" max="100000000" step="0.01" required',String(state.shoppingBudget)),name);break;
  case "assign-shop":openModal("Alışveriş listesini görevlendir","Alışveriş için aile üyesi ve bildirim zamanı belirle.",'<div class="form-grid">'+memberField("Sorumlu aile üyesi","assignee",state.shoppingMeta.assignee)+field("Bildirim zamanı","reminderAt","datetime-local","",state.shoppingMeta.reminderAt||"")+'</div>',name);break;
- case "new-radar":openModal("Radar'a önemli tarih ekle","Takip türünü, sorumlu kişiyi ve tam hatırlatma saatini belirle.",'<div class="form-grid">'+selectField("Kategori","cat",Object.entries(cats).map(([id,v])=>[id,v[0]]),"bill")+field("Konu / açıklama","title","text",'required maxlength="150" placeholder="Örn. Elektrik faturası"')+memberField("Sorumlu kişi","assignee")+field("Son tarih ve saat","dueAt","datetime-local","required",futureInput(7,17))+field("Hatırlatma tarihi ve saati","reminderAt","datetime-local")+ '<label class="form-check span-two"><input type="checkbox" name="private"> Yalnızca benim görebileceğim özel bir kayıt olsun</label></div>',name);break;
+ case "new-radar":openModal("Radar'a önemli tarih ekle","Takip türünü, sorumlu kişiyi ve tam hatırlatma saatini belirle.",'<div class="form-grid">'+selectField("Kategori","cat",Object.entries(cats).map(([id,v])=>[id,v[0]]),"bill")+field("Konu / açıklama","title","text",'required maxlength="150" placeholder="Örn. Elektrik faturası"')+memberField("Sorumlu kişi","assignee")+field("Son tarih ve saat","dueAt","datetime-local","required",futureInput(7,17))+field("Hatırlatma tarihi ve saati","reminderAt","datetime-local")+ '<label class="form-check span-two"><input type="checkbox" name="private"> Yalnızca benim görebileceğim özel bir kayıt olsun</label>'+linkedEventField()+'</div>',name);break;
  case "new-event":openModal("Aile etkinliği oluştur","Etkinlik takvimde görünür; davet edilen üyeler katılım yanıtı verebilir.",'<div class="form-grid">'+field("Etkinlik adı","title","text",'required maxlength="150" placeholder="Örn. Aile yemeği"')+field("Tarih","date","date","required",selectedDate)+field("Saat","time","time","required","18:00")+'<div class="field span-two"><span>Davet edilecek aile üyeleri</span><div class="modal-tags">'+state.members.map(m=>'<label class="modal-tag"><input type="checkbox" name="invitees" value="'+esc(m.id)+'" '+(m.id===current()?"checked":"")+'> '+esc(m.name)+'</label>').join("")+'</div></div><label class="field span-two"><span>Not (isteğe bağlı)</span><textarea name="notes" maxlength="500" placeholder="Yer, hazırlık veya küçük bir not"></textarea></label><label class="form-check span-two"><input type="checkbox" name="private"> Yalnızca bana özel etkinlik</label></div>',name);break;
  case "new-member":openModal("Aile üyesi ekle","Bu önizlemede üyeler yalnızca aynı cihazda kullanılabilir.",field("Üyenin adı","name","text",'required maxlength="40" placeholder="Örn. Anne"'),name);break;
  case "rename-family":openModal("Aile ismini değiştir","Aile alanınıza bir ad verin.",field("Aile adı","name","text",'required maxlength="50"',state.familyName),name);break;
@@ -228,24 +232,48 @@ function openForm(name){
 }
 function processForm(form){
  const name=form.dataset.form,fd=new FormData(form),v=k=>safeText(fd.get(k)),datetime=k=>validDate(v(k))?v(k):null;
+ if(name==="create-family"&&window.HabitopiaCloud?.user){window.HabitopiaCloud.showFamilies();closeModal();return;}
  if(name==="create-family"){if(!confirm("Örnek aile verilerinin yerine boş bir aile alanı oluşturulsun mu?"))return;state=blank(v("family"),v("name"));taskFilter="mine";save();closeModal();navigate("home");toast("Aile alanın oluşturuldu.");return;}
+ if(name==="new-asset"){
+  if(!v("title"))return;
+  const assetId=uid(),privateTo=fd.has("private")?current():null;
+  if(privateTo&&v("assignee")!==current()&&datetime("reminderAt")){toast("Özel eşya hatırlatmasını yalnızca kendine gönderebilirsin.");return;}
+  const asset={id:assetId,title:v("title"),category:v("category"),brand:v("brand"),model:v("model"),serial:v("serial"),
+    purchasedAt:v("purchasedAt"),warrantyUntil:v("warrantyUntil"),notes:v("notes"),services:[],creator:current(),privateTo};
+  (state.assets??=[]).push(asset);
+  const reminderAt=datetime("reminderAt"),warrantyUntil=v("warrantyUntil");
+  if(warrantyUntil){
+   const dueAt=warrantyUntil+"T18:00";
+   if(reminderAt&&new Date(reminderAt)>new Date(dueAt)){state.assets.pop();toast("Hatırlatma garanti bitişinden sonra olamaz.");return;}
+   state.radar.push({id:uid(),title:asset.title+" garanti bitişi",cat:"warranty",assignee:privateTo?current():v("assignee"),
+     creator:current(),dueAt,reminderAt,doneAt:null,privateTo,linkedAssetId:assetId});
+  }
+  save();closeModal();navigate("assets");toast("Eşya kaydı eklendi.");return;
+ }
+ if(name==="asset-service"){
+  const asset=(state.assets||[]).find(a=>a.id===targetAssetId);
+  if(!asset){toast("Eşya bulunamadı.");return;}
+  if(window.HabitopiaCloud?.active&&asset.creator!==current()){toast("Servis kaydını yalnızca eşya sahibi ekleyebilir.");return;}
+  (asset.services??=[]).push({id:uid(),title:v("title"),date:v("date")||localDay(),notes:v("notes")});
+  save();closeModal();showAsset(asset.id);toast("Servis geçmişi güncellendi.");return;
+ }
  if(name==="new-task"){
   const rows=v("items").split(/\r?\n/).map(x=>safeText(x,140)).filter(Boolean).slice(0,40);
   if(!rows.length){toast("En az bir görev yaz.");return;}
   const listId=uid(),dueAt=datetime("dueAt"),reminderAt=datetime("reminderAt");
   if(reminderAt&&dueAt&&new Date(reminderAt)>new Date(dueAt)){toast("Bildirim tarihi son tarihten sonra olamaz.");return;}
   const assignee=v("assignee");
-  rows.forEach(title=>state.tasks.push({id:uid(),listId,listTitle:v("listTitle")||"Aile görevleri",title,assignee,creator:current(),dueAt,reminderAt,doneAt:null}));
+  rows.forEach(title=>state.tasks.push({id:uid(),listId,listTitle:v("listTitle")||"Aile görevleri",title,assignee,creator:current(),dueAt,reminderAt,doneAt:null,linkedEventId:v("linkedEventId")||null}));
   taskFilter="all";save();closeModal();navigate("tasks");toast(rows.length+" görev eklendi.");return;
  }
- if(name==="new-shop"){if(!v("title"))return;state.shopping.push({id:uid(),title:v("title"),qty:number(v("qty"))||1,unit:v("unit")||"adet",price:number(v("price")),bought:false});}
+ if(name==="new-shop"){if(!v("title"))return;state.shopping.push({id:uid(),title:v("title"),qty:number(v("qty"))||1,unit:v("unit")||"adet",price:number(v("price")),bought:false,creator:current(),linkedEventId:v("linkedEventId")||null});}
  if(name==="set-budget")state.shoppingBudget=number(v("budget"));
  if(name==="assign-shop")state.shoppingMeta={assignee:v("assignee"),reminderAt:datetime("reminderAt")};
  if(name==="new-radar"){
   if(!datetime("dueAt")){toast("Geçerli bir son tarih seç.");return;}
   const rem=datetime("reminderAt"),due=datetime("dueAt");if(rem&&new Date(rem)>new Date(due)){toast("Bildirim son tarihten sonra olamaz.");return;}
   if(fd.has("private")&&v("assignee")!==current()){toast("Özel Radar kaydını yalnızca kendine atayabilirsin.");return;}
-  state.radar.push({id:uid(),title:v("title"),cat:cats[v("cat")]?v("cat"):"custom",assignee:v("assignee"),creator:current(),dueAt:due,reminderAt:rem,doneAt:null,privateTo:fd.has("private")?current():null});
+  state.radar.push({id:uid(),title:v("title"),cat:cats[v("cat")]?v("cat"):"custom",assignee:v("assignee"),creator:current(),dueAt:due,reminderAt:rem,doneAt:null,privateTo:fd.has("private")?current():null,linkedEventId:v("linkedEventId")||null});
  }
  if(name==="new-event"){
   if(!validDate(v("date"))){toast("Geçerli tarih seç.");return;}
@@ -267,7 +295,18 @@ function act(action,id,value){
  if(action==="close-modal"){closeModal();return}
  if(action==="show-invite"){window.HabitopiaCloud?.showInvite?.();return;}
  if(action==="goto-tasks"||action==="goto-radar"){navigate(action==="goto-tasks"?"tasks":"radar");return}
- if(["new-task","new-shop","set-budget","assign-shop","new-radar","new-event","new-member","rename-family","create-family"].includes(action)){openForm(action);return}
+ if(action==="new-member"&&window.HabitopiaCloud?.active){window.HabitopiaCloud.showInvite();return;}
+ if(["new-task","new-shop","set-budget","assign-shop","new-radar","new-event","new-member","rename-family","create-family","new-asset"].includes(action)){openForm(action);return}
+ if(action==="asset-detail"){showAsset(id);return;}
+ if(action==="asset-service"){targetAssetId=id;openForm("asset-service");return;}
+ if(action==="asset-doc-open"){window.HabitopiaCloud?.openDocument?.(document.querySelector('[data-path="'+CSS.escape(value||"")+'"]')?.dataset.path||"").catch(e=>toast("Belge açılamadı: "+e.message));return;}
+ if(action==="delete-asset"){
+  const asset=(state.assets||[]).find(x=>x.id===id);if(!asset)return;
+  if(window.HabitopiaCloud?.active&&asset.creator!==current()){toast("Yalnızca eşya sahibi silebilir.");return;}
+  if(!confirm("Eşya kaydını silmek istiyor musun? Bağlı Radar hatırlatmaları da silinecek."))return;
+  state.radar=state.radar.filter(x=>x.linkedAssetId!==id);state.assets=state.assets.filter(x=>x.id!==id);
+  save();closeModal();render();toast("Eşya silindi.");return;
+ }
  if(action==="task-filter"){taskFilter=value;render();return}
  if(action==="radar-filter"){radarFilter=value;render();return}
  if(action==="select-date"){selectedDate=value;render();return}
@@ -332,6 +371,15 @@ document.addEventListener("submit",e=>{
 });
 document.addEventListener("change",async e=>{
  if(e.target.name==="cat"&&e.target.closest('form[data-form="new-radar"]')){const privacy=e.target.closest("form").querySelector('[name="private"]');if(privacy&&e.target.value==="health")privacy.checked=true;return;}
+ if(e.target.id==="asset-doc-upload"){
+  const file=e.target.files?.[0],assetId=e.target.dataset.id;e.target.value="";
+  if(!file)return;
+  try{
+   await window.HabitopiaCloud.uploadDocument(assetId,file,"private");
+   toast("Belge güvenli alana yüklendi.");await viewAssetDocuments(assetId);
+  }catch(err){toast("Belge yüklenemedi: "+err.message);}
+  return;
+ }
  if(e.target.id==="import-file"&&window.HabitopiaCloud?.active){toast("Bulut oturumundayken yerel yedek yükleme kapalıdır.");e.target.value="";return;}
  if(e.target.id!=="import-file")return;const file=e.target.files?.[0];e.target.value="";if(!file)return;
  if(file.size>1024*1024){toast("Yedek boyutu 1 MB'ı geçemez.");return;}
@@ -354,7 +402,10 @@ $("#user-switch").addEventListener("click",()=>{
  $("#overlay").hidden=false;document.body.style.overflow="hidden";
 });
 $("#modal").addEventListener("click",e=>{const el=e.target.closest('[data-action="switch-member-and-close"]');if(el){act("switch-member",el.dataset.id);closeModal();}});
-$("#start-family").addEventListener("click",()=>window.HabitopiaCloud?.user?window.HabitopiaCloud.showFamilies():window.HabitopiaCloud?.showAuth?.()||openForm("create-family"));
+$("#start-family").addEventListener("click",()=>{
+  if(window.HabitopiaCloud){window.HabitopiaCloud.user?window.HabitopiaCloud.showFamilies():window.HabitopiaCloud.showAuth();return;}
+  openForm("create-family");
+ });
 window.addEventListener("hashchange",()=>{const p=location.hash.slice(1);if(pageTitle[p])navigate(p)});
 document.addEventListener("visibilitychange",()=>{if(!document.hidden){poll();render()}});
 const initial=location.hash.slice(1);if(pageTitle[initial])page=initial;
