@@ -51,7 +51,7 @@ test("Private push subscriptions have RLS and delivery worker is privileged",()=
  assert.match(sender,/family_claim_push_delivery/);
  assert.match(sender,/crypto\.subtle\.sign/);
  assert.match(sender,/method:"POST"/);
- assert.match(sender,/TTL:"240"/);
+ assert.match(sender,/"TTL":"240"/);
 });
 test("Mobile layout has keyboard handling, loading, responsive cards and reduced motion",()=>{
  assert.match(css,/@media\(max-width:780px\)/);
