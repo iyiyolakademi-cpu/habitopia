@@ -27,11 +27,30 @@ Bulut senkronizasyonunda Supabase Auth, Postgres RLS, Realtime ve 25 saniyelik y
 ## Altı geliştirme
 
 1. **Aile hesabı ve davet:** E-posta/şifre, aile oluşturma, 128 bit rastgele davet kodu, aile üyesi olarak katılım. Üyeler farklı telefonlarla aynı haneye erişir.
-2. **Görevler ve bildirimler:** Aile görevi üyeye atanır, kişisel tarih/saat ile hatırlatılır, onay gerekmeden tamamlanır. Sunucu `pg_cron` ile her dakika zamanı gelen görev/Radar kayıtlarına **uygulama içi bildirim** üretir. Uygulama açıkken tarayıcı bildirimleri izne bağlı olarak görüntülenebilir. **Uygulama kapalıyken işletim sistemi push bildirimi henüz yoktur** (VAPID, service worker ve ayrı sağlayıcı kurulumu gerekir).
+2. **Görevler ve bildirimler:** Aile görevi üyeye atanır, kişisel tarih/saat ile hatırlatılır, onay gerekmeden tamamlanır. Sunucu `pg_cron` ile her dakika zamanı gelen görev/Radar kayıtlarına **uygulama içi bildirim** üretir. Uygulama açıkken tarayıcı bildirimleri izne bağlı olarak görüntülenebilir. **Web Push alıcısı, cihaz aboneliği ve Edge göndericisi eklendi; veritabanı otomatik çağrısı etkinleştirilmediği için uygulama kapalıyken teslimat henüz çalışır olarak doğrulanmadı.**
 3. **Evin dijital hafızası:** Ev eşyası, marka/model, seri, satın alma, garanti bitişi, servis geçmişi. Garanti tarihi girildiğinde Radar kaydı oluşturulur. Hesaba giriş yapıldığında özel PDF/fotoğraf belgeleri 5 MB sınırlı ve özel bucket'ta tutulabilir.
 4. **Birbirine bağlı işler:** Görev, alışveriş ürünü veya Radar kaydı bir takvim etkinliğine bağlanabilir. Etkinliğin altında bağlantılı işler ve tamamlanma durumları listelenir.
 5. **Güvenlik:** Her tabloda RLS. Aile kayıtlarını yalnızca üyeler görür. Özel kayıtları yalnızca oluşturan kişi okuyabilir. Sağlık Radar kayıtları zorunlu olarak özel kalır. Üyeye atanmayan görev tamamlanamaz. Bağlı etkinlik aynı aileye ait olmalıdır. Dosyalar anonim erişime kapalıdır. Sunucudaki 5 yetki yükseltilmiş RPC, `auth.uid()` ve aile üyeliği doğrular; Supabase security advisor bu kontrollü RPC'leri bilgilendirme/uyarı olarak listeleyebilir.
 6. **Mobil:** Dar ekran tasarımı, sabit 5'li alt gezinme, ayrı Evim ve Belgeler sayfası, hesap ve davet pencereleri.
+
+## Telefon bildirimleri ve gelişmiş mobil deneyim — 1 Kasım 2026
+
+**Bu sürümde kodlananlar:**
+- Mobil klavye açıldığında form alanlarının ve tam ekran düzenin yüksekliğinin ayarlanması, 320–780 px arası kart/başlık/işlem düğmeleri, okunabilir boş durumlar, hafif geçişler ve yükleme/senkronizasyon göstergesi.
+- `sw.js` ile kurulabilir PWA ve arka plan Web Push alıcısı. Bildirime dokunulunca **Bildirimler** merkezi açılır.
+- Ayarlar → Telefon Bildirimleri → **Telefon bildirimlerini aç**: kullanıcıdan işletim sistemi izni istenir, Web Push aboneliği Supabase'te kullanıcı ve aile kimliğiyle güvenli kaydedilir; abonelik kapatma ve tekrar bağlama desteklenir.
+- RLS'li `family_push_subscriptions` tablosu, hizmete özel teslim kaydı/claim fonksiyonları, Vault'ta şifreli VAPID kimliği, Supabase Edge Function `family-webpush` ile VAPID imzalı (kilit ekranında özel bilgi içermeyen) boş-payload push gönderimi.
+- Mevcut `pg_cron` her dakika görev ve Radar kayıtlarını **uygulama içi** bildirim kuyruğuna eklemeye devam eder.
+
+**Henüz tamamlanmayan önemli işlem:** Veritabanı Cron → Edge Function gönderim çağrısı bu oturumda güvenlik kontrolü nedeniyle etkinleştirilemedi. Bu nedenle **uygulama tamamen kapalıyken push teslimatı henüz doğrulanmış veya etkin olarak ilan edilemez**. Proje yöneticisinin Supabase panelinde güvenli, yetkili sunucu-zamanlayıcı bağlantısını tamamlaması gerekir. Gönderim servisi aktif, ancak otomatik çalıştırılması bağlı değil. Gerçek bir iPhone ve Android ile teslimat testi yapılmadı.
+
+**iPhone kullanımı:** iOS 16.4+ cihazda Safari üzerinden **Paylaş → Ana Ekrana Ekle**, sonra Habitopia'yı Ana Ekran simgesinden aç → Ayarlar → Telefon Bildirimleri. Normal Safari sekmesinde iPhone web push etkinleştirilemez.
+
+**Android kullanımı:** Güncel Chrome'da Habitopia'yı aç, istersen **Ana Ekrana ekle**, sonra Ayarlar → Telefon Bildirimleri → Telefon bildirimlerini aç. Tarayıcı iznini kabul et.
+
+**Gizlilik:** Push mesajları görev başlığı, sağlık bilgisi, kişi adı veya başka özel aile verisi taşımaz; yalnızca genel "yeni hatırlatma" mesajı verir. Uygulama açıldığında kimlik doğrulanarak asıl bildirim kaydı alınır. Abonelikler kullanıcı ve aileye RLS ile bağlanır. Servis rolü anahtarı ve VAPID özel anahtarı istemci dosyalarında bulunmaz.
+
+**Test:** `node --test tests/*.test.cjs` ile statik ve uygulama durumu kontrolleri; gerçek cihaz teslimat testi ayrıca gereklidir.
 
 ## Supabase e-posta doğrulama ayarı — yayın öncesi gerekli
 

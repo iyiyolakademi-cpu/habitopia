@@ -6,14 +6,21 @@
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#f4f7f3",
-  "theme_color": "#eef4ee",
+  "background_color": "#fbfaf5",
+  "theme_color": "#28583d",
   "icons": [
     {
       "src": "family-icon.svg",
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any maskable"
+    },
+    {
+      "src": "assets/habitopia-logo-transparent.png",
+      "sizes": "200x189",
+      "type": "image/png",
+      "purpose": "any"
     }
-  ]
+  ],
+  "id": "/habitopia/"
 }

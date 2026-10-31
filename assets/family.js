@@ -184,8 +184,15 @@ function renderFamily(){
  '<div class="two-col"><section class="panel"><div class="panel-heading"><h3>'+esc(state.familyName)+'</h3>'+pill(state.members.length+" kişi")+'</div>'+state.members.map(m=>'<div class="family-member"><div class="member-avatar">'+esc(m.name[0]?.toLocaleUpperCase("tr-TR")||"?")+'</div><div class="member-info"><strong>'+esc(m.name)+'</strong><small>'+(m.id===current()?"Senin hesabın":"Aile üyesi")+'</small></div>'+(m.id===current()?pill("Sen"):"")+'</div>').join("")+'</section><div class="info-rail"><div class="rail-card"><h3>Birlikte kullanın</h3><p>Yeni aile üyeleri kendi e-posta adresleriyle kayıt olup davet koduyla katılabilir. Görev listesi gönderdiğinde atanmış kişinin ekranında görünür.</p>'+button("Davet kodunu göster ↗","show-invite","btn-light btn-small")+'</div><div class="rail-card"><h3>Kişisel alanın gizliliği</h3><p>Özel işaretlenen kayıtlar ve sağlık hatırlatmaları diğer aile üyelerinin hesaplarında görünmez. Ortak kayıtları yalnızca bu ailenin üyeleri görebilir.</p></div></div></div>';
 }
 function renderSettings(){
- return header("KONTROL SENDE","Ayarlar ve Veriler","Aile bilgilerini, telefon bildirimlerini ve kişisel verilerini yönet.")+
- '<div class="settings-stack"><div class="settings-block"><h3>Aile bilgilerim</h3><p>Aile alanı: <strong>'+esc(state.familyName)+'</strong></p>'+button("Aile adını değiştir","rename-family","btn-muted")+' '+button("Hesabım ve davetler","show-invite","btn-light")+'</div><div class="settings-block"><h3>Hatırlatmalar</h3><p>Zamanı gelen görev ve Radar kayıtları sunucuda uygulama içi bildirim olarak saklanır. Telefon tamamen kapalıyken işletim sistemi push bildirimi henüz desteklenmez.</p><div class="settings-actions">'+button("Bildirim izni iste","request-permission","btn-light")+button("Bildirimleri gör","show-notifications","btn-muted")+'</div></div><div class="settings-block"><h3>Verilerim ve yedek</h3><p>Aile bilgileriniz Supabase üzerinde aile üyeliğine göre korunur ve hesaplar arasında eşzamanlanır. Daha önce kullandığın yerel Habitopia kayıtları otomatik aktarılmaz.</p><div class="settings-actions">'+button("Bilgilerimi indir","export","btn-muted")+'</div><p class="archive-note">Bu indirme kişisel bir JSON kopyası oluşturur; bulut hesabını veya diğer aile üyelerinin kayıtlarını silmez.</p></div></div>';
+ return header("KONTROL SENDE","Ayarlar ve Veriler","Bildirimlerini, aile hesabını ve kişisel verilerini yönet.")+
+ '<div class="settings-stack"><div class="settings-block"><h3>Aile bilgilerim</h3><p>Aile alanı: <strong>'+esc(state.familyName)+'</strong></p>'+button("Aile adını değiştir","rename-family","btn-muted")+' '+button("Hesabım ve davetler","show-invite","btn-light")+'</div>'+
+ '<div class="settings-block push-settings"><div class="push-settings-header"><span class="push-settings-glyph">♧</span><div><span class="eyebrow">TELEFON BİLDİRİMLERİ</span><h3>Önemli işleri kaçırma</h3><p>Aile görevleri ve Radar hatırlatmalarını bildirim izni verdiğin cihazda al.</p></div></div>'+
+ '<div class="push-steps"><div><strong>1</strong><span>Uygulamayı telefonunun Ana Ekranı’na ekle (iPhone için gereklidir).</span></div><div><strong>2</strong><span>Aşağıdaki butondan bildirim izni ver.</span></div><div><strong>3</strong><span>Görev veya Radar kaydına hatırlatma tarihi ve saati belirle.</span></div></div>'+
+ '<div class="push-status" id="push-status" role="status" aria-live="polite">Bu cihazdaki bildirim durumu kontrol ediliyor…</div>'+
+ '<div class="settings-actions push-actions"><button type="button" class="btn btn-primary" id="push-enable" data-action="push-enable">Telefon bildirimlerini aç</button>'+
+ button("Bu cihazda kapat","push-disable","btn-muted")+button("Bildirim merkezini aç","show-notifications","btn-light")+'</div>'+
+ '<p class="archive-note">iPhone: iOS 16.4 veya üstünde Ana Ekran’a eklediğin uygulamada açılabilir. Bildirimler telefonun internet bağlantısına ve bildirim ayarlarına bağlıdır. Sunucu gönderimi etkinleştirilmeden arka plan push gönderimi başlamaz.</p></div>'+
+ '<div class="settings-block"><h3>Verilerim ve yedek</h3><p>Aile bilgileriniz Supabase üzerinde aile üyeliğine göre korunur ve hesaplar arasında eşzamanlanır. Önceki yerel Habitopia kayıtları otomatik taşınmaz.</p><div class="settings-actions">'+button("Bilgilerimi indir","export","btn-muted")+'</div></div></div>';
 }
 function updateHeader(){
  $("#topbar-heading").textContent=pageTitle[page];
@@ -202,12 +209,14 @@ function updateHeader(){
  if(dot)dot.hidden=unread===0;
  const bell=$("#notification-open");
  if(bell){bell.setAttribute("aria-label",unread?unread+" okunmamış hatırlatma, bildirimleri aç":"Bildirimleri aç");bell.classList.toggle("has-notifications",unread>0);}
+ window.HabitopiaPush?.setBadge?.(unread);
 }
 function render(){
  updateHeader();
  const views={home:renderHome,tasks:renderTasks,shopping:renderShopping,radar:renderRadar,calendar:renderCalendar,assets:renderAssets,family:renderFamily,settings:renderSettings};
  $("#page-content").innerHTML=(views[page]||renderHome)();
  document.title=pageTitle[page]+" — Habitopia Aile";
+ if(page==="settings")window.HabitopiaPush?.refresh?.();
 }
 function navigate(next){
  if(!pageTitle[next])return;page=next;closeMenu();render();window.scrollTo({top:0,behavior:"instant"});try{history.replaceState({},"","#"+next)}catch{}
@@ -337,6 +346,8 @@ const noConfirm=(msg)=>confirm(msg);
 function act(action,id,value,path){
  if(action==="close-modal"){closeModal();return}
  if(action==="show-invite"){window.HabitopiaCloud?.showInvite?.();return;}
+ if(action==="push-enable"){window.HabitopiaPush?.enable?.();return;}
+ if(action==="push-disable"){window.HabitopiaPush?.disable?.();return;}
  if(action==="go-calendar-date"){selectedDate=value;calendarMonth=new Date(Number(value.slice(0,4)),Number(value.slice(5,7))-1,1);navigate("calendar");return;}
  if(action==="go-calendar"){navigate("calendar");return;}
  if(action==="go-shopping"){navigate("shopping");return;}
@@ -369,7 +380,7 @@ function act(action,id,value,path){
  if(action==="export"){const blob=new Blob([JSON.stringify({format:"habitopia-family",version:VERSION,exportedAt:now().toISOString(),data:state},null,2)],{type:"application/json"});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download="habitopia-aile-yedek-"+localDay()+".json";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),5000);toast("Yedek dosyası oluşturuldu.");return}
  if(action==="reset"&&window.HabitopiaCloud?.active){toast("Buluttaki aile kaydını sıfırlama burada kapalıdır.");return;}
  if(action==="reset"){if(!noConfirm("Bu cihazdaki Habitopia Aile verilerini silmek istiyor musun? Önce yedek almanı öneririz."))return;state=sample();save();navigate("home");toast("Örnek aileye dönüldü.");return}
- if(action==="request-permission"){if(!("Notification" in window)){toast("Bu tarayıcı bildirimleri desteklemiyor.");return}if(!window.isSecureContext){toast("Bildirimler için güvenli HTTPS gerekir.");return}Notification.requestPermission().then(p=>toast(p==="granted"?"Uygulama açıkken bildirim izni verildi.":"Bildirim izni verilmedi.")).catch(()=>toast("Bildirim izni alınamadı."));return}
+ if(action==="request-permission"){window.HabitopiaPush?.enable?.();return;}
  if(action==="show-notifications"){showNotifications();return}
  if(action==="mark-notification"){markNotificationRead(id);updateHeader();showNotifications();return;}
  if(action==="notification-go"){closeModal();navigate(value==="tasks"?"tasks":value==="shopping"?"shopping":"radar");if(value==="tasks"&&id){setTimeout(()=>document.getElementById("list-"+id)?.scrollIntoView({block:"center",behavior:"smooth"}),40);}return}
@@ -429,12 +440,12 @@ function showNotifications(){
 function poll(){
  const notices=notificationsForMember();
  $("#notification-dot").hidden=!notices.length;
- if(!("Notification" in window)||Notification.permission!=="granted"||document.hidden)return;
+ if(!("Notification" in window)||Notification.permission!=="granted"||document.hidden||window.HabitopiaPush?.subscribed)return;
  let changed=false;
  notices.forEach(n=>{
   if(state.notified.includes(n.id))return;
   try{
-   const alert=new Notification(n.title,{body:n.message,tag:n.id,icon:"./family-icon.svg"});
+   const alert=new Notification(n.title,{body:n.message,tag:n.id,icon:"./assets/habitopia-logo-transparent.png"});
    alert.onclick=()=>{window.focus();navigate(n.type);alert.close();};
    state.notified.push(n.id);changed=true;
   }catch(e){console.warn("Bildirim gösterilemedi",e);}
@@ -501,5 +512,17 @@ render();
   reset:()=>{state=blank("","");render();}
  });
  window.addEventListener("habitopia-cloud-error",e=>toast("Bulut kaydı başarısız: "+e.detail));
+ let notificationsRequested=typeof URLSearchParams==="function"&&new URLSearchParams(location.search||"").get("open")==="notifications";
+ const openRequested=()=>{
+  if(!window.HabitopiaCloud?.active)return;
+  if(notificationsRequested){
+    notificationsRequested=false;
+    try{history.replaceState({},document.title,location.pathname+location.hash);}catch{}
+    showNotifications();
+  }
+ };
+ window.addEventListener("habitopia-family-ready",openRequested);
+ window.addEventListener("habitopia-open-notifications",()=>{if(window.HabitopiaCloud?.active)showNotifications();else notificationsRequested=true;});
+ if(window.HabitopiaCloud?.active)openRequested();
  setInterval(poll,30000);poll();
 })();

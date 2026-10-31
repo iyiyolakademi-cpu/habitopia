@@ -134,6 +134,7 @@ async function fullLoad(){
  lastSnapshot=clone(s);
  callbacks?.setState(s);
  status("Bulutta eşzamanlandı");
+ window.dispatchEvent(new Event("habitopia-family-updated"));
  return true;
  }catch(e){status("Senkronizasyon hatası");console.error("Habitopia cloud load",e);lastError=e.message||"Senkronizasyon hatası";return false;}
  finally{loading=false;}
@@ -214,7 +215,7 @@ function subscribe(){
  clearInterval(tick);tick=setInterval(()=>{if(document.visibilityState==="visible")queueReload(50);},25000);
 }
 function status(text){
- const x=document.getElementById("sync-indicator");if(x)x.textContent=activeHousehold?text:"Güvenli aile hesabı gerekiyor";
+ const x=document.getElementById("sync-indicator");if(x){x.textContent=activeHousehold?text:"Güvenli aile hesabı gerekiyor";if(x.dataset)x.dataset.state=/hata|başarısız/i.test(text)?"error":/Kaydediliyor|Bağlanıyor/i.test(text)?"saving":"ready";}
  const b=document.getElementById("cloud-account");if(b)b.textContent=auth?(activeHousehold?"☁ Ailem":"Aile seç"):"Kayıt ol";
 }
 async function useHousehold(id){
@@ -228,6 +229,7 @@ async function useHousehold(id){
   gate(true);
   close();
   status("Buluta bağlı");
+  window.dispatchEvent(new Event("habitopia-family-ready"));
  }catch(e){activeHousehold=null;gate(false);connectionError(e.message);throw e;}
 }
 function getPending(){
