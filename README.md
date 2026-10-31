@@ -50,3 +50,6 @@ Tüm ekranlar `src/styles/midnight.css` dosyasındaki koyu renk sistemiyle göst
 
 ## İki Dünya platformu
 Habitopia ve Hayat Borsan artık aynı depoda iki ayrı işlevsel uygulama olarak yer alır; ana sayfa `index.html` büyük kutucuklu seçim menüsüdür. Ayrıntılar için `docs/TWO-WORLDS.md`.
+
+## Yeni Habitopia Yaşam Haritası
+Giriş sonrası `habitopia.html` ana ekranı artık metrik/kart paneli değil, dört etkileşimli durağı olan çizim tabanlı gece haritasıdır. Ritim Ormanı → alışkanlıklar; Görev Yolu → açılabilir günlük defter; Sessiz Vadi → odaklanma; Ufuk Noktası → plan/takvim. Haritadaki ağaç mevcut günlük görev ve alışkanlık tamamlanmasına göre 0-4 görünüm seviyesinde canlanır; ayrı puan veya veri tablosu yaratılmaz. Eski günlük araçlar aşağıdaki `<details>` defterine taşındı. Kaynaklar: `src/styles/journey.css` ve `src/scripts/journey.js`. Geri dönüş dalı: `backup/habitopia-before-journey-20261031`.

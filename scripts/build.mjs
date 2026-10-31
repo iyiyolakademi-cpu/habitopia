@@ -12,8 +12,10 @@ const parts=[
   ["REDESIGN_CSS","src/styles/redesign.css",c=>`<style id="habitopia-redesign">${c}</style>`],
   ["MIDNIGHT_CSS","src/styles/midnight.css",c=>`<style id="habitopia-midnight">${c}</style>`],
   ["UNIVERSE_CSS","src/styles/universe.css",c=>`<style id="habitopia-universe">${c}</style>`],
+  ["JOURNEY_CSS","src/styles/journey.css",c=>`<style id="habitopia-journey">${c}</style>`],
   ["POLISH_JS","src/scripts/polish.js",c=>`<script id="habitopia-v3-behavior">${c}</script>`],
-  ["REDESIGN_JS","src/scripts/redesign.js",c=>`<script id="habitopia-redesign-behavior">${c}</script>`]
+  ["REDESIGN_JS","src/scripts/redesign.js",c=>`<script id="habitopia-redesign-behavior">${c}</script>`],
+  ["JOURNEY_JS","src/scripts/journey.js",c=>`<script id="habitopia-journey-behavior">${c}</script>`]
 ];
 let output=await readFile(resolve(root,"src/index.template.html"),"utf8");
 for(const [key,path,wrap] of parts){

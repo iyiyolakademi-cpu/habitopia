@@ -402,7 +402,77 @@ body{background:#e9eee8!important}
   </nav>
   <header class="topbar"><div class="top-row"><div class="brand-orb" id="brandIcon"></div><div class="head-copy"><div class="eyebrow"><span class="date-dot"></span><span id="dateLabel"></span></div><div class="greeting" id="greeting"></div></div><button type="button" class="top-avatar" data-action="go-account" aria-label="Profilim"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 21a7.5 7.5 0 0 1 15 0"/></svg></button><button class="coin" data-action="rewards" aria-label="Puan mağazasını aç"><span class="coin-dot">P</span><span class="coin-value" id="coinCount">0</span><span class="coin-copy" id="coinCopy">Puan</span></button></div><div class="progress-card"><span class="level-label" id="levelLabel"></span><span class="xp-value" id="xpValue">0 / 50 XP</span><div class="xp-track"><div class="xp-fill" id="xpFill"></div></div></div></header>
   <main class="main" id="main">
-    <section class="view active" id="view-today">
+    
+<section class="view active" id="view-today">
+  <div class="journey-home">
+    <div class="journey-intro">
+      <div class="journey-overline"><span class="journey-spark" aria-hidden="true">✳</span><span id="journeyChapter">HABITOPIA / YENİ BİR GÜN</span><span class="journey-day" id="journeyDate"></span></div>
+      <h1 id="journeyHeadline">Kendi yolunu<br><em>çiz.</em></h1>
+      <p id="journeyTagline">Bir liste değil. Bugün keşfedeceğin bir dünya.</p>
+    </div>
+    <section class="journey-scene journey-level-0" id="journeyScene" aria-label="Bugünün etkileşimli yaşam haritası">
+      <div class="journey-nightglow" aria-hidden="true"></div>
+      <svg class="journey-landscape" viewBox="0 0 380 580" preserveAspectRatio="none" aria-hidden="true">
+        <defs>
+          <linearGradient id="j-sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#10252c"/><stop offset=".56" stop-color="#162e30"/><stop offset="1" stop-color="#12221e"/></linearGradient>
+          <linearGradient id="j-hill" x1="0" y1="0" x2=".8" y2="1"><stop offset="0" stop-color="#27463c"/><stop offset="1" stop-color="#142821"/></linearGradient>
+          <linearGradient id="j-trail" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#c9d4a4"/><stop offset="1" stop-color="#8db7a1"/></linearGradient>
+          <filter id="j-soft"><feGaussianBlur stdDeviation="3"/></filter>
+        </defs>
+        <rect width="380" height="580" fill="url(#j-sky)"/>
+        <circle cx="285" cy="92" r="49" fill="#e9d7a3" opacity=".06" filter="url(#j-soft)"/>
+        <circle class="journey-moon" cx="285" cy="92" r="27" fill="#e3d8ab" opacity=".82"/>
+        <g class="journey-stars" fill="#d9f1de">
+          <circle cx="34" cy="43" r="1.4"/><circle cx="135" cy="21" r="1.2"/><circle cx="213" cy="44" r="1.2"/><circle cx="357" cy="35" r="1.5"/><circle cx="343" cy="142" r="1"/><circle cx="22" cy="205" r="1"/><circle cx="185" cy="117" r="1.2"/><circle cx="273" cy="174" r="1.1"/><circle cx="361" cy="309" r="1.4"/><circle cx="24" cy="410" r="1.2"/>
+        </g>
+        <path d="M0 225 Q90 189 170 222 T380 205 V580 H0 Z" fill="#1b3732"/>
+        <path d="M0 324 Q85 273 168 316 T380 301 V580 H0 Z" fill="url(#j-hill)"/>
+        <path d="M0 434 Q102 403 199 441 T380 406 V580 H0 Z" fill="#1d362a"/>
+        <path d="M0 516 Q151 484 244 516 T380 487 V580 H0 Z" fill="#14251e"/>
+        <path d="M76 86 C112 101 239 107 286 204 S260 310 112 358 S127 467 270 505" stroke="#f8e6b5" stroke-width="28" opacity=".07" fill="none" stroke-linecap="round"/>
+        <path class="journey-trail" d="M76 86 C112 101 239 107 286 204 S260 310 112 358 S127 467 270 505" stroke="url(#j-trail)" stroke-width="3" fill="none" stroke-linecap="round" stroke-dasharray="4 10"/>
+        <g class="journey-tree" transform="translate(190 276)">
+          <ellipse cx="0" cy="78" rx="64" ry="9" fill="#10251c" opacity=".68"/>
+          <path d="M-8 75 C-4 47 -7 17 -9 -13 M-7 25 Q-20 1 -39 -9 M-8 9 Q4 -4 28 -18 M-6 40 Q9 21 40 18" stroke="#9e9874" stroke-width="9" fill="none" stroke-linecap="round"/>
+          <ellipse cx="-33" cy="-21" rx="27" ry="33" fill="#3a6350"/>
+          <ellipse cx="6" cy="-48" rx="35" ry="43" fill="#436d57"/>
+          <ellipse cx="38" cy="-9" rx="27" ry="34" fill="#315745"/>
+          <ellipse cx="-4" cy="-10" rx="37" ry="28" fill="#4c765e"/>
+          <g class="journey-tree-leaves" fill="#b2c98c">
+            <circle cx="-38" cy="-37" r="5"/><circle cx="-5" cy="-66" r="4.2"/><circle cx="15" cy="-48" r="4"/><circle cx="41" cy="-25" r="5"/><circle cx="-9" cy="-23" r="5"/><circle cx="30" cy="2" r="4.2"/><circle cx="-29" cy="-3" r="3.7"/>
+          </g>
+        </g>
+        <g fill="#91ac86" opacity=".47"><path d="M27 534l-5-24 9 12 3-18 2 31M333 397l-5-22 9 13 5-18 1 28M80 253l-4-18 9 10 4-14 2 21"/></g>
+      </svg>
+      <div class="journey-map-header"><span id="journeyMapTitle">BUGÜNÜN ROTASI</span><span class="journey-live"><span aria-hidden="true">●</span> <span id="journeyWorldHint">4 DURAK</span></span></div>
+      <button type="button" class="journey-spot journey-spot-habit" data-action="journey-habits" aria-label="Alışkanlıklar bölümüne git">
+        <span class="journey-node"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21v-9M12 16c-6 0-8-4-8-9 5 0 8 2 8 7m0-1c0-5 3-7 8-7 0 5-2 9-8 9"/></svg></span>
+        <strong id="journeyHabitTitle">Ritim Ormanı</strong>
+        <small id="journeyHabitCount">Alışkanlıklarını keşfet</small>
+      </button>
+      <button type="button" class="journey-spot journey-spot-task" data-action="journey-tasks" aria-label="Bugünün görevlerini aç">
+        <span class="journey-node"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 5 5 9-10M3 3h18v18H3z"/></svg></span>
+        <strong id="journeyTaskTitle">Görev Yolu</strong>
+        <small id="journeyTaskCount">Adımlarını planla</small>
+      </button>
+      <button type="button" class="journey-spot journey-spot-focus" data-action="open-focus" aria-label="Odaklanma başlat">
+        <span class="journey-node"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 7v5l4 2"/></svg></span>
+        <strong id="journeyFocusTitle">Sessiz Vadi</strong>
+        <small id="journeyFocusCount">Odak süresi</small>
+      </button>
+      <button type="button" class="journey-spot journey-spot-plan" data-action="go-plan" aria-label="Planımı ve takvimi aç">
+        <span class="journey-node"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4m8-4v4M3 10h18"/></svg></span>
+        <strong id="journeyPlanTitle">Ufuk Noktası</strong>
+        <small id="journeyPlanCount">Takvim ve hedefler</small>
+      </button>
+      <div class="journey-map-footer" aria-live="polite"><span class="journey-heart" aria-hidden="true">✦</span><span id="journeyWorldMessage">Attığın her adım bu dünyayı büyütür.</span></div>
+    </section>
+    <div class="journey-postscene"><span class="journey-postscene-rule"></span><p id="journeyFootnote">Dört ayrı durak. Tek bir yolculuk.</p><span class="journey-postscene-rule"></span></div>
+    <details class="journey-workbench" id="journeyWorkbench">
+      <summary><span class="journey-summary-label"><span id="journeyWorkbenchTitle">Günlük defterim</span><small id="journeyWorkbenchSubtitle">Görevler, su, odak ve günlük araçlar</small></span><span class="journey-summary-plus" aria-hidden="true">+</span></summary>
+      <div class="journey-workbench-body">
+        <div class="journey-legacy" hidden aria-hidden="true">
+
       <div class="page-head"><div><h1 data-i18n="today"></h1><p id="todaySubtitle"></p></div><button class="icon-btn" data-action="gift" id="giftButton"></button></div>
       <section class="hbt-today-summary" id="hbtTodaySummary" aria-label="Günlük ilerleme"><div class="hbt-summary-top"><span class="hbt-eyebrow" id="hbtDailyGreeting">GÜNLÜK PLAN</span><span id="hbtSummaryWeek">Bugün</span></div><div class="hbt-summary-main"><div><strong class="hbt-summary-title" id="hbtSummaryTitle">Kendi yolunda ilerle.</strong><p id="hbtSummaryCopy">Küçük adımlar birikir.</p></div><div class="hbt-progress-circle" id="hbtProgressCircle" style="--progress:0"><div><strong id="hbtProgressPercent">0%</strong><span id="hbtPercentLabel">tamamlandı</span></div></div></div><div class="hbt-summary-bottom"><span id="hbtSummaryCount">0 / 0 adım</span><button type="button" data-action="open-task" id="hbtQuickTask">+ Görev ekle</button></div></section>
       <div class="card hero"><div class="hero-kicker" data-i18n="dailyOverview"></div><div class="hero-line" id="heroLine"></div><div class="pill-row" id="heroPills"></div></div><section class="world-action-tiles" aria-label="Hızlı başlangıç">
@@ -411,12 +481,18 @@ body{background:#e9eee8!important}
   <button type="button" data-action="go-plan" class="world-action-card"><span class="action-icon" aria-hidden="true">▦</span><strong>Planına bak</strong><small>Bugün ve yarın</small><span class="action-arrow" aria-hidden="true">↗</span></button>
 </section>
 <div id="growthDashboard" class="growth-board"></div>
+
+        </div>
       <div class="quick-add"><input class="text-input" id="quickTask" maxlength="90" data-i18n-placeholder="quickTask"><button class="primary" data-action="quick-task">+</button></div>
       <div class="section-head"><h2 data-i18n="tasks"></h2><span id="taskSummary"></span></div><div class="task-list" id="taskList"></div>
       <div class="section-head"><h2 data-i18n="dailyBalance"></h2><span data-i18n="health"></span></div>
       <div class="card water-card"><div class="water-ring" id="waterRing"><strong id="waterValue">0/8</strong></div><div><h2 class="card-title" data-i18n="waterTracking"></h2><p class="card-sub" id="waterCopy"></p><span class="lock-note" id="waterLockNote"></span></div><div class="water-actions"><button data-action="water-plus">+</button><button data-action="water-minus" id="waterMinus">−</button></div></div>
       <div class="card focus-card"><div class="feature-icon" id="focusIcon"></div><div><h2 class="card-title" data-i18n="focusTime"></h2><p class="card-sub" data-i18n="focusCopy"></p></div><button class="primary" style="min-height:40px" data-action="open-focus" data-i18n="start"></button></div>
-    </section>
+
+      </div>
+    </details>
+  </div>
+</section>
     <section class="view" id="view-habits">
       <div class="page-head"><div><h1 data-i18n="habits"></h1><p data-i18n="habitsSubtitle"></p></div><button class="icon-btn" data-action="add-habit" id="addHabitIcon"></button></div>
       <div class="habit-toolbar"><div class="week-nav"><button data-action="week-prev">‹</button><strong id="weekLabel"></strong><button data-action="week-next">›</button></div><button class="secondary" style="min-height:38px" data-action="add-habit" data-i18n="newHabit"></button></div>
@@ -2900,6 +2976,122 @@ html.habitopia-midnight .hbt-insight-summary strong{color:#f6f9fc!important}
 }
 @media(prefers-reduced-motion:reduce){.world-action-card{transition:none!important}}
 </style>
+<style id="habitopia-journey">
+/* Habitopia Living Map — immersive home with an explorable landscape. */
+html.habitopia-midnight.journey-home-active body .topbar{display:none!important}
+html.habitopia-midnight #view-today .journey-home{width:100%;max-width:880px;margin:auto;padding-bottom:16px}
+html.habitopia-midnight #view-today .journey-intro{margin:8px 3px 25px}
+html.habitopia-midnight .journey-overline{display:flex;align-items:center;gap:10px;color:#a3b6af;font-weight:800;font-size:10px;letter-spacing:.16em}
+html.habitopia-midnight .journey-spark{font-size:19px;color:#d3c799;line-height:1}
+html.habitopia-midnight .journey-day{margin-left:auto;font-size:10px;letter-spacing:0;color:#abbcb4;font-weight:650}
+html.habitopia-midnight #view-today .journey-intro h1{font-size:clamp(43px,8vw,76px)!important;line-height:1.025!important;letter-spacing:-.075em!important;font-weight:820!important;color:#f6f1e7!important;margin:17px 0 12px}
+html.habitopia-midnight .journey-intro em{font-style:normal;font-weight:700;color:#b7cdac}
+html.habitopia-midnight .journey-intro p{color:#a9b9ae!important;font-size:13px;line-height:1.65;margin:0;max-width:500px}
+html.habitopia-midnight .journey-scene{
+  position:relative;width:100%;height:584px;overflow:hidden;isolation:isolate;
+  background:linear-gradient(180deg,#0e242c,#17352d 72%,#102319);border:1px solid #355347;
+  border-radius:33px;box-shadow:0 30px 60px rgba(0,0,0,.41);color:#fff;
+}
+.journey-landscape{width:100%;height:100%;position:absolute;inset:0;z-index:-1;pointer-events:none}
+.journey-nightglow{position:absolute;pointer-events:none;z-index:0;width:350px;height:340px;top:-200px;right:-120px;border-radius:50%;background:#ced6a01a;filter:blur(55px)}
+html.habitopia-midnight .journey-tree{transform-origin:190px 340px;filter:drop-shadow(0 12px 16px #081f1830);transition:filter .7s ease}
+html.habitopia-midnight .journey-tree-leaves{opacity:.3;transition:opacity .8s ease}
+html.habitopia-midnight .journey-level-1 .journey-tree-leaves{opacity:.5}
+html.habitopia-midnight .journey-level-2 .journey-tree-leaves{opacity:.7}
+html.habitopia-midnight .journey-level-3 .journey-tree-leaves{opacity:.9}
+html.habitopia-midnight .journey-level-4 .journey-tree-leaves{opacity:1;filter:drop-shadow(0 0 9px #d7e7a577)}
+html.habitopia-midnight .journey-stars{opacity:.67;animation:journeyTwinkle 7s ease-in-out infinite alternate}
+html.habitopia-midnight .journey-trail{opacity:.8;animation:journeyDash 18s linear infinite}
+html.habitopia-midnight .journey-map-header{position:absolute;inset:21px 21px auto;display:flex;align-items:center;justify-content:space-between;gap:8px;z-index:1;color:#d4e2d3;font-size:9px;font-weight:850;letter-spacing:.15em;pointer-events:none}
+html.habitopia-midnight .journey-live{display:flex;align-items:center;gap:7px;white-space:nowrap;color:#d1ddc7;font-size:10px;letter-spacing:.055em}
+html.habitopia-midnight .journey-live>span:first-child{color:#a9d9b0;font-size:9px}
+html.habitopia-midnight .journey-spot{
+  position:absolute;z-index:2;display:flex;flex-direction:column;align-items:center;gap:4px;
+  min-width:110px;max-width:158px;padding:4px;background:transparent!important;
+  border:0!important;box-shadow:none!important;color:#f7f5ec!important;text-align:center;cursor:pointer;
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation;
+}
+html.habitopia-midnight .journey-spot:focus-visible{outline:3px solid #e5edbc!important;outline-offset:5px!important;border-radius:15px}
+html.habitopia-midnight .journey-spot-habit{left:5%;top:15%}
+html.habitopia-midnight .journey-spot-task{right:3%;top:34%}
+html.habitopia-midnight .journey-spot-focus{left:8%;top:58%}
+html.habitopia-midnight .journey-spot-plan{right:8%;top:78%}
+html.habitopia-midnight .journey-node{
+  width:73px;height:73px;border-radius:50%;display:grid;place-items:center;
+  background:#dcd0a9!important;border:5px solid #27433b!important;
+  box-shadow:0 0 0 5px #d5e2bc22,0 11px 30px #071b18ae!important;
+  color:#28453b!important;transition:transform .18s,box-shadow .18s;
+}
+html.habitopia-midnight .journey-node svg{width:30px;height:30px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+html.habitopia-midnight .journey-spot-task .journey-node{background:#a9c5ca!important;color:#1f4650!important}
+html.habitopia-midnight .journey-spot-focus .journey-node{background:#b7c0a2!important;color:#334b34!important}
+html.habitopia-midnight .journey-spot-plan .journey-node{background:#b5b0d1!important;color:#3b345b!important}
+html.habitopia-midnight .journey-spot:hover .journey-node{transform:translateY(-5px) scale(1.06);box-shadow:0 0 0 8px #f6f7d62b,0 15px 40px #071b18d0!important}
+html.habitopia-midnight .journey-spot strong{font-size:13px!important;line-height:1.3;font-weight:850!important;letter-spacing:-.025em!important;color:#f4f6ed!important;text-shadow:0 2px 10px #081915,0 1px 2px #081915}
+html.habitopia-midnight .journey-spot small{font-size:10px!important;line-height:1.36;color:#d1dfd2!important;text-shadow:0 2px 8px #081915;max-width:134px}
+html.habitopia-midnight .journey-map-footer{
+  position:absolute;bottom:16px;left:16px;right:16px;z-index:3;pointer-events:none;
+  background:rgba(9,29,23,.78);backdrop-filter:blur(10px);border:1px solid #b7d3a92b;
+  color:#e8eee2;border-radius:15px;padding:12px 14px;font-size:11px;line-height:1.5;
+  display:flex;align-items:center;gap:9px;text-align:left
+}
+html.habitopia-midnight .journey-heart{font-size:17px;color:#d9d4aa}
+html.habitopia-midnight .journey-postscene{display:flex;gap:12px;align-items:center;justify-content:center;margin:26px 6px 19px;color:#8d9e91}
+html.habitopia-midnight .journey-postscene p{text-align:center;margin:0;white-space:nowrap;font-size:11px;color:#8d9e91}
+html.habitopia-midnight .journey-postscene-rule{height:1px;flex:1;background:#32463a}
+html.habitopia-midnight .journey-workbench{background:#131c19;border:1px solid #33453b;border-radius:23px;margin:0 0 24px;overflow:hidden}
+html.habitopia-midnight .journey-workbench>summary{
+  cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between;gap:10px;
+  padding:18px 20px;min-height:75px;color:#f4f4ec;user-select:none
+}
+html.habitopia-midnight .journey-workbench>summary::-webkit-details-marker{display:none}
+html.habitopia-midnight .journey-workbench>summary:focus-visible{outline:3px solid #d5debb;outline-offset:-4px}
+html.habitopia-midnight .journey-summary-label{display:flex;flex-direction:column;gap:5px}
+html.habitopia-midnight .journey-summary-label>span{font-size:15px;font-weight:800}
+html.habitopia-midnight .journey-summary-label>small{font-size:11px!important;color:#a1afa5!important}
+html.habitopia-midnight .journey-summary-plus{width:34px;height:34px;border:1px solid #456151;border-radius:50%;display:grid;place-items:center;font-size:24px;font-weight:300;color:#dbe9d4;transition:transform .2s}
+html.habitopia-midnight .journey-workbench[open] .journey-summary-plus{transform:rotate(45deg)}
+html.habitopia-midnight .journey-workbench-body{border-top:1px solid #30443a;padding:17px 15px 19px}
+html.habitopia-midnight #view-today .journey-legacy[hidden]{display:none!important}
+html.habitopia-midnight #view-today .journey-workbench .quick-add{margin-top:0!important}
+html.habitopia-midnight #view-today .journey-workbench .task{background:#1d2922!important;border-color:#394d41!important}
+html.habitopia-midnight #view-today .journey-workbench .water-card,
+html.habitopia-midnight #view-today .journey-workbench .focus-card{background:#1b2922!important;border-color:#34483e!important}
+html.habitopia-midnight.journey-home-active body .nav{border-color:#365246!important;background:#101d18!important}
+html.habitopia-midnight.journey-home-active .nav .nav-btn.active{background:#2c4939!important;color:#d5e4c3!important}
+html.habitopia-midnight .nav .nav-btn{transition:background .15s,color .15s}
+html.habitopia-midnight.journey-home-active body .main{padding-top:12px!important}
+@keyframes journeyTwinkle{0%{opacity:.45}100%{opacity:.9}}
+@keyframes journeyDash{to{stroke-dashoffset:-280}}
+@media(min-width:900px){
+ html.habitopia-midnight.journey-home-active body .nav{top:67px!important}
+ html.habitopia-midnight .journey-scene{height:620px}
+ html.habitopia-midnight .journey-spot-habit{left:14%;top:13%}
+ html.habitopia-midnight .journey-spot-task{right:15%;top:32%}
+ html.habitopia-midnight .journey-spot-focus{left:18%;top:59%}
+ html.habitopia-midnight .journey-spot-plan{right:17%;top:78%}
+ html.habitopia-midnight .journey-spot .journey-node{width:84px;height:84px}
+}
+@media(max-width:370px){
+ html.habitopia-midnight .journey-scene{height:550px;border-radius:25px}
+ html.habitopia-midnight .journey-spot{min-width:90px;max-width:115px;padding:2px}
+ html.habitopia-midnight .journey-spot-habit{left:1%;top:16%}
+ html.habitopia-midnight .journey-spot-task{right:1%;top:34%}
+ html.habitopia-midnight .journey-spot-focus{left:3%;top:59%}
+ html.habitopia-midnight .journey-spot-plan{right:3%;top:76%}
+ html.habitopia-midnight .journey-node{width:59px;height:59px;border-width:3px}
+ html.habitopia-midnight .journey-node svg{width:25px;height:25px}
+ html.habitopia-midnight .journey-spot strong{font-size:11px!important}
+ html.habitopia-midnight .journey-spot small{font-size:9px!important}
+ html.habitopia-midnight .journey-map-header{inset:16px 11px auto;font-size:8px}
+ html.habitopia-midnight .journey-map-footer{bottom:8px;left:9px;right:9px;padding:10px;font-size:10px}
+ html.habitopia-midnight .journey-workbench-body{padding:12px 10px}
+}
+@media(prefers-reduced-motion:reduce){
+ html.habitopia-midnight .journey-stars,html.habitopia-midnight .journey-trail{animation:none!important}
+ html.habitopia-midnight .journey-spot .journey-node,html.habitopia-midnight .journey-workbench .journey-summary-plus{transition:none!important}
+}
+</style>
 
 <div class="focus-alarm" id="focusAlarm" role="alert" aria-live="assertive">
   <div class="focus-alarm-icon">⏰</div>
@@ -3992,6 +4184,99 @@ function renderHabitVisualChart(){
       default:return priorHandleAction(action,el);
     }
   };
+})();
+</script>
+<script id="habitopia-journey-behavior">/* Habitopia Living Map — live projections of the existing account state. */
+(function(){
+ "use strict";
+ const wording={
+  tr:{
+   chapter:"HABITOPIA / YENİ BİR GÜN",headline:"Kendi yolunu",headlineEnd:"çiz.",
+   tagline:"Bir liste değil. Bugün keşfedeceğin bir dünya.",map:"BUGÜNÜN ROTASI",stops:"4 DURAK",
+   habit:"Ritim Ormanı",task:"Görev Yolu",focus:"Sessiz Vadi",plan:"Ufuk Noktası",
+   habitEmpty:"Yeni bir ritim oluştur",taskEmpty:"İlk görevini oluştur",
+   focusEmpty:"Zihnini dinlendir",planCopy:"Takvim ve hedefler",
+   countHabit:(done,total)=>done+"/"+total+" alışkanlık",countTask:(done,total)=>done+"/"+total+" görev",
+   focusMinutes:n=>n+" dakika odak",forest:["Dünyan seni bekliyor.","İlk adımların toprağa işleniyor.","Ağacın yeni yapraklar açıyor.","Bu dünya seninle canlanıyor.","Bugün yolculuğunu tamamladın."],
+   footnote:"Dört ayrı durak. Tek bir yolculuk.",workbench:"Günlük defterim",workbenchSub:"Görevler, su, odak ve günlük araçlar",
+   nav:{today:"Rotam",habits:"Ritim",plan:"Takvim",profile:"İzlerim",account:"Ben"}
+  },
+  en:{
+   chapter:"HABITOPIA / A NEW DAY",headline:"Find your own",headlineEnd:"path.",
+   tagline:"Not a dashboard. A world to explore today.",map:"TODAY'S PATH",stops:"4 STOPS",
+   habit:"Rhythm Forest",task:"Task Trail",focus:"Quiet Valley",plan:"Horizon Point",
+   habitEmpty:"Create your first habit",taskEmpty:"Create your first task",
+   focusEmpty:"Find your focus",planCopy:"Calendar and goals",
+   countHabit:(done,total)=>done+"/"+total+" habits",countTask:(done,total)=>done+"/"+total+" tasks",
+   focusMinutes:n=>n+" minutes focused",forest:["Your world is waiting.","Your first steps are taking root.","Your tree is growing new leaves.","Your world is coming alive.","You've completed today's journey."],
+   footnote:"Four stops. One journey.",workbench:"My daily notebook",workbenchSub:"Tasks, water, focus and daily tools",
+   nav:{today:"My Path",habits:"Rhythm",plan:"Calendar",profile:"My Traces",account:"Me"}
+  }
+ };
+ function t(){return wording[state?.settings?.lang==="en"?"en":"tr"]}
+ function put(id,value){const node=document.getElementById(id);if(node)node.textContent=String(value)}
+ function setHomeClass(){
+   document.documentElement.classList.toggle("journey-home-active",!!document.getElementById("view-today")?.classList.contains("active"));
+ }
+ function renderJourney(){
+   const scene=document.getElementById("journeyScene");
+   if(!scene || !state || !state.settings)return;
+   const w=t(),today=localDateKey();
+   const dueHabits=(Array.isArray(state.habits)?state.habits:[]).filter(h=>habitDue(h,today));
+   const doneHabits=dueHabits.filter(h=>habitCompletedOn(h,today)).length;
+   const todayTasks=dueTasks();
+   const doneTasks=todayTasks.filter(x=>Array.isArray(x.completedDates)&&x.completedDates.includes(today)).length;
+   const focusMinutes=(state.tracking?.focusSessions||[]).filter(s=>s?.date===today)
+      .reduce((total,s)=>total+Math.max(0,Number(s.minutes)||0),0);
+   const total=dueHabits.length+todayTasks.length;
+   const done=doneHabits+doneTasks;
+   const level=total?Math.max(0,Math.min(4,Math.floor(4*done/total))):0;
+   for(let i=0;i<=4;i++)scene.classList.toggle("journey-level-"+i,i===level);
+   const lang=state.settings.lang==="en"?"en-US":"tr-TR";
+   put("journeyChapter",w.chapter);
+   put("journeyDate",dateFromKey(today).toLocaleDateString(lang,{day:"numeric",month:"short"}));
+   const header=document.getElementById("journeyHeadline");
+   if(header){header.replaceChildren(document.createTextNode(w.headline),document.createElement("br"));
+     const em=document.createElement("em");em.textContent=w.headlineEnd;header.appendChild(em);}
+   put("journeyTagline",w.tagline);
+   put("journeyMapTitle",w.map);put("journeyWorldHint",w.stops);
+   put("journeyHabitTitle",w.habit);put("journeyTaskTitle",w.task);
+   put("journeyFocusTitle",w.focus);put("journeyPlanTitle",w.plan);
+   put("journeyHabitCount",dueHabits.length?w.countHabit(doneHabits,dueHabits.length):w.habitEmpty);
+   put("journeyTaskCount",todayTasks.length?w.countTask(doneTasks,todayTasks.length):w.taskEmpty);
+   put("journeyFocusCount",focusMinutes?w.focusMinutes(Math.round(focusMinutes)):w.focusEmpty);
+   put("journeyPlanCount",w.planCopy);
+   put("journeyWorldMessage",w.forest[level]);put("journeyFootnote",w.footnote);
+   put("journeyWorkbenchTitle",w.workbench);put("journeyWorkbenchSubtitle",w.workbenchSub);
+   for(const [view,label] of Object.entries(w.nav)){
+     const el=document.querySelector('.nav-btn[data-view="'+view+'"] span');
+     if(el)el.textContent=label;
+   }
+   setHomeClass();
+ }
+ // These wrappers run after the original render methods; no data schema or save logic changes.
+ const oldRenderToday=renderToday;
+ renderToday=function(...args){const result=oldRenderToday.apply(this,args);renderJourney();return result};
+ const oldRenderAll=renderAll;
+ renderAll=function(...args){const result=oldRenderAll.apply(this,args);renderJourney();return result};
+ const oldShowView=showView;
+ showView=function(...args){const result=oldShowView.apply(this,args);setHomeClass();if(args[0]==="today")renderJourney();return result};
+ const oldHandleAction=handleAction;
+ handleAction=function(action,element){
+   if(action==="journey-habits"){showView("habits");return}
+   if(action==="journey-tasks"){
+     const details=document.getElementById("journeyWorkbench");
+     if(details){
+       details.open=true;
+       const target=details.querySelector(".quick-add")||details;
+       const reduce=state?.settings?.reduceMotion||window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
+       target.scrollIntoView({behavior:reduce?"auto":"smooth",block:"start"});
+     }
+     return;
+   }
+   return oldHandleAction(action,element);
+ };
+ setHomeClass();
 })();
 </script>
 
