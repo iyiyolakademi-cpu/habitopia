@@ -191,7 +191,7 @@ function updateHeader(){
  $("#today-small").textContent=now().toLocaleDateString("tr-TR",{day:"numeric",month:"long"});
  $$(".nav-link").forEach(b=>b.classList.toggle("active",b.dataset.page===page));
  $("#demo-banner").hidden=!state.demo||!!window.HabitopiaCloud?.active;
- $(".mobile-bottom-nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===page));
+ $$(".mobile-bottom-nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===page));
  $("#notification-dot").hidden=notificationsForMember().length===0;
 }
 function render(){
