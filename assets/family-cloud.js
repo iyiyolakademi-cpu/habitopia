@@ -189,6 +189,7 @@ function status(text){
  const b=document.getElementById("cloud-account");if(b)b.textContent=auth?(activeHousehold?"☁ Hesabım":"Aile seç"):"Giriş yap";
 }
 async function useHousehold(id){
+ await op;
  if(!householdList.some(h=>h.household_id===id))throw Error("Bu aileye üye değilsin.");
  activeHousehold=id;sessionStorage.setItem("hbt-family-household",id);
  close();await fullLoad();subscribe();status("Buluta bağlı");
@@ -205,6 +206,7 @@ async function start(){
  }else chooseFamily();
 }
 async function signout(){
+ await op;
  if(unsub){client.removeChannel(unsub);unsub=null;}
  if(tick)clearInterval(tick);
  const {error}=await client.auth.signOut();if(error)throw error;
