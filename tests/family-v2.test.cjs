@@ -34,7 +34,7 @@ test("RLS and private health handling is built in",()=>{
  assert.match(sql,/Health reminders must be private/);
  assert.match(sql,/Immutable item identity/);
  assert.match(sql,/Private items cannot be assigned to someone else/);
- assert.match(family,/özel eşya/);
+ assert.match(family,/Bu eşya yalnızca bana özel olsun/);
 });
 test("Phone navigation and asset services are wired",()=>{
  assert.match(html,/mobile-bottom-nav/);
