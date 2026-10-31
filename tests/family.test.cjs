@@ -27,18 +27,18 @@ test("Shopping budget, quantities, user-specific reminders and RSVP flow exist",
  assert.match(js,/const cost=/);
  assert.match(js,/function notificationsForMember/);
  assert.match(js,/data-action="rsvp"/);
- assert.match(js,/e\\.rsvp\\[current\\(\\)\\]/);
+ assert.ok(js.includes("e.rsvp[current()]"));
 });
 test("Standalone local preview does not silently reuse old storage",()=>{
  assert.match(js,/habitopia-family-v1/);
  assert.doesNotMatch(js,/habitopia-state-v15-browser/);
  assert.match(js,/localStorage/);
- assert.match(js,/JSON\\.stringify/);
+ assert.ok(js.includes("JSON.stringify"));
  assert.match(html,/Örnek aileyi inceliyorsun/);
 });
 test("Mobile and accessibility styling",()=>{
- assert.match(css,/@media\\(max-width:780px\\)/);
- assert.match(css,/@media\\(max-width:420px\\)/);
+ assert.ok(css.includes("@media(max-width:780px)"));
+ assert.ok(css.includes("@media(max-width:420px)"));
  assert.match(css,/focus-visible/);
  assert.match(css,/prefers-reduced-motion/);
  assert.match(html,/aria-modal="true"/);
@@ -60,7 +60,7 @@ test("Initial app actually renders dashboard and separate screens",()=>{
  assert.match(h.node("#page-content").innerHTML,/Ailenin yaşam alanı/);
  assert.match(h.node("#page-content").innerHTML,/Aile Görevleri/);
  h.handlers.click({target:{closest(selector){return selector==="[data-page]"?{dataset:{page:"shopping"}}:null}},preventDefault(){}});
- assert.match(h.node("#page-content").innerHTML,/Alışveriş bütçesi/i);
+ assert.match(h.node("#page-content").innerHTML,/ALIŞVERİŞ BÜTÇESİ/);
  h.handlers.click({target:{closest(selector){return selector==="[data-page]"?{dataset:{page:"radar"}}:null}},preventDefault(){}});
  assert.match(h.node("#page-content").innerHTML,/İnternet taahhüdü/);
  h.handlers.click({target:{closest(selector){return selector==="[data-page]"?{dataset:{page:"calendar"}}:null}},preventDefault(){}});
